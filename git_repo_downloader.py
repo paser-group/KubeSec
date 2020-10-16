@@ -1,7 +1,7 @@
 # coding: utf-8
 
 """
-Courtesy Jonathon Alexander Gibson
+ --  Courtesy Jonathon Alexander Gibson
 """
 
 import git
@@ -16,16 +16,19 @@ def main():
     url_count = 0
 
     # Collect first 1000 repositories
-    for p in range(1, 11):
-        print("Page:", p)
-        p_req = requests.get("https://api.github.com/search/repositories?q=kubernetes,microservice" + "?&page=" + str(p) + "&per_page=100" + "&sort=stars&order=desc", auth=AUTH)
-        p_res = p_req.json()
+    for page in range(1, 11):
+        #request with git AUTH to get response from github with 100 repository/page
+        page_request = requests.get("https://api.github.com/search/repositories?q=kubernetes,microservice" + "?&page=" + str(page) + "&per_page=100" + "&sort=stars&order=desc", auth=AUTH)
+        #Convert the response to JSON format
+        page_result = page_request.json()
         try:
-            items = p_res["items"]
+            # choose "items" attribute to get all the repository informations
+            items = page_result["items"]
             # print(items)
         except Exception as e:
             print(e)
-        urls = [item["html_url"] for item in items]  # make temporary list of URLs from the current JSON response on page <p> for year range <y>
+        # pick html_url as url for each repository
+        urls = [item["html_url"] for item in items]
         url_count += len(urls)
         all_urls.extend(urls)
         print(len(all_urls))
@@ -33,7 +36,8 @@ def main():
     urls_set = set(all_urls)
 
     clone_count = 0
-    cloned_repos_dir = "/Users/shamim/Downloads/k8s_data"
+    #update directory with your own directory
+    cloned_repos_dir = ""
 
     for repo in urls_set:
         clone_count += 1
