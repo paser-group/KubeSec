@@ -15,7 +15,16 @@ Sample code snippets
 ### Category-2: Implementing Kubernetes Specific security policies
 
 #### Category-2.1 Network Specific Policies
+This is a very rare example.  
 Sample code snippets: 
+```
+networkPolicy:
+  ## Enable creation of NetworkPolicy resources.
+  ##
+  enabled: false
+```
+source: `GITLAB_REPOS/justin@kubernetes/src/services/postgres/values-production.yaml`
+
 
 #### Category-2.2 Pod Specific Policies
 Sample code snippets: 
@@ -43,8 +52,14 @@ Sample code snippets:
 ### Category-5 Namespace Separation
 #### Category-5.1 Use of "default" namespace 
 Sample code snippets: 
-
-
+```
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: airflow-deployment
+  namespace: default
+ ```
+  
 ### Category-6 Encrypt and restrict etcd 
 #### Category-6.1 Unrestricted etcd access
 #### Category-6.2 Unencrypted etcd server secrets
