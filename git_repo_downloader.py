@@ -1,5 +1,9 @@
 # coding: utf-8
 
+"""
+Courtesy Jonathon Alexander Gibson
+"""
+
 import git
 import requests
 from git import GitCommandError
@@ -28,9 +32,9 @@ def main():
     # remove repetition from multiple iterations
     urls_set = set(all_urls)
 
+    clone_count = 0
     cloned_repos_dir = "/Users/shamim/Downloads/k8s_data"
 
-    clone_count = 0
     for repo in urls_set:
         clone_count += 1
         repo = repo.lstrip("https://")
