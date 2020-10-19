@@ -15,8 +15,52 @@ Sample code snippets
 ### Category-2: Implementing Kubernetes Specific security policies
 
 #### Category-2.1 Network Specific Policies
-This is a very rare example.  
-Sample code snippets: 
+
+By default, pods are non-isolated; they accept traffic from any source. Pods become isolated by having a NetworkPolicy that selects them.
+
+Reference:
+https://kubernetes.io/docs/concepts/services-networking/network-policies/
+https://github.com/ahmetb/kubernetes-network-policy-recipes   
+CNCF Talk: https://www.youtube.com/watch?v=3gGpMmYeEO8   
+
+I found 1 or 2 repositories that uses NetworkPolices. Typically a K8s cluster using Network Policy should be like the snippet.
+https://kubernetes.io/docs/concepts/services-networking/network-policies/#networkpolicy-resource
+``` 
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ...
+  namespace: ...
+spec:
+  podSelector:
+    matchLabels:
+        ....
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - ipBlock:
+    - namespaceSelector:
+        matchLabels:
+          project: YYYY
+    - podSelector:
+        matchLabels:
+          role: frontend
+    ports:
+    - protocol: TCP
+      port: XXXX
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/24
+    ports:
+    - protocol: TCP
+      port: XXXX
+```
+
+
+Sample code snippets: This is a rare example
 ```
 networkPolicy:
   ## Enable creation of NetworkPolicy resources.
@@ -27,7 +71,28 @@ source: `GITLAB_REPOS/justin@kubernetes/src/services/postgres/values-production.
 
 
 #### Category-2.2 Pod Specific Policies
-Sample code snippets: 
+ 
+reference: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+`securityContext` field is missing from container manifest file for both `Pod` and `Container`  
+Sample code snippets:
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+      - mountPath: "/var/www/html"
+        name: mypd
+  volumes:
+    - name: mypd
+      persistentVolumeClaim:
+        claimName: pvc-name
+```
+Source: GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-volumes/pods-with-volume.yaml
 
 #### Category-2.3 Generic Policies
 Sample code snippets: 

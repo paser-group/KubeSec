@@ -4,16 +4,19 @@ import io
 # <---------UPDATE the 'dataset_location' with the directory location of the dataset ------>
 dataset_location = "/Users/shamim/Downloads/K8s_inspection/" # Update this LINE such as "/Users/Xyz/Downloads"
 #----------------------------------------------------------------------------------------#
-
-
 github_dataset = "/GITHUB_REPOS"
 gitlab_dataset = "/GITLAB_REPOS"
 
 github_data= dataset_location+github_dataset
 gitlab_data= dataset_location+gitlab_dataset
 
+#create github_yaml_data.txt and gitlab_yaml_data.txt in the same directory of this dump_yaml_content.py
+#replace github_yaml_data.txt with gitlab_yaml_data.txt for gitlab
 yaml_data = open("github_yaml_data.txt", "w")
 
+
+
+#replace github_data with gitlab_data for gitlab
 for (dirpath, dirname, filenames) in os.walk(github_data,topdown=True):
     for filename in filenames:
         #print(filename)
@@ -21,6 +24,7 @@ for (dirpath, dirname, filenames) in os.walk(github_data,topdown=True):
             print(filename)
             filepath = os.path.join(dirpath, filename)
             relpath = os.path.relpath(filepath, dataset_location)
+            #replace github_data with gitlab_data for gitlab
             relpath_repo = os.path.relpath(filepath, github_data)
             #print(relpath)
             repo_name = relpath_repo.split('/')
