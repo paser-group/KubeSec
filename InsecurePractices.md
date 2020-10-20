@@ -167,9 +167,33 @@ Sample code snippets:
 #### Category-4.1 Alert configurations
 #### Category-4.2 Log setup at application level, pod and cluster level
 Reference: https://kubernetes.io/docs/tasks/debug-application-cluster/audit/
+> An audit policy file can be passed a file with the policy to kube-apiserver using the --audit-policy-file
 
-#### Category-4.3 Log monitor
+Check for `audit.k8.io/v1`  
+Sample audit policy file:
 ```
+apiVersion: audit.k8s.io/v1
+kind: Policy
+rules:
+- level: Metadata
+```
+#### Category-4.3 Log monitor
+> I found third party alert configuration and monitoring support for kubernetes https://github.com/prometheus-operator/prometheus-operator/
+
+Sample code: Using `Promethus` object
+```
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: example
+    ... 
+```
+
+Sample code: Using `PrometheusRule` object
+```
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata: ... 
 ```
 
 ### Category-5 Namespace Separation
@@ -299,8 +323,132 @@ Reference: https://kubernetes.io/docs/tasks/administer-cluster/securing-a-cluste
 Sample code snippets:
 ##PREVIOUS CATEGORIES 
 ### Category-12 Hardcoded secret
-#### Category-11.1 Insecure metadata of Kubernetes cluster
-Sample code snippets:
+Although this events are quite rare.  
+Sample code snippets:  
+source:  GITLAB_REPOS/justin@kubernetes/src/services/nextcloud/values.yaml
+
+```
+## Official nextcloud image version
+## ref: https://hub.docker.com/r/library/nextcloud/tags/
+##
+image:
+  repository: nextcloud
+  tag: 15.0.2-apache
+  pullPolicy: IfNotPresent
+  # pullSecrets:
+  #   - myRegistrKeySecretName
+
+nameOverride: ""
+fullnameOverride: ""
+
+# Number of replicas to be deployed
+replicaCount: 1
+
+## Allowing use of ingress controllers
+## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
+##
+ingress:
+  enabled: true
+  annotations: {}
+
+nextcloud:
+  host: nextcloud.corp.justin-tech.com
+  username: admin
+  password: changeme
+
+
+internalDatabase:
+  enabled: true
+  name: nextcloud
+
+
+##
+## External database configuration
+##
+externalDatabase:
+  enabled: false
+
+  ## Database host
+  host:
+
+  ## Database user
+  user: nextcloud
+
+  ## Database password
+  password:
+
+  ## Database name
+  database: nextcloud
+
+##
+## MariaDB chart configuration
+##
+mariadb:
+  ## Whether to deploy a mariadb server to satisfy the applications database requirements. To use an external database set this to false and configure the externalDatabase parameters
+  enabled: true
+
+  db:
+    name: nextcloud
+    user: nextcloud
+    password: changeme
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: true
+    storageClass: "nfs-client"
+    accessMode: ReadWriteOnce
+    size: 8Gi
+
+service:
+  type: ClusterIP
+  port: 8080
+  loadBalancerIP: nil
+
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  enabled: true
+  ## nextcloud data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: "nfs-client"
+
+  ## A manually managed Persistent Volume and Claim
+  ## Requires persistence.enabled: true
+  ## If defined, PVC must be created manually before volume will be bound
+  # existingClaim:
+
+  accessMode: ReadWriteOnce
+  size: 8Gi
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+
+```
 
 
 
