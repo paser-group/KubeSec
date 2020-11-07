@@ -1,26 +1,28 @@
 '''
 Parse and Identify the violation of RBAC in the repository
 '''
-
+from ruamel.yaml import YAML
+from ruamel.yaml.scanner import ScannerError
 import yaml
 import os
 import constant
+counts = 0
+source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS/" #justin@kubernetes/"
 
-source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/justin@kubernetes/"
-
+count =0
 
 def get_key_values(dictionary_or_list,key_or_value):
     if(type(dictionary_or_list) is dict):
         for key,values in dictionary_or_list.items():
             if((type(values) is dict) or (type(values) is list)):
-                if(key_or_value is return_key):
+                if(key_or_value is constant.return_key):
                     yield key
                 for value in get_key_values(values,key_or_value):
                     yield value
             else:
-                if (key_or_value is return_key):
+                if (key_or_value is constant.return_key):
                     yield key
-                if (key_or_value is return_value):
+                if (key_or_value is constant.return_value):
                     yield values
 
     elif(type(dictionary_or_list) is list):
@@ -29,67 +31,28 @@ def get_key_values(dictionary_or_list,key_or_value):
                 for value in get_key_values(item,key_or_value):
                     yield value
 
+def find_value_for_keys(yaml,key_):
+    #values = []
+    if key_ in yaml:
+        return yaml[key_]
+    else:
+        for key,value in yaml.items():
+            if(type(value) is dict):
+                return find_value_for_keys(value,key_)
 
-#source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/"
-#subdirs = os.listdir(source)
-#print(subdirs)
-
-# def find_key(dictionary,keysearch="key"):
-#     for key,value in dictionary.items():
-#         if keysearch = "key":
-#             return key
-
-
-
-def parse_yaml_file(source):
-    count = 0
-    for (root, directory, files) in os.walk(source,topdown=True):
-        for name in files:
-            if name.endswith((".yaml", ".yml")) and not name.endswith(("docker-compose.yml","bootstrap.yml","application,yml")):
-                #print(name)
-                file_path = root + "/" +name
-                #print(file_path)
-                with open(file_path,"r") as file:
-                    try:
-                        generator = yaml.safe_load_all(file)
-                        yaml_file = {}
-                        yaml_file = generator.__next__()
-                        print(yaml_file)
-                        print("------"*10)
-                        print("\n"*3)
-                        v = get_key_values(yaml_file, constant.return_value)
-                        for value in v:
-                            print(value)
-                        print("\n" * 3)
-                        print("------"*10)
-
-                    except yaml.YAMLError as exc:
-                        print(exc)
-
-
+def parse_yaml_file(file_path):
+    yaml_file = {}
+    with open(file_path,"r") as file:
+        try:
+            #yaml = YAML()
+            list_yaml =list(yaml.safe_load_all(file))
+            #generator = yaml.safe_load_all(file)
+            yaml_file = {}
+            if(len(list_yaml)>0):
+                yaml_file = list_yaml[0]
+        except yaml.YAMLError as exc:
+            print(exc)
     #return yaml_file
 
-
-def parse(source):
-    count = 0
-    for (root, directory, files) in os.walk(source, topdown=True):
-        for name in files:
-            if name.endswith((".yaml", ".yml")) and not name.endswith(
-                    ("docker-compose.yml", "bootstrap.yml", "application,yml")):
-                # print(name)
-                file_path = root + "/" + name
-                # print(file_path)
-                with open(file_path, "r") as file:
-                    try:
-                        generator = yaml.safe_load_all(file)
-                        yaml_file = {}
-                        yaml_file = generator.__next__()
-
-                    except yaml.YAMLError as exc:
-                        print(exc)
-
-    return yaml_file
-
-if __name__ == "__main__":
-    parse_yaml_file(source)
-        #print("Instance Found {}",count)
+# if __name__ == "__main__":
+#     parse_yaml_file(source)
