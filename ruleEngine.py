@@ -2,15 +2,17 @@ import yaml_parser
 import os
 import constant
 
-source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS/" #justin@kubernetes/"
-
-#source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/"
+#source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS"
+#source = "/Users/shamim/Downloads/k8s_data/"
+source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/justin@kubernetes/"
 subdirs = os.listdir(source)
 
 
 def check_rbac(yaml_file):
     values = yaml_parser.get_key_values(yaml_file, constant.return_value)
-    if constant.rbac_object_role in values:
+    if constant.rbac_api_version in values:
+        return True
+    elif constant.rbac_object_role in values:
         return True
     elif constant.rbac_cluster_role_binding in values:
         return True
@@ -40,6 +42,25 @@ def check_pod_policy(yaml_file):
 def check_network_policy(yaml_file):
     pass
 
+def check_update_strategy(yaml_file):
+    pass
+
+def check_resource_limit(yaml_file):
+    absent_flag = True
+    kind = yaml_parser.find_value_for_keys(yaml_file,constant.kind)
+    if(kind == constant.pod):
+        keys = yaml_parser.get_key_values(yaml_file,constant.return_key)
+        if(constant.limit_resources in keys):
+            if(constant.limit_resources in keys) and (constant.limit_requests in keys):
+                absent_flag = False
+            else:
+                return absent_flag
+
+    #pass
+
+def check_network_egress_policy():
+    pass
+
 def check_no_TLS(yaml_file):
     count =0
     #https://stackabuse.com/python-check-if-string-contains-substring/
@@ -54,9 +75,13 @@ def check_yaml_load(source):
     namespace_count = 0
     rbac_miss_count = 0
     no_TLS_count = 0
+    no_limit_resource_count =0
+    count = 0
     for dir in subdirs:
-        print(dir)
+        print("\n\n========",dir,"--->",count,"===========\n\n")
+#        print(dir)
         rbac_flag = False
+        no_limit_resource =0
         source_dir = source + "/" + dir + "/"
         for (root, directory, files) in os.walk(source_dir, topdown=True):
             for name in files:
@@ -72,7 +97,15 @@ def check_yaml_load(source):
                         rbac_flag = True
                     no_TLS = check_no_TLS(y)
                     no_TLS_count = no_TLS + no_TLS_count
+                    no_limit = check_resource_limit(y)
+                    if(no_limit is True):
+                        no_limit_resource = no_limit_resource + 1
+
+        no_limit_resource_count = no_limit_resource_count + no_limit_resource
+
+
                     #print(y)
+        count = count + 1
 
         if(rbac_flag is False):
             #print("\n Dirname-->",dir,"\n")
@@ -80,9 +113,11 @@ def check_yaml_load(source):
         if(rbac_flag is True):
             print("\n RBAC Dirname-->", dir, "\n")
 
+
     print(rbac_miss_count,"out of ",len(subdirs))
     print(namespace_count)
     print(" NO TLS -->",no_TLS_count)
+    print(" NO LIMIT --->", no_limit_resource_count)
 
 if __name__ == "__main__":
     check_yaml_load(source)

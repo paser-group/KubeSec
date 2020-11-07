@@ -52,7 +52,7 @@ def parse_yaml_file(file_path):
                 yaml_file = list_yaml[0]
         except yaml.YAMLError as exc:
             print(exc)
-    #return yaml_file
+    return yaml_file
 
 # if __name__ == "__main__":
 #     parse_yaml_file(source)
