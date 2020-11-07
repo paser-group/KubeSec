@@ -1,16 +1,12 @@
 import os
 
-"""
-Role Based Access Control aka RBAC implementation
 
-"""
 
 # Pod Security Policy
 # Network Security Polic0.5
 
-#for (root, directory, files) in os.walk(source, topdown=True):
-
 # Function Parameter
+
 return_key = 'key'
 return_value = 'value'
 kind = 'kind'
@@ -35,11 +31,12 @@ network_policy_ingress = 'Ingress'
 network_policy_egress = 'egress'
 
 #Pod Policy
-
+pod = 'Pod'
 pod_policy_security_context = 'securityContext'
 
 #Limit CPU, memory usage
 
+limit_resources = 'resources'
 limit_memory = 'limits'
 limit_requests = 'requests'
 

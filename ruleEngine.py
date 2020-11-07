@@ -3,8 +3,8 @@ import os
 import constant
 
 #source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS"
-#source = "/Users/shamim/Downloads/k8s_data/"
-source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/justin@kubernetes/"
+source = "/Users/shamim/Downloads/k8s_data/"
+#source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/" # justin@kubernetes/"
 subdirs = os.listdir(source)
 
 
@@ -90,17 +90,30 @@ def check_yaml_load(source):
                 if name.endswith((".yaml", ".yml")) and not name.endswith(("docker-compose.yml", "bootstrap.yml", "application,yml")):
                     #print (file_path)
                     y = yaml_parser.parse_yaml_file(file_path)
+
+                    #### CHECK DEFAULT NAMESPACE
                     namespace = check_default_namespace(y)
                     namespace_count = namespace + namespace_count
+
+                    #### CHECK RBAC EXISTENCE
                     rbac = check_rbac(y)
                     if(rbac is True):
                         rbac_flag = True
+
+                    #### CHECK NO TLS
                     no_TLS = check_no_TLS(y)
                     no_TLS_count = no_TLS + no_TLS_count
+
+                    #### CHECK RESOURCE LIMIT
                     no_limit = check_resource_limit(y)
                     if(no_limit is True):
                         no_limit_resource = no_limit_resource + 1
 
+                    #### CHECK POD POLICY
+
+                    #### NETWORK POLICY
+
+        ##### UPDATE RESOURCE LIMIT COUNT
         no_limit_resource_count = no_limit_resource_count + no_limit_resource
 
 
@@ -113,10 +126,12 @@ def check_yaml_load(source):
         if(rbac_flag is True):
             print("\n RBAC Dirname-->", dir, "\n")
 
+        ##### WRITE IN A CSV FILE
+
 
     print(rbac_miss_count,"out of ",len(subdirs))
     print(namespace_count)
-    print(" NO TLS -->",no_TLS_count)
+    print(" NO TLS -->", no_TLS_count)
     print(" NO LIMIT --->", no_limit_resource_count)
 
 if __name__ == "__main__":
