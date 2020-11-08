@@ -52,10 +52,11 @@ def check_resource_limit(yaml_file):
     kind = yaml_parser.find_value_for_keys(yaml_file,constant.kind)
     if(kind == constant.pod):
         keys = yaml_parser.get_key_values(yaml_file,constant.return_key)
-        if(constant.limit_resources in keys):
-            if(constant.limit_resources in keys) and (constant.limit_requests in keys):
-                absent_flag = False
-            # else:
+        if(constant.pod_spec in keys and constant.pod_container in keys):
+            if(constant.limit_resources in keys):
+                if(constant.limit_resources in keys) and (constant.limit_requests in keys):
+                    absent_flag = False
+            #   else:
             #     return absent_flag
         else:
             return absent_flag

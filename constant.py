@@ -31,6 +31,8 @@ network_policy_ingress = 'Ingress'
 network_policy_egress = 'egress'
 
 #Pod Policy
+pod_spec = 'spec'
+pod_container = 'container'
 pod = 'Pod'
 pod_policy_security_context = 'securityContext'
 
