@@ -90,6 +90,7 @@ def parse_yaml_file_test(source):
                     print(value)
                     if value==constant.pod:
                         count_pod = count_pod + 1
+                #CHECK namespace with dictionary
                 if(namespace is not None):
                     count_namespace_instance = count_namespace_instance +1
                     print(namespace)

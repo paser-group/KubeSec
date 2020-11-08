@@ -43,3 +43,10 @@ limit_requests = 'requests'
 #default_namespace
 namespace_key = 'namespace'
 namespace_value_default = 'default'
+
+#hard-coded password
+user_only  = 'user'
+user_name = 'username'
+password = 'password'
+password_key = 'key'
+empty_string = ''

@@ -4,8 +4,8 @@ import constant
 import pandas as pd
 
 #source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS"
-#source = "/Users/shamim/Downloads/k8s_data/"
-source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/justin@kubernetes/"
+source = "/Users/shamim/Downloads/k8s_data/"
+#source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/justin@kubernetes/"
 subdirs = os.listdir(source)
 
 
@@ -38,6 +38,7 @@ def check_default_namespace(yaml_file):
     return counts
 
 def check_pod_policy(yaml_file):
+
     pass
 
 def check_network_policy(yaml_file):
@@ -54,10 +55,11 @@ def check_resource_limit(yaml_file):
         if(constant.limit_resources in keys):
             if(constant.limit_resources in keys) and (constant.limit_requests in keys):
                 absent_flag = False
-            else:
-                return absent_flag
-
-    #pass
+            # else:
+            #     return absent_flag
+        else:
+            return absent_flag
+    #return absent_flag
 
 def check_network_egress_policy():
     pass
@@ -78,20 +80,27 @@ def check_hardcoded_secrets(yaml_file):
     key_count = 0
     keys = yaml_parser.get_key_values(yaml_file,constant.return_key)
     for key in keys:
-        if(key==constant.user_name):
+        if(key==constant.user_name or key == constant.user_only):
             value = yaml_parser.find_value_for_keys(yaml_file,constant.user_name)
-            if(value is not None):
+            value =str(value)
+            #print("-----USERNAME------")
+            if(value):
+                print("-----USERNAME------")
                 username_count = username_count + 1
         elif(key==constant.password):
             p_value = yaml_parser.find_value_for_keys(yaml_file,constant.password)
-            # if(len(p_value)==0):
-            #     pass
-            if(p_value is not None):
+            p_value = str(p_value)
+            if(p_value):
+                print("-----PASSWORD------")
                 password_count = password_count +1
         elif(key==constant.password_key):
             k_value = yaml_parser.find_value_for_keys(yaml_file,constant.password_key)
-            if(k_value is not None):
+            k_value = str(k_value)
+            if(k_value):
+                print("-----KEY------")
                 key_count = key_count + 1
+
+    #print("USERNAME --->", username_count, "PASSWORD--->", password_count, "KEY---->", key_count)
 
     return username_count,password_count,key_count
 
@@ -146,16 +155,19 @@ def check_yaml_load(source):
                     #### Hard Coded Secrets
 
                     u_count, p_count, k_count = check_hardcoded_secrets(y)
+                    print("USERNAME --->", u_count, "PASSWORD--->", p_count, "KEY---->", k_count)
+
+                    #### Update Hard coded count
+                    username_count = username_count + u_count
+                    password_count = password_count + p_count
+                    key_count = key_count + k_count
 
         ##### UPDATE RESOURCE LIMIT COUNT
         no_limit_resource_count = no_limit_resource_count + no_limit_resource
-        #### Update Hard coded count
-        username_count = username_count + u_count
-        password_count = password_count + p_count
-        key_count = key_count + k_count
 
+        #print("USERNAME --->", username_count, "PASSWORD--->", password_count, "KEY---->", key_count)
 
-                    #print(y)
+        #print(y)
         count = count + 1
 
         if(rbac_flag is False):
