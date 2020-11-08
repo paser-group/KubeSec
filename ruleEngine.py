@@ -1,10 +1,11 @@
 import yaml_parser
 import os
 import constant
+import pandas as pd
 
 #source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS"
-source = "/Users/shamim/Downloads/k8s_data/"
-#source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/" # justin@kubernetes/"
+#source = "/Users/shamim/Downloads/k8s_data/"
+source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/justin@kubernetes/"
 subdirs = os.listdir(source)
 
 
@@ -71,19 +72,48 @@ def check_no_TLS(yaml_file):
             count = count + 1
     return count
 
+def check_hardcoded_secrets(yaml_file):
+    password_count = 0
+    username_count = 0
+    key_count = 0
+    keys = yaml_parser.get_key_values(yaml_file,constant.return_key)
+    for key in keys:
+        if(key==constant.user_name):
+            value = yaml_parser.find_value_for_keys(yaml_file,constant.user_name)
+            if(value is not None):
+                username_count = username_count + 1
+        elif(key==constant.password):
+            p_value = yaml_parser.find_value_for_keys(yaml_file,constant.password)
+            # if(len(p_value)==0):
+            #     pass
+            if(p_value is not None):
+                password_count = password_count +1
+        elif(key==constant.password_key):
+            k_value = yaml_parser.find_value_for_keys(yaml_file,constant.password_key)
+            if(k_value is not None):
+                key_count = key_count + 1
+
+    return username_count,password_count,key_count
+
 def check_yaml_load(source):
     namespace_count = 0
     rbac_miss_count = 0
     no_TLS_count = 0
     no_limit_resource_count =0
     count = 0
+
+    username_count = 0
+    password_count = 0
+    key_count =0
     for dir in subdirs:
         print("\n\n========",dir,"--->",count,"===========\n\n")
 #        print(dir)
         rbac_flag = False
         no_limit_resource =0
+        u_count, p_count, k_count = 0, 0, 0
         source_dir = source + "/" + dir + "/"
         for (root, directory, files) in os.walk(source_dir, topdown=True):
+
             for name in files:
                 file_path = root + "/" + name
                 #print(name)
@@ -113,8 +143,16 @@ def check_yaml_load(source):
 
                     #### NETWORK POLICY
 
+                    #### Hard Coded Secrets
+
+                    u_count, p_count, k_count = check_hardcoded_secrets(y)
+
         ##### UPDATE RESOURCE LIMIT COUNT
         no_limit_resource_count = no_limit_resource_count + no_limit_resource
+        #### Update Hard coded count
+        username_count = username_count + u_count
+        password_count = password_count + p_count
+        key_count = key_count + k_count
 
 
                     #print(y)
@@ -129,10 +167,13 @@ def check_yaml_load(source):
         ##### WRITE IN A CSV FILE
 
 
+
     print(rbac_miss_count,"out of ",len(subdirs))
     print(namespace_count)
     print(" NO TLS -->", no_TLS_count)
     print(" NO LIMIT --->", no_limit_resource_count)
+    print("USERNAME --->",username_count, "PASSWORD--->",password_count,"KEY---->",key_count)
+
 
 if __name__ == "__main__":
     check_yaml_load(source)
