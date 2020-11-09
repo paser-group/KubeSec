@@ -64,7 +64,7 @@ def check_pod_policy(yaml_file):
     #count_privileged_containers = 0
 
     kind = yaml_parser.find_value_for_keys(yaml_file, constant.kind)
-    if (kind == constant.pod):
+    if (kind == constant.pod or kind == constant.pod_security_policy_object):
         keys = yaml_parser.get_key_values(yaml_file, constant.return_key)
         if (constant.pod_policy_security_context in keys):
             # absent_security_context = False
@@ -91,7 +91,35 @@ def check_network_policy(yaml_file):
     pass
 
 def check_update_strategy(yaml_file):
-    pass
+    no_rolling_update_count =0
+    replica_count = 0
+    keys = yaml_parser.get_key_values(yaml_file,constant.return_key)
+    if(constant.pod_replicas in keys):
+        replica_count = replica_count + 1
+        value = yaml_parser.find_all_value_for_keys(yaml_file,constant.pod_replicas)
+        print("REPLICA-->",value,"TYPE",type(value))
+        print(yaml_file)
+        for val in value:
+            if(type(val) is int) and (val>1):
+                if(constant.pod_strategy in keys):
+                    if(constant.pod_strategy_rolling_update in keys):
+                        pass
+                    elif(constant.pod_strategy_type in keys):
+                        update_strategy = yaml_parser.find_all_value_for_keys(yaml_file,constant.pod_strategy_type)
+                        for update in update_strategy:
+                            if(update_strategy == constant.pod_strategy_rolling_update):
+                                pass
+                            else:
+                                print("----------------------1")
+                                no_rolling_update_count = no_rolling_update_count + 1
+                    else:
+                        print("----------------------2")
+                        no_rolling_update_count = no_rolling_update_count + 1
+                else:
+                    print("----------------------3")
+                    no_rolling_update_count = no_rolling_update_count + 1
+    #print("REPLICA-->",replica_count, "NO ROLLING UPDATE--->",no_rolling_update_count)
+    return no_rolling_update_count, replica_count
 
 def check_network_egress_policy():
     pass
@@ -162,11 +190,16 @@ def check_yaml_load(source):
     username_count = 0
     password_count = 0
     key_count =0
+
     missing_security_context_count = 0
     privileged_container_count = 0
     privilege_escalation_count = 0
 
     count_root_privilege = 0
+
+    no_rolling_update_count = 0
+    replica_count = 0
+
     for dir in subdirs:
         print("\n\n========",dir,"--->",count,"===========\n\n")
 #        print(dir)
@@ -215,6 +248,14 @@ def check_yaml_load(source):
                     count_root_privilege = count_root + count_root_privilege
                     #print("ROOT PRIVILEGE -->", count_root)
 
+                    ##### Rolling Update
+
+                    no_rolling_update, replica = check_update_strategy(y)
+                    no_rolling_update_count = no_rolling_update_count + no_rolling_update
+                    replica_count = replica_count + replica
+
+
+
 
                     #### NETWORK POLICY
 
@@ -249,10 +290,12 @@ def check_yaml_load(source):
     print(rbac_miss_count,"out of ",len(subdirs))
     print(namespace_count)
     print(" NO TLS -->", no_TLS_count)
-    print(" NO LIMIT --->", no_limit_resource_count)
+    print(" NO RESOURCE LIMIT --->", no_limit_resource_count)
     print("USERNAME --->",username_count, "PASSWORD--->",password_count,"KEY---->",key_count)
     print("PRIVILEGE ESCALATION-->", privilege_escalation_count ,"MISSING SECURITY CONTEXT",missing_security_context_count, "PRIVILEGED CONTAINER-->", privileged_container_count)
     print("ROOT PRIVILEGE -->", count_root_privilege)
+    print("NO ROLLING UPDATE -->", no_rolling_update_count, "out of ",replica_count,"instances")
+
 
 
 if __name__ == "__main__":

@@ -2,8 +2,11 @@ import os
 
 
 
-# Pod Security Policy
-# Network Security Polic0.5
+# Rolling Update
+pod_replicas = 'replicas'
+pod_strategy = 'strategy'
+pod_strategy_type = 'type'
+pod_strategy_rolling_update = 'rollingUpdate'
 
 # Function Parameter
 
@@ -34,6 +37,8 @@ network_policy_egress = 'egress'
 pod_spec = 'spec'
 pod_container = 'container'
 pod = 'Pod'
+pod_security_policy_object = 'PodSecurityPolicy'
+
 pod_policy_security_context = 'securityContext'
 
 
@@ -43,7 +48,6 @@ container_privilege_given = 'privileged'
 container_linux_security = 'seLinuxOptions'
 container_seccomp_security = 'seccompProfile'
 
-pod_security_policy_object = 'PodSecurityPolicy'
 
 # Will Explore later
 container_user = 'runAsUser'
