@@ -4,8 +4,8 @@ import constant
 import pandas as pd
 
 #source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS"
-source = "/Users/shamim/Downloads/k8s_data/"
-#source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/justin@kubernetes/"
+#source = "/Users/shamim/Downloads/k8s_data/"
+source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/" #justin@kubernetes/"
 subdirs = os.listdir(source)
 
 
@@ -37,14 +37,63 @@ def check_default_namespace(yaml_file):
         pass
     return counts
 
-def check_pod_policy(yaml_file):
+#https://kubernetes.io/docs/concepts/policy/pod-security-policy/
 
+def check_root_privilege(yaml_file):
+    count_privileged =0
+    keys = yaml_parser.get_key_values(yaml_file, constant.return_key)
+    if(constant.container_privilege_given in keys):
+        values = list(yaml_parser.find_all_value_for_keys(yaml_file,constant.container_privilege_given))
+        for value in values:
+            print ("ROOT PRIVILEGE value type-->",type(value),"VALUE-->",value)
+            if(type(value) is bool):
+                #"IT IS OK-->"
+                if(value is True):
+                    count_privileged = count_privileged + 1
+            elif(type(value is str)):
+                if (value =='true'):
+                    count_privileged = count_privileged + 1
+    print("ROOT PRIVILEGE check-->", count_privileged)
+    return count_privileged
+
+
+def check_pod_policy(yaml_file):
+    count_missing_security_context = 0
+    count_container_privilege_escalation = 0
+    count_no_container_privilege_escalation = 0
+    #count_privileged_containers = 0
+
+    kind = yaml_parser.find_value_for_keys(yaml_file, constant.kind)
+    if (kind == constant.pod):
+        keys = yaml_parser.get_key_values(yaml_file, constant.return_key)
+        if (constant.pod_policy_security_context in keys):
+            # absent_security_context = False
+            # if (constant.pod_container in keys):
+            print("Container exists!------->")
+            if (constant.container_privilege_escalation in keys):
+                values = list(yaml_parser.find_all_value_for_keys(yaml_file, constant.container_privilege_escalation))
+                #print("es value-->", type(values), "VALUE-->", values)
+                # print("\n\n", value, "\n\n")
+                for value in values:
+                    if (value):
+                        count_container_privilege_escalation = count_container_privilege_escalation + 1
+            else:
+                count_no_container_privilege_escalation = count_no_container_privilege_escalation + 1
+        else:
+            count_missing_security_context = count_missing_security_context + 1
+
+    return count_missing_security_context,count_container_privilege_escalation,count_no_container_privilege_escalation
+#
+def check_linux_capability_pod(yaml_file):
     pass
 
 def check_network_policy(yaml_file):
     pass
 
 def check_update_strategy(yaml_file):
+    pass
+
+def check_network_egress_policy():
     pass
 
 def check_resource_limit(yaml_file):
@@ -62,8 +111,6 @@ def check_resource_limit(yaml_file):
             return absent_flag
     #return absent_flag
 
-def check_network_egress_policy():
-    pass
 
 def check_no_TLS(yaml_file):
     count =0
@@ -86,19 +133,19 @@ def check_hardcoded_secrets(yaml_file):
             value =str(value)
             #print("-----USERNAME------")
             if(value):
-                print("-----USERNAME------")
+                #print("-----USERNAME------")
                 username_count = username_count + 1
         elif(key==constant.password):
             p_value = yaml_parser.find_value_for_keys(yaml_file,constant.password)
             p_value = str(p_value)
             if(p_value):
-                print("-----PASSWORD------")
+                #print("-----PASSWORD------")
                 password_count = password_count +1
         elif(key==constant.password_key):
             k_value = yaml_parser.find_value_for_keys(yaml_file,constant.password_key)
             k_value = str(k_value)
             if(k_value):
-                print("-----KEY------")
+                #print("-----KEY------")
                 key_count = key_count + 1
 
     #print("USERNAME --->", username_count, "PASSWORD--->", password_count, "KEY---->", key_count)
@@ -115,6 +162,11 @@ def check_yaml_load(source):
     username_count = 0
     password_count = 0
     key_count =0
+    missing_security_context_count = 0
+    privileged_container_count = 0
+    privilege_escalation_count = 0
+
+    count_root_privilege = 0
     for dir in subdirs:
         print("\n\n========",dir,"--->",count,"===========\n\n")
 #        print(dir)
@@ -151,12 +203,25 @@ def check_yaml_load(source):
 
                     #### CHECK POD POLICY
 
+                    count_msc, count_pe, count_upe = check_pod_policy(y)
+                    print("PRIVILEGE ESCALATION-->",count_pe,"MISSING SECURITY CONTEXT-->",count_msc, "PREVILEGE ESCALATION UNDEFINED", count_upe)
+                    privilege_escalation_count = privilege_escalation_count + count_pe
+                    privileged_container_count = privileged_container_count + count_upe
+                    missing_security_context_count = missing_security_context_count + count_msc
+
+                    ### PRIVILEGE COUNT
+
+                    count_root = check_root_privilege(y)
+                    count_root_privilege = count_root + count_root_privilege
+                    #print("ROOT PRIVILEGE -->", count_root)
+
+
                     #### NETWORK POLICY
 
                     #### Hard Coded Secrets
 
                     u_count, p_count, k_count = check_hardcoded_secrets(y)
-                    print("USERNAME --->", u_count, "PASSWORD--->", p_count, "KEY---->", k_count)
+                   # print("USERNAME --->", u_count, "PASSWORD--->", p_count, "KEY---->", k_count)
 
                     #### Update Hard coded count
                     username_count = username_count + u_count
@@ -186,6 +251,8 @@ def check_yaml_load(source):
     print(" NO TLS -->", no_TLS_count)
     print(" NO LIMIT --->", no_limit_resource_count)
     print("USERNAME --->",username_count, "PASSWORD--->",password_count,"KEY---->",key_count)
+    print("PRIVILEGE ESCALATION-->", privilege_escalation_count ,"MISSING SECURITY CONTEXT",missing_security_context_count, "PRIVILEGED CONTAINER-->", privileged_container_count)
+    print("ROOT PRIVILEGE -->", count_root_privilege)
 
 
 if __name__ == "__main__":

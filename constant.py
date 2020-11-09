@@ -36,6 +36,23 @@ pod_container = 'container'
 pod = 'Pod'
 pod_policy_security_context = 'securityContext'
 
+
+container_privilege_escalation = 'allowPrivilegeEscalation'
+container_privilege_given = 'privileged'
+
+container_linux_security = 'seLinuxOptions'
+container_seccomp_security = 'seccompProfile'
+
+pod_security_policy_object = 'PodSecurityPolicy'
+
+# Will Explore later
+container_user = 'runAsUser'
+container_user_group = 'runAsGroup'
+
+user_permission_pod = '1000'
+user_permission_container = '2000'
+
+
 #Limit CPU, memory usage
 
 limit_resources = 'resources'
