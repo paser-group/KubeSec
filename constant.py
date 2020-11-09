@@ -30,7 +30,8 @@ rbac_cluster_role_binding = 'ClusterRoleBinding'
 
 network_policy_api_version = 'networking.k8s.io/v1'
 network_policy_object = 'NetworkPolicy'
-network_policy_ingress = 'Ingress'
+network_policy_ingress_object = 'Ingress'
+network_policy_ingress = 'ingress'
 network_policy_egress = 'egress'
 
 #Pod Policy

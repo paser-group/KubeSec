@@ -87,7 +87,17 @@ def check_linux_capability_pod(yaml_file):
     pass
 
 def check_network_policy(yaml_file):
-    pass
+    network_policy = False
+    keys = yaml_parser.get_key_values(yaml_file,constant.return_key)
+    values = yaml_parser.get_key_values(yaml_file,constant.return_value)
+    kind_value = yaml_parser.find_value_for_keys(yaml_file,constant.kind)
+    if(constant.network_policy_api_version in values):
+        missing_network_flag = True
+    elif(kind_value == constant.network_policy_object or kind_value == constant.network_policy_ingress_object or constant.network_policy_egress):
+        missing_network_flag = True
+    elif(constant.network_policy_ingress in keys or constant.network_policy_egress in keys):
+        missing_network_flag = True
+    return missing_network_flag
 
 def check_update_strategy(yaml_file):
     no_rolling_update_count =0
@@ -182,6 +192,8 @@ def check_hardcoded_secrets(yaml_file):
 def check_yaml_load(source):
     namespace_count = 0
     rbac_miss_count = 0
+    network_policy_miss_count = 0
+
     no_TLS_count = 0
     no_limit_resource_count =0
     count = 0
@@ -202,7 +214,11 @@ def check_yaml_load(source):
     for dir in subdirs:
         print("\n\n========",dir,"--->",count,"===========\n\n")
 #        print(dir)
+        # INCOSISTENCY MAKE IT CONSISTENT
+        # Assume RBAC flag missing
         rbac_flag = False
+        # Assume Network flag present
+        network_flag = False
         no_limit_resource =0
         u_count, p_count, k_count = 0, 0, 0
         source_dir = source + "/" + dir + "/"
@@ -253,10 +269,12 @@ def check_yaml_load(source):
                     no_rolling_update_count = no_rolling_update_count + no_rolling_update
                     replica_count = replica_count + replica
 
-
-
-
                     #### NETWORK POLICY
+
+                    flag = check_network_policy(y)
+                    if(flag is True):
+                        network_flagflag = True
+
 
                     #### Hard Coded Secrets
 
@@ -282,18 +300,22 @@ def check_yaml_load(source):
         if(rbac_flag is True):
             print("\n RBAC Dirname-->", dir, "\n")
 
+        if(network_flag is False):
+            network_policy_miss_count = network_policy_miss_count + 1
+
         ##### WRITE IN A CSV FILE
 
 
 
-    print(rbac_miss_count,"out of ",len(subdirs))
-    print(namespace_count)
+    print("NO RBAC in ",rbac_miss_count,"repositories out of ",len(subdirs))
+    print("DEFAULT NAMESPACE COUNT---> ",namespace_count)
     print(" NO TLS -->", no_TLS_count)
     print(" NO RESOURCE LIMIT --->", no_limit_resource_count)
     print("USERNAME --->",username_count, "PASSWORD--->",password_count,"KEY---->",key_count)
     print("PRIVILEGE ESCALATION-->", privilege_escalation_count ,"MISSING SECURITY CONTEXT",missing_security_context_count, "PRIVILEGED CONTAINER-->", privileged_container_count)
     print("ROOT PRIVILEGE -->", count_root_privilege)
     print("NO ROLLING UPDATE -->", no_rolling_update_count, "out of ",replica_count,"instances")
+    print("NETWORK POLICY MISSING in ", network_policy_miss_count, "repositories out of ", len(subdirs))
 
 
 
