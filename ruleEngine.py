@@ -39,24 +39,6 @@ def check_default_namespace(yaml_file):
 
 #https://kubernetes.io/docs/concepts/policy/pod-security-policy/
 
-def check_root_privilege(yaml_file):
-    count_privileged =0
-    keys = yaml_parser.get_key_values(yaml_file, constant.return_key)
-    if(constant.container_privilege_given in keys):
-        values = list(yaml_parser.find_all_value_for_keys(yaml_file,constant.container_privilege_given))
-        for value in values:
-            print ("ROOT PRIVILEGE value type-->",type(value),"VALUE-->",value)
-            if(type(value) is bool):
-                #"IT IS OK-->"
-                if(value is True):
-                    count_privileged = count_privileged + 1
-            elif(type(value is str)):
-                if (value =='true'):
-                    count_privileged = count_privileged + 1
-    print("ROOT PRIVILEGE check-->", count_privileged)
-    return count_privileged
-
-
 def check_pod_policy(yaml_file):
     count_missing_security_context = 0
     count_container_privilege_escalation = 0
@@ -83,7 +65,24 @@ def check_pod_policy(yaml_file):
             count_missing_security_context = count_missing_security_context + 1
 
     return count_missing_security_context,count_container_privilege_escalation,count_no_container_privilege_escalation
-#
+
+# check privileged value is True?
+def check_root_privilege(yaml_file):
+    count_privileged =0
+    keys = yaml_parser.get_key_values(yaml_file, constant.return_key)
+    if(constant.container_privilege_given in keys):
+        values = list(yaml_parser.find_all_value_for_keys(yaml_file,constant.container_privilege_given))
+        for value in values:
+            print ("ROOT PRIVILEGE value type-->",type(value),"VALUE-->",value)
+            if(type(value) is bool):
+                if(value is True):
+                    count_privileged = count_privileged + 1
+            elif(type(value is str)):
+                if (value =='true'):
+                    count_privileged = count_privileged + 1
+    print("ROOT PRIVILEGE check-->", count_privileged)
+    return count_privileged
+
 def check_linux_capability_pod(yaml_file):
     pass
 
