@@ -97,6 +97,7 @@ def check_network_policy(yaml_file):
         missing_network_flag = True
     elif(constant.network_policy_ingress in keys or constant.network_policy_egress in keys):
         missing_network_flag = True
+
     return missing_network_flag
 
 def check_update_strategy(yaml_file):
@@ -140,7 +141,7 @@ def check_resource_limit(yaml_file):
         keys = yaml_parser.get_key_values(yaml_file,constant.return_key)
         if(constant.pod_spec in keys and constant.pod_container in keys):
             if(constant.limit_resources in keys):
-                if(constant.limit_resources in keys) and (constant.limit_requests in keys):
+                if(constant.limit_memory in keys) and (constant.limit_requests in keys):
                     absent_flag = False
             #   else:
             #     return absent_flag
@@ -273,7 +274,7 @@ def check_yaml_load(source):
 
                     flag = check_network_policy(y)
                     if(flag is True):
-                        network_flagflag = True
+                        network_flag = True
 
 
                     #### Hard Coded Secrets
@@ -309,14 +310,13 @@ def check_yaml_load(source):
 
     print("NO RBAC in ",rbac_miss_count,"repositories out of ",len(subdirs))
     print("DEFAULT NAMESPACE COUNT---> ",namespace_count)
-    print(" NO TLS -->", no_TLS_count)
-    print(" NO RESOURCE LIMIT --->", no_limit_resource_count)
+    print("NO TLS -->", no_TLS_count)
+    print("NO RESOURCE LIMIT --->", no_limit_resource_count)
     print("USERNAME --->",username_count, "PASSWORD--->",password_count,"KEY---->",key_count)
     print("PRIVILEGE ESCALATION-->", privilege_escalation_count ,"MISSING SECURITY CONTEXT",missing_security_context_count, "PRIVILEGED CONTAINER-->", privileged_container_count)
     print("ROOT PRIVILEGE -->", count_root_privilege)
     print("NO ROLLING UPDATE -->", no_rolling_update_count, "out of ",replica_count,"instances")
     print("NETWORK POLICY MISSING in ", network_policy_miss_count, "repositories out of ", len(subdirs))
-
 
 
 if __name__ == "__main__":

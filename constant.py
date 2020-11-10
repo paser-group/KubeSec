@@ -33,6 +33,7 @@ network_policy_object = 'NetworkPolicy'
 network_policy_ingress_object = 'Ingress'
 network_policy_ingress = 'ingress'
 network_policy_egress = 'egress'
+network_ingress_enabled = 'enabled'
 
 #Pod Policy
 pod_spec = 'spec'

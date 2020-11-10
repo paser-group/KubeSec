@@ -34,18 +34,9 @@ def get_key_values(dictionary_or_list,key_or_value):
                 for value in get_key_values(item,key_or_value):
                     yield value
 
-def find_value_for_keys(yaml,key_):
-    #values = []
-        if yaml is not None:
-            if key_ in yaml:
-                value = yaml.get(key_)
-                return value
-            elif(type(yaml) is dict):
-                for key,value in yaml.items():
-                    if(type(value) is dict):
-                         return find_value_for_keys(value,key_)
 
- def find_all_value_for_keys(yaml,key_):
+
+def find_all_value_for_keys(yaml,key_):
     if (type(yaml) is dict):
         for key, value in yaml.items():
             if key_ == key:
@@ -54,11 +45,22 @@ def find_value_for_keys(yaml,key_):
             else:
                  for values in find_all_value_for_keys(value,key_):
                      yield values
+
     elif(type(yaml) is list):
         for item in yaml:
             for values in find_all_value_for_keys(item,key_):
                 yield values
 
+def find_value_for_keys(yaml,key_):
+    #values = []
+    if yaml is not None:
+        if key_ in yaml:
+            value = yaml.get(key_)
+            return value
+        elif(type(yaml) is dict):
+            for key,value in yaml.items():
+                if(type(value) is dict):
+                    return find_value_for_keys(value,key_)
 
 
 def parse_yaml_file(file_path):
@@ -82,7 +84,6 @@ def check_root_privilege(yaml_file):
     if(constant.container_privilege_given in keys):
         values = yaml_parser.find_value_for_keys(yaml_file,constant.container_privilege_given)
         print("WHAT HAPPENED--->",values)
-
         if(values):
             count_privileged = count_privileged + 1
     print("ROOT PRIVILEGE -->", count_privileged)
