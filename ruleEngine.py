@@ -4,8 +4,8 @@ import constant
 import pandas as pd
 
 #source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS"
-#source = "/Users/shamim/Downloads/k8s_data/"
-source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/" #justin@kubernetes/"
+source = "/Users/shamim/Downloads/k8s_data/"
+#source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/" #justin@kubernetes/"
 subdirs = os.listdir(source)
 
 
@@ -131,8 +131,19 @@ def check_update_strategy(yaml_file):
     #print("REPLICA-->",replica_count, "NO ROLLING UPDATE--->",no_rolling_update_count)
     return no_rolling_update_count, replica_count
 
-def check_network_egress_policy():
-    pass
+def check_network_egress_policy(yaml_file):
+    missing_egress = True
+    keys = yaml_parser.get_key_values(yaml_file, constant.return_key)
+    values = yaml_parser.get_key_values(yaml_file,constant.return_value)
+    kind_value = yaml_parser.find_value_for_keys(yaml_file,constant.kind)
+    if(kind_value == constant.network_policy_egress_object or kind_value == constant.network_policy_egress):
+        missing_egress =False
+    elif(constant.network_policy_egress in keys and kind_value == constant.network_policy_object):
+        missing_egress = False
+
+    return missing_egress
+
+
 
 def check_resource_limit(yaml_file):
     absent_flag = True
@@ -195,6 +206,8 @@ def check_yaml_load(source):
     rbac_miss_count = 0
     network_policy_miss_count = 0
 
+    network_egress_policy_miss_count = 0
+
     no_TLS_count = 0
     no_limit_resource_count =0
     count = 0
@@ -220,6 +233,8 @@ def check_yaml_load(source):
         rbac_flag = False
         # Assume Network flag present
         network_flag = False
+        # missing egress
+        network_egress_flag = False
         no_limit_resource =0
         u_count, p_count, k_count = 0, 0, 0
         source_dir = source + "/" + dir + "/"
@@ -276,6 +291,11 @@ def check_yaml_load(source):
                     if(flag is True):
                         network_flag = True
 
+                    #### NETWORK EGRESS POLICY
+                    e_flag = check_network_egress_policy(y)
+                    if(e_flag is True):
+                        network_egress_flag = True
+
 
                     #### Hard Coded Secrets
 
@@ -304,6 +324,9 @@ def check_yaml_load(source):
         if(network_flag is False):
             network_policy_miss_count = network_policy_miss_count + 1
 
+        if(network_egress_flag is False):
+            network_egress_policy_miss_count = network_egress_policy_miss_count + 1
+
         ##### WRITE IN A CSV FILE
 
 
@@ -317,6 +340,7 @@ def check_yaml_load(source):
     print("ROOT PRIVILEGE -->", count_root_privilege)
     print("NO ROLLING UPDATE -->", no_rolling_update_count, "out of ",replica_count,"instances")
     print("NETWORK POLICY MISSING in ", network_policy_miss_count, "repositories out of ", len(subdirs))
+    print("NETWORK EGRESS POLICY MISSING in ", network_egress_policy_miss_count, "repositories out of ", len(subdirs))
 
 
 if __name__ == "__main__":
