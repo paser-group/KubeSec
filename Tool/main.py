@@ -6,32 +6,33 @@ import pandas as pd
 
 
 #source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS"
-source = "/Users/shamim/Downloads/k8s_data/"
-#source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/" #justin@kubernetes/"
+#source = "/Users/shamim/Downloads/k8s_data/"
+source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/" #justin@kubernetes/"
 subdirs = os.listdir(source)
 
 def aggregate_all_functions(source):
     csv_list_per_file = []
-    namespace_count = 0
-    rbac_miss_count = 0
-    network_policy_miss_count = 0
-    network_egress_policy_miss_count = 0
+    csv_list_per_repo = []
+    namespace_count,namespace_count_old = 0,0
+    rbac_miss_count,rbac_miss_count_old = 0,0
+    network_policy_miss_count,network_policy_miss_count_old = 0,0
+    network_egress_policy_miss_count,network_egress_policy_miss_count_old = 0,0
 
-    no_TLS_count = 0
-    no_limit_resource_count =0
+    no_TLS_count,no_TLS_count_old = 0,0
+    no_limit_resource_count,no_limit_resource_count_old =0,0
     count = 0
 
-    username_count = 0
-    password_count = 0
-    key_count =0
+    username_count,username_count_old = 0,0
+    password_count,password_count_old = 0,0
+    key_count,key_count_old =0,0
 
-    missing_security_context_count = 0
-    privileged_container_count = 0
-    privilege_escalation_count = 0
+    missing_security_context_count,missing_security_context_count_old= 0,0
+    unspecified_privilege_escalation_count,unspecified_privileged_container_count_old = 0,0
+    privilege_escalation_count,privilege_escalation_count_old = 0,0
 
-    count_root_privilege = 0
+    count_root_privilege,count_root_privilege_old = 0,0
 
-    no_rolling_update_count = 0
+    no_rolling_update_count,no_rolling_update_count_old = 0,0
     replica_count = 0
 
     for dir in subdirs:
@@ -78,7 +79,7 @@ def aggregate_all_functions(source):
                     count_msc, count_pe, count_upe = ruleEngine.check_pod_policy(y)
                     #print("MISSING SECURITY CONTEXT-->",count_msc,"PRIVILEGE ESCALATION-->",count_pe,"PREVILEGE ESCALATION UNDEFINED", count_upe)
                     privilege_escalation_count = privilege_escalation_count + count_pe
-                    privileged_container_count = privileged_container_count + count_upe
+                    unspecified_privilege_escalation_count = unspecified_privilege_escalation_count + count_upe
                     missing_security_context_count = missing_security_context_count + count_msc
 
                     ### PRIVILEGE COUNT
@@ -121,8 +122,8 @@ def aggregate_all_functions(source):
                     else:
                         tuple_per_file = (dir, name, namespace, no_TLS, count_msc, count_pe, count_upe, count_root, no_rolling_update,u_count, p_count, k_count,False)
                     csv_list_per_file.append(tuple_per_file)
-                    data_frame = pd.DataFrame(csv_list_per_file)
-                    data_frame.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITHUB_all_per_file.csv',header=['REPO NAME','FILE NAME','DEFAULT NAMESPACE','HTTP WITHOUT TLS', 'MISSING SECURITY CONTEXT','PRIVILEGE ESCALATION','USPECIFIED PRIVILEGE ESCALATION','ROOR PRIVILEGE','NO ROLLING UPDATE','USERNAME','PASSWORD','KEY','SECURE FLAG'],index=False, encoding='utf-8')
+                    data_frame_file = pd.DataFrame(csv_list_per_file)
+                    data_frame_file.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITHUB_all_per_file.csv',header=['REPO NAME','FILE NAME','DEFAULT NAMESPACE','HTTP WITHOUT TLS', 'MISSING SECURITY CONTEXT','PRIVILEGE ESCALATION','USPECIFIED PRIVILEGE ESCALATION','ROOT PRIVILEGE','NO ROLLING UPDATE','USERNAME','PASSWORD','KEY','SECURE FLAG'],index=False, encoding='utf-8')
 
 
 
@@ -146,8 +147,30 @@ def aggregate_all_functions(source):
         if(network_egress_flag is False):
             network_egress_policy_miss_count = network_egress_policy_miss_count + 1
 
-        ##### WRITE IN A CSV FILE
+        ##### WRITE IN A CSV FILE FOR EACH REPO
 
+        tuple_per_repo = (dir, rbac_flag, network_flag, network_egress_flag, namespace_count - namespace_count_old,no_TLS_count - no_TLS_count_old,missing_security_context_count-missing_security_context_count_old,
+                          privilege_escalation_count-privilege_escalation_count_old, unspecified_privilege_escalation_count-unspecified_privileged_container_count_old,
+                          count_root_privilege - count_root_privilege_old, no_rolling_update_count- no_rolling_update_count_old,
+                          username_count - username_count_old, password_count -password_count_old, key_count - key_count_old)
+
+        namespace_count_old = namespace_count
+        no_TLS_count_old = no_TLS_count
+        missing_security_context_count_old = missing_security_context_count
+        privilege_escalation_count_old = privilege_escalation_count
+        unspecified_privileged_container_count_old = unspecified_privilege_escalation_count
+        count_root_privilege_old = count_root_privilege
+        no_rolling_update_count_old = no_rolling_update_count
+        username_count_old = username_count
+        password_count_old = password_count
+        key_count_old = key_count
+
+        csv_list_per_repo.append(tuple_per_repo)
+        data_frame_repo = pd.DataFrame(csv_list_per_repo)
+        data_frame_repo.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITLAB_all_per_repo.csv',
+                               header=['REPO NAME','RBAC FLAG','NETWORK POLICY FLAG', 'NETWORK EGRESS FLAG', 'DEFAULT NAMESPACE', 'HTTP WITHOUT TLS', 'MISSING SECURITY CONTEXT',
+                                                                                                         'PRIVILEGE ESCALATION', 'USPECIFIED PRIVILEGE ESCALATION',
+                                  'ROOT PRIVILEGE', 'NO ROLLING UPDATE', 'USERNAME', 'PASSWORD', 'KEY'],index=False, encoding='utf-8')
 
 
     print("NO RBAC in ",rbac_miss_count,"repositories out of ",len(subdirs))
@@ -155,7 +178,7 @@ def aggregate_all_functions(source):
     print("NO TLS -->", no_TLS_count)
     print("NO RESOURCE LIMIT --->", no_limit_resource_count)
     print("USERNAME --->",username_count, "PASSWORD--->",password_count,"KEY---->",key_count)
-    print("PRIVILEGE ESCALATION-->", privilege_escalation_count ,"MISSING SECURITY CONTEXT",missing_security_context_count, "PRIVILEGED CONTAINER-->", privileged_container_count)
+    print("PRIVILEGE ESCALATION-->", privilege_escalation_count ,"MISSING SECURITY CONTEXT",missing_security_context_count, "PRIVILEGED CONTAINER-->", unspecified_privilege_escalation_count)
     print("ROOT PRIVILEGE -->", count_root_privilege)
     print("NO ROLLING UPDATE -->", no_rolling_update_count, "out of ",replica_count,"instances")
     print("NETWORK POLICY MISSING in ", network_policy_miss_count, "repositories out of ", len(subdirs))
