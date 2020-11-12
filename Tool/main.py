@@ -6,8 +6,8 @@ import pandas as pd
 
 
 #source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS"
-#source = "/Users/shamim/Downloads/k8s_data/"
-source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/" #justin@kubernetes/"
+source = "/Users/shamim/Downloads/k8s_data/"
+#source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/" #justin@kubernetes/"
 subdirs = os.listdir(source)
 
 def aggregate_all_functions(source):
@@ -167,7 +167,7 @@ def aggregate_all_functions(source):
 
         csv_list_per_repo.append(tuple_per_repo)
         data_frame_repo = pd.DataFrame(csv_list_per_repo)
-        data_frame_repo.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITLAB_all_per_repo.csv',
+        data_frame_repo.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITHUB_all_per_repo.csv',
                                header=['REPO NAME','RBAC FLAG','NETWORK POLICY FLAG', 'NETWORK EGRESS FLAG', 'DEFAULT NAMESPACE', 'HTTP WITHOUT TLS', 'MISSING SECURITY CONTEXT',
                                                                                                          'PRIVILEGE ESCALATION', 'USPECIFIED PRIVILEGE ESCALATION',
                                   'ROOT PRIVILEGE', 'NO ROLLING UPDATE', 'USERNAME', 'PASSWORD', 'KEY'],index=False, encoding='utf-8')
