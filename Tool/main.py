@@ -5,12 +5,14 @@ import yaml_parser
 import pandas as pd
 
 
-#source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS"
-source = "/Users/shamim/Downloads/k8s_data/"
+source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS"
+#source = "/Users/shamim/Downloads/k8s_data/"
 #source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/" #justin@kubernetes/"
 subdirs = os.listdir(source)
 
 def aggregate_all_functions(source):
+    count_total_yaml_file =0
+    count_total_insecure_yaml_file =0
     csv_list_per_file = []
     csv_list_per_repo = []
     namespace_count,namespace_count_old = 0,0
@@ -119,12 +121,14 @@ def aggregate_all_functions(source):
 
                     #### Write Results to CSV file
                     if(namespace+no_TLS+count_msc+count_upe+count_pe+count_root+no_rolling_update+u_count+p_count+k_count>0):
+                        count_total_insecure_yaml_file = count_total_insecure_yaml_file + 1
                         tuple_per_file = (dir, name, namespace,no_TLS,count_msc,count_pe,count_upe,count_root,no_rolling_update,u_count,p_count,k_count,True)
                     else:
                         tuple_per_file = (dir, name, namespace, no_TLS, count_msc, count_pe, count_upe, count_root, no_rolling_update,u_count, p_count, k_count,False)
                     csv_list_per_file.append(tuple_per_file)
                     data_frame_file = pd.DataFrame(csv_list_per_file)
-                    data_frame_file.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITHUB_all_per_file.csv',header=['REPO NAME','FILE NAME','DEFAULT NAMESPACE','HTTP WITHOUT TLS', 'MISSING SECURITY CONTEXT','PRIVILEGE ESCALATION','USPECIFIED PRIVILEGE ESCALATION','ROOT PRIVILEGE','NO ROLLING UPDATE','USERNAME','PASSWORD','KEY','SECURE FLAG'],index=False, encoding='utf-8')
+                    data_frame_file.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITHUB_sample_all_per_file.csv',header=['REPO NAME','FILE NAME','DEFAULT NAMESPACE','HTTP WITHOUT TLS', 'MISSING SECURITY CONTEXT','PRIVILEGE ESCALATION','USPECIFIED PRIVILEGE ESCALATION','ROOT PRIVILEGE','NO ROLLING UPDATE','USERNAME','PASSWORD','KEY','SECURE FLAG'],index=False, encoding='utf-8')
+                    count_total_yaml_file = count_total_yaml_file + 1
 
 
 
@@ -174,7 +178,7 @@ def aggregate_all_functions(source):
 
         csv_list_per_repo.append(tuple_per_repo)
         data_frame_repo = pd.DataFrame(csv_list_per_repo)
-        data_frame_repo.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITHUB_all_per_repo.csv',
+        data_frame_repo.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITHUB_sample_all_per_repo.csv',
                                header=['REPO NAME','RBAC FLAG','NETWORK POLICY FLAG', 'NETWORK EGRESS FLAG', 'DEFAULT NAMESPACE', 'HTTP WITHOUT TLS', 'MISSING SECURITY CONTEXT',
                                                                                                          'PRIVILEGE ESCALATION', 'USPECIFIED PRIVILEGE ESCALATION',
                                   'ROOT PRIVILEGE', 'NO ROLLING UPDATE', 'USERNAME', 'PASSWORD', 'KEY'],index=False, encoding='utf-8')
@@ -191,6 +195,7 @@ def aggregate_all_functions(source):
     print("NETWORK POLICY MISSING in ", network_policy_miss_count, "repositories out of ", len(subdirs))
     print("NETWORK EGRESS POLICY MISSING in ", network_egress_policy_miss_count, "repositories out of ", len(subdirs))
     print("FOUND",count_insecure_repo," INSECURE repositories out of ",len(subdirs), "repositories" )
+    print("FOUND",count_total_insecure_yaml_file," INSECURE YAML files out of ",count_total_yaml_file, "total files" )
 
 
 if __name__ == "__main__":
