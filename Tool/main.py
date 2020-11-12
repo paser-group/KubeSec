@@ -34,6 +34,7 @@ def aggregate_all_functions(source):
 
     no_rolling_update_count,no_rolling_update_count_old = 0,0
     replica_count = 0
+    count_insecure_repo = 0
 
     for dir in subdirs:
         print("\n\n========",dir,"--->",count,"===========\n\n")
@@ -154,6 +155,12 @@ def aggregate_all_functions(source):
                           count_root_privilege - count_root_privilege_old, no_rolling_update_count- no_rolling_update_count_old,
                           username_count - username_count_old, password_count -password_count_old, key_count - key_count_old)
 
+        if(rbac_flag is False or network_flag is False or network_egress_flag is False or (namespace_count - namespace_count_old + no_TLS_count - no_TLS_count_old +missing_security_context_count-missing_security_context_count_old +
+                          privilege_escalation_count-privilege_escalation_count_old + unspecified_privilege_escalation_count-unspecified_privileged_container_count_old+
+                          count_root_privilege - count_root_privilege_old+ no_rolling_update_count- no_rolling_update_count_old+
+                          username_count - username_count_old+ password_count -password_count_old+ key_count - key_count_old)>0):
+            count_insecure_repo = count_insecure_repo + 1
+
         namespace_count_old = namespace_count
         no_TLS_count_old = no_TLS_count
         missing_security_context_count_old = missing_security_context_count
@@ -183,6 +190,7 @@ def aggregate_all_functions(source):
     print("NO ROLLING UPDATE -->", no_rolling_update_count, "out of ",replica_count,"instances")
     print("NETWORK POLICY MISSING in ", network_policy_miss_count, "repositories out of ", len(subdirs))
     print("NETWORK EGRESS POLICY MISSING in ", network_egress_policy_miss_count, "repositories out of ", len(subdirs))
+    print("FOUND",count_insecure_repo," INSECURE repositories out of ",len(subdirs), "repositories" )
 
 
 if __name__ == "__main__":

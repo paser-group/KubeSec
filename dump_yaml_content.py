@@ -10,9 +10,9 @@ gitlab_dataset = "/GITLAB_REPOS"
 github_data= dataset_location+github_dataset
 gitlab_data= dataset_location+gitlab_dataset
 
-#create github_sample_yaml_data.txt and gitlab_yaml_data.txt in the same directory of this dump_yaml_content.py
-#replace github_sample_yaml_data.txt with gitlab_yaml_data.txt for gitlab
-yaml_data = open("github_sample_yaml_data.txt", "w")
+#create GITHUB_sample_yaml_data.txt and GITLAB_yaml_data.txt in the same directory of this dump_yaml_content.py
+#replace GITHUB_sample_yaml_data.txt with GITLAB_yaml_data.txt for gitlab
+yaml_data = open("GITHUB_sample_yaml_data.txt", "w")
 
 
 
