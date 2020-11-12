@@ -10,9 +10,9 @@ gitlab_dataset = "/GITLAB_REPOS"
 github_data= dataset_location+github_dataset
 gitlab_data= dataset_location+gitlab_dataset
 
-#create github_yaml_data.txt and gitlab_yaml_data.txt in the same directory of this dump_yaml_content.py
-#replace github_yaml_data.txt with gitlab_yaml_data.txt for gitlab
-yaml_data = open("github_yaml_data.txt", "w")
+#create github_sample_yaml_data.txt and gitlab_yaml_data.txt in the same directory of this dump_yaml_content.py
+#replace github_sample_yaml_data.txt with gitlab_yaml_data.txt for gitlab
+yaml_data = open("github_sample_yaml_data.txt", "w")
 
 
 
@@ -30,10 +30,10 @@ for (dirpath, dirname, filenames) in os.walk(github_data,topdown=True):
             repo_name = relpath_repo.split('/')
 
             yaml_data.write("\n"+"==" * 7 + "Repository Name" + "==" * 7)
-            print("\n", repo_name[0], file=yaml_data)
+            #print("\n", repo_name[0], file=yaml_data)
             original_file_name, file_extension = os.path.splitext(filename)
             yaml_data.write("\n"+"=="*7+"File path"+"=="*7)
-            print("\n",relpath, file=yaml_data)
+            #print("\n",relpath, file=yaml_data)
 
             with io.open(filepath, 'r') as f:
                 code_content = f.read()
