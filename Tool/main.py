@@ -48,7 +48,6 @@ def aggregate_all_functions(source):
         u_count, p_count, k_count = 0, 0, 0
         source_dir = source + "/" + dir + "/"
         for (root, directory, files) in os.walk(source_dir, topdown=True):
-
             for name in files:
                 file_path = root + "/" + name
                 #print(name)
@@ -77,7 +76,7 @@ def aggregate_all_functions(source):
                     #### CHECK POD POLICY
 
                     count_msc, count_pe, count_upe = ruleEngine.check_pod_policy(y)
-                    print("MISSING SECURITY CONTEXT-->",count_msc,"PRIVILEGE ESCALATION-->",count_pe,"PREVILEGE ESCALATION UNDEFINED", count_upe)
+                    #print("MISSING SECURITY CONTEXT-->",count_msc,"PRIVILEGE ESCALATION-->",count_pe,"PREVILEGE ESCALATION UNDEFINED", count_upe)
                     privilege_escalation_count = privilege_escalation_count + count_pe
                     privileged_container_count = privileged_container_count + count_upe
                     missing_security_context_count = missing_security_context_count + count_msc
@@ -109,19 +108,21 @@ def aggregate_all_functions(source):
                     #### Hard Coded Secrets
 
                     u_count, p_count, k_count = ruleEngine.check_hardcoded_secrets(y)
-                   # print("USERNAME --->", u_count, "PASSWORD--->", p_count, "KEY---->", k_count)
+                    #print("USERNAME --->", u_count, "PASSWORD--->", p_count, "KEY---->", k_count)
 
                     #### Update Hard coded count
                     username_count = username_count + u_count
                     password_count = password_count + p_count
                     key_count = key_count + k_count
+
+                    #### Write Results to CSV file
                     if(namespace+no_TLS+count_msc+count_upe+count_pe+count_root+no_rolling_update+u_count+p_count+k_count>0):
                         tuple_per_file = (dir, name, namespace,no_TLS,count_msc,count_pe,count_upe,count_root,no_rolling_update,u_count,p_count,k_count,True)
                     else:
                         tuple_per_file = (dir, name, namespace, no_TLS, count_msc, count_pe, count_upe, count_root, no_rolling_update,u_count, p_count, k_count,False)
                     csv_list_per_file.append(tuple_per_file)
                     data_frame = pd.DataFrame(csv_list_per_file)
-                    data_frame.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITLAB_per_file.csv',header=['REPO NAME','FILE NAME','DEFAULT NAMESPACE','HTTP WITHOUT TLS', 'MISSING SECURITY CONTEXT','PRIVILEGE ESCALATION','USPECIFIED PRIVILEGE ESCALATION','ROOR PRIVILEGE','NO ROLLING UPDATE','USERNAME','PASSWORD','KEY','SECURE FLAG'],index=False, encoding='utf-8')
+                    data_frame.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITHUB_per_file.csv',header=['REPO NAME','FILE NAME','DEFAULT NAMESPACE','HTTP WITHOUT TLS', 'MISSING SECURITY CONTEXT','PRIVILEGE ESCALATION','USPECIFIED PRIVILEGE ESCALATION','ROOR PRIVILEGE','NO ROLLING UPDATE','USERNAME','PASSWORD','KEY','SECURE FLAG'],index=False, encoding='utf-8')
 
 
 
