@@ -4,10 +4,11 @@ import constant
 import yaml_parser
 import pandas as pd
 
-
-source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS"
-#source = "/Users/shamim/Downloads/k8s_data/"
-#source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/" #justin@kubernetes/"
+##### UPDATE SOURCE Data set location
+ 
+#source = "/Users/shamim/Downloads/K8s_inspection/GITHUB_REPOS"
+#source = "/Users/shamim/Research/kube_data/"
+source = "/Users/shamim/Downloads/K8s_inspection/GITLAB_REPOS/" #justin@kubernetes/"
 subdirs = os.listdir(source)
 
 def aggregate_all_functions(source):
@@ -127,7 +128,9 @@ def aggregate_all_functions(source):
                         tuple_per_file = (dir, name, namespace, no_TLS, count_msc, count_pe, count_upe, count_root, no_rolling_update,u_count, p_count, k_count,False)
                     csv_list_per_file.append(tuple_per_file)
                     data_frame_file = pd.DataFrame(csv_list_per_file)
-                    data_frame_file.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITHUB_sample_all_per_file.csv',header=['REPO NAME','FILE NAME','DEFAULT NAMESPACE','HTTP WITHOUT TLS', 'MISSING SECURITY CONTEXT','PRIVILEGE ESCALATION','USPECIFIED PRIVILEGE ESCALATION','ROOT PRIVILEGE','NO ROLLING UPDATE','USERNAME','PASSWORD','KEY','SECURE FLAG'],index=False, encoding='utf-8')
+
+                    #### UPDATE CSV FILE
+                    data_frame_file.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/DEMO_per_file.csv',header=['REPO NAME','FILE NAME','DEFAULT NAMESPACE','HTTP WITHOUT TLS', 'MISSING SECURITY CONTEXT','PRIVILEGE ESCALATION','USPECIFIED PRIVILEGE ESCALATION','ROOT PRIVILEGE','NO ROLLING UPDATE','USERNAME','PASSWORD','KEY','SECURE FLAG'],index=False, encoding='utf-8')
                     count_total_yaml_file = count_total_yaml_file + 1
 
 
@@ -178,22 +181,32 @@ def aggregate_all_functions(source):
 
         csv_list_per_repo.append(tuple_per_repo)
         data_frame_repo = pd.DataFrame(csv_list_per_repo)
-        data_frame_repo.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/GITHUB_sample_all_per_repo.csv',
+
+        ##### Update CSV files
+        data_frame_repo.to_csv('/Users/shamim/Fall-20/CSC-6903/KubeSec/DEMO_per_repo.csv',
                                header=['REPO NAME','RBAC FLAG','NETWORK POLICY FLAG', 'NETWORK EGRESS FLAG', 'DEFAULT NAMESPACE', 'HTTP WITHOUT TLS', 'MISSING SECURITY CONTEXT',
                                                                                                          'PRIVILEGE ESCALATION', 'USPECIFIED PRIVILEGE ESCALATION',
                                   'ROOT PRIVILEGE', 'NO ROLLING UPDATE', 'USERNAME', 'PASSWORD', 'KEY'],index=False, encoding='utf-8')
 
+    count_pod_configuration = privilege_escalation_count+missing_security_context_count+unspecified_privilege_escalation_count+count_root_privilege
 
-    print("NO RBAC in ",rbac_miss_count,"repositories out of ",len(subdirs))
-    print("DEFAULT NAMESPACE COUNT---> ",namespace_count)
-    print("NO TLS -->", no_TLS_count)
-    print("NO RESOURCE LIMIT --->", no_limit_resource_count)
-    print("USERNAME --->",username_count, "PASSWORD--->",password_count,"KEY---->",key_count)
-    print("PRIVILEGE ESCALATION-->", privilege_escalation_count ,"MISSING SECURITY CONTEXT",missing_security_context_count, "PRIVILEGED CONTAINER-->", unspecified_privilege_escalation_count)
-    print("ROOT PRIVILEGE -->", count_root_privilege)
-    print("NO ROLLING UPDATE -->", no_rolling_update_count, "out of ",replica_count,"instances")
-    print("NETWORK POLICY MISSING in ", network_policy_miss_count, "repositories out of ", len(subdirs))
-    print("NETWORK EGRESS POLICY MISSING in ", network_egress_policy_miss_count, "repositories out of ", len(subdirs))
+
+    print("---------------------------------------------------------------------------------------------")
+    print("-----------------------------------------RESULTS---------------------------------------------")
+    print("VIOLATION OF LEAST PRIVILEGE --->",rbac_miss_count,"repositories out of ",len(subdirs))
+    print("USE OF DEFAULT NAMESPACE ---> ",namespace_count)
+    print("INSECURE HTTP -->", no_TLS_count)
+    print("UNBOUNDED RESOURCE LIMIT --->", no_limit_resource_count)
+    print("EXPOSED SECRET --->",username_count+password_count+key_count,"\nBREAKDOWN #####-->","USERNAME --->",username_count, "PASSWORD--->",password_count,"KEY---->",key_count)
+    print("INSECURE POD CONFIGURATION--->",count_pod_configuration,"\nBREAKDOWN #####--->","PRIVILEGE ESCALATION--->", privilege_escalation_count ,"MISSING SECURITY CONTEXT --->",missing_security_context_count, "PRIVILEGED CONTAINER--->", unspecified_privilege_escalation_count,"ROOT PRIVILEGE --->", count_root_privilege)
+    print("IMPROPER UPDATE POLICY-->", no_rolling_update_count, "out of ",replica_count,"instances")
+    print("UNDEFINED NETWORK POLICY", network_policy_miss_count, "repositories out of ", len(subdirs))
+
+    print("-----------------------------------------------------------------------------------------------")
+    print("-----------------------------------------STATISTICS---------------------------------------------")
+
+    #print("NETWORK POLICY MISSING in ", network_policy_miss_count, "repositories out of ", len(subdirs))
+    #print("NETWORK EGRESS POLICY MISSING in ", network_egress_policy_miss_count, "repositories out of ", len(subdirs))
     print("FOUND",count_insecure_repo," INSECURE repositories out of ",len(subdirs), "repositories" )
     print("FOUND",count_total_insecure_yaml_file," INSECURE YAML files out of ",count_total_yaml_file, "total files" )
 
