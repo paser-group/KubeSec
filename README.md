@@ -17,3 +17,7 @@
 ##### Inspect Results
 1. In console observe detailed summary result for each of the violations.
 2. Go to the CSV files and see the results for per repository and per file.
+
+##### Video Demonstration of the Project
+https://drive.google.com/file/d/11AH-JrHRHKoPJBrMmyPmCz7EVS9JgL2F/view?usp=sharing
+
