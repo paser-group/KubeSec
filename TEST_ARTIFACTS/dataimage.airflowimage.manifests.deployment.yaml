@@ -1,0 +1,227 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: airflow-deployment
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: airflow
+      run: airflow
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: airflow
+        run: airflow
+    spec:
+
+      volumes:
+        - name: airflow-secrets
+          secret:
+            secretName: airflow
+        - name: analytics-repo
+          emptyDir: {}
+        - name: airflow-logs
+          persistentVolumeClaim:
+            claimName: persistent-airflow-logs
+        - name: kube-config
+          emptyDir: {}
+
+      containers:
+      # airflow scheduler
+      - name: scheduler
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
+        resources:
+          limits:
+            memory: "4000Mi"
+          requests:
+            memory: "1000Mi"
+            cpu: "1000m"
+        env:
+          # General
+          - name: GIT_BRANCH
+            value: "master"
+          - name: IN_CLUSTER
+            value: "False"
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: "/secrets/cloudsql/cloudsql-credentials"
+          - name: NAMESPACE
+            valueFrom:
+              secretKeyRef:
+                name: airflow
+                key: NAMESPACE
+          - name: SLACK_API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: airflow
+                key: SLACK_API_TOKEN
+          # Secret Env Vars
+          - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+            valueFrom:
+              secretKeyRef:
+                name: airflow
+                key: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+          - name: AIRFLOW__CORE__FERNET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: airflow
+                key: AIRFLOW__CORE__FERNET_KEY
+        volumeMounts:
+          - name: airflow-secrets
+            mountPath: /secrets/cloudsql/
+            readOnly: true
+          - name: analytics-repo
+            mountPath: /usr/local/airflow/analytics
+          - name: airflow-logs
+            mountPath: /usr/local/airflow/logs
+          - name: kube-config
+            mountPath: /root/.kube/
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "gcloud auth activate-service-account --key-file /secrets/cloudsql/cloudsql-credentials"]
+        command: ["airflow"]
+        args: ["scheduler"]
+
+      # airflow webserver
+      - name: webserver
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
+        resources:
+          limits:
+            memory: "1000Mi"
+          requests:
+            memory: "200Mi"
+            cpu: "500m"
+        env:
+          # General
+          - name: GIT_BRANCH
+            value: "master"
+          - name: IN_CLUSTER
+            value: "False"
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: "/secrets/cloudsql/cloudsql-credentials"
+          - name: NAMESPACE
+            valueFrom:
+              secretKeyRef:
+                name: airflow
+                key: NAMESPACE
+          - name: SLACK_API_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: airflow
+                key: SLACK_API_TOKEN
+          # Secret Env Vars
+          - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+            valueFrom:
+              secretKeyRef:
+                name: airflow
+                key: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+          - name: AIRFLOW__CORE__FERNET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: airflow
+                key: AIRFLOW__CORE__FERNET_KEY
+        volumeMounts:
+          - name: airflow-secrets
+            mountPath: /secrets/cloudsql/
+            readOnly: true
+          - name: analytics-repo
+            mountPath: /usr/local/airflow/analytics
+          - name: airflow-logs
+            mountPath: /usr/local/airflow/logs
+          - name: kube-config
+            mountPath: /root/.kube/
+        command: ["airflow"]
+        args: ["webserver"]
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: "/health"
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          successThreshold: 1
+          timeoutSeconds: 10
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: "/health"
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          successThreshold: 1
+          timeoutSeconds: 10
+
+      # periodically clone the repo to get updated code/dags
+      - name: watcher
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
+        resources:
+          limits:
+            memory: "100Mi"
+          requests:
+            memory: "50Mi"
+        env:
+          - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+            valueFrom:
+              secretKeyRef:
+                name: airflow
+                key: AIRFLOW__CORE__SQL_ALCHEMY_CONN
+          - name: AIRFLOW__CORE__FERNET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: airflow
+                key: AIRFLOW__CORE__FERNET_KEY
+        volumeMounts:
+          - name: analytics-repo
+            mountPath: /usr/local/airflow/analytics
+          - name: airflow-secrets
+            mountPath: /secrets/cloudsql/
+            readOnly: true
+          - name: kube-config
+            mountPath: /root/.kube/
+        command: ["repo_watcher.py"]
+
+        # cloudsql proxy for airflow to talk to the database
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances=gitlab-analysis:us-west1:airflow-pg=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/cloudsql-credentials"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+          - name: airflow-secrets
+            mountPath: /secrets/cloudsql/
+            readOnly: true
+
+      initContainers:
+      # Get the credentials for k8s before the other repos start up
+      - name: init-creds
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
+        command: ["/bin/sh", "-c"]
+        args: ["gcloud auth activate-service-account --key-file /secrets/cloudsql/cloudsql-credentials && \
+                gcloud container clusters get-credentials data-ops --region us-west1-a --project gitlab-analysis"]
+        volumeMounts:
+          - name: airflow-secrets
+            mountPath: /secrets/cloudsql/
+            readOnly: true
+          - name: kube-config
+            mountPath: /root/.kube/
+      # Copy the repo before the other containers start up
+      - name: init-repo
+        image: registry.gitlab.com/gitlab-data/data-image/airflow-image:latest
+        command: ["/bin/sh", "-c"]
+        args: ["git clone -b master --single-branch $REPO --depth 1"]
+        env:
+          - name: REPO
+            value: "https://gitlab.com/gitlab-data/analytics.git"
+        volumeMounts:
+          - name: analytics-repo
+            mountPath: /usr/local/airflow/analytics
