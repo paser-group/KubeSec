@@ -19,6 +19,9 @@ def loadYAML( script_ ):
     return dict2ret 
 
 def keyMiner(dic_, value):
+  '''
+  If you give a value, then this function gets the corresponding key, and the keys that call the key 
+  '''
   if dic_ == value:
     return [dic_]
   elif isinstance(dic_, dict):
@@ -33,27 +36,23 @@ def keyMiner(dic_, value):
       if p:
         return [str(i)] + p
 
-'''
-def getKeyRecursively(  dict_, depth_ = 0 , parent = 'ROOT' ) :
+
+
+def getKeyRecursively(  dict_, list2hold,  depth_ = 0  ) :
     if  isinstance(dict_, dict) :
-        # for key_, val_ in dict_.items():       
         for key_, val_ in sorted(dict_.items(), key=lambda x: x[0]):              
             if isinstance(val_, dict):
-                print(key_, depth_, parent)
+                list2hold.append( (key_, depth_) )
                 depth_ += 1 
-                parent  = key_     
-                getKeyRecursively( val_, depth_, parent ) 
-                print('*'*50)
+                getKeyRecursively( val_, list2hold,  depth_ ) 
             elif isinstance(val_, list):
                 for listItem in val_:
                         if( isinstance( listItem, dict ) ):
-                            print(key_, depth_, parent )  
+                            list2hold.append( (key_, depth_) )
                             depth_ += 1 
-                            getKeyRecursively( listItem, depth_, parent )     
-                print('='*50)
+                            getKeyRecursively( listItem, list2hold,  depth_ )     
             else: 
-                print( key_, depth_, parent )
-'''
+                list2hold.append( (key_, depth_) )                
 
             
 
@@ -63,3 +62,6 @@ if __name__=='__main__':
     # print('-'*100)
     # print( keyMiner(dic, '/usr/local/airflow/analytics' ) )
 
+    temp_ = []
+    getKeyRecursively( dic, temp_ )
+    print(len( temp_ ) )

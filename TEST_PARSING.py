@@ -35,7 +35,15 @@ class TestParsing( unittest.TestCase ):
         scriptName   = TEST_CONSTANTS._test_yaml
         yaml_as_dict = parser.loadYAML( scriptName )
         key_lis      = parser.keyMiner( yaml_as_dict, TEST_CONSTANTS._value_for_key )
-        self.assertEqual(oracle_value, key_lis[-2] ,  TEST_CONSTANTS._common_error_string + oracle_value  )                   
+        self.assertEqual(oracle_value, key_lis[-2] ,  TEST_CONSTANTS._common_error_string + oracle_value  )         
+
+    def testKeyCount(self):     
+        oracle_value = 226 
+        scriptName   = TEST_CONSTANTS._test_yaml
+        yaml_as_dict = parser.loadYAML( scriptName )
+        key_lis      = [] 
+        parser.getKeyRecursively  ( yaml_as_dict, key_lis )
+        self.assertEqual(oracle_value, len(key_lis) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )                     
 
 
 if __name__ == '__main__':
