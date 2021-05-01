@@ -39,6 +39,9 @@ def keyMiner(dic_, value):
 
 
 def getKeyRecursively(  dict_, list2hold,  depth_ = 0  ) :
+    '''
+    gives you ALL keys in a regular/nested dictionary 
+    '''
     if  isinstance(dict_, dict) :
         for key_, val_ in sorted(dict_.items(), key=lambda x: x[0]):              
             if isinstance(val_, dict):
@@ -54,7 +57,21 @@ def getKeyRecursively(  dict_, list2hold,  depth_ = 0  ) :
             else: 
                 list2hold.append( (key_, depth_) )                
 
-            
+def getValuesRecursively(  dict_   ) :
+    '''
+    gives you ALL values in a regular/nested dictionary 
+    '''
+    if  isinstance(dict_, dict) :
+        for val_ in dict_.values():
+            yield from getValuesRecursively(val_) 
+    elif isinstance(dict_, list):
+        for v_ in dict_:
+            yield from getValuesRecursively(v_)
+    else: 
+        yield dict_
+
+
+
 
 if __name__=='__main__':
     dic = loadYAML('TEST_ARTIFACTS/dataimage.airflowimage.manifests.deployment.yaml')
@@ -62,6 +79,5 @@ if __name__=='__main__':
     # print('-'*100)
     # print( keyMiner(dic, '/usr/local/airflow/analytics' ) )
 
-    temp_ = []
-    getKeyRecursively( dic, temp_ )
-    print(len( temp_ ) )
+    temp_ = list (getValuesRecursively( dic  ) )
+    print( len(temp_) )

@@ -45,6 +45,12 @@ class TestParsing( unittest.TestCase ):
         parser.getKeyRecursively  ( yaml_as_dict, key_lis )
         self.assertEqual(oracle_value, len(key_lis) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )                     
 
+    def testValueCount(self):     
+        oracle_value = 151 
+        scriptName   = TEST_CONSTANTS._test_yaml
+        yaml_as_dict = parser.loadYAML( scriptName )
+        key_lis      = list( parser.getValuesRecursively  ( yaml_as_dict ) )
+        self.assertEqual(oracle_value, len(key_lis) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )                     
 
 if __name__ == '__main__':
     unittest.main()
