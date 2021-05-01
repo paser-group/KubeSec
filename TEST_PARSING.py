@@ -24,14 +24,14 @@ class TestParsing( unittest.TestCase ):
         self.assertEqual(oracle_value, len(key_lis) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )   
 
     def testKeyPath1(self):     
-        oracle_value = 'spec'
+        oracle_value = TEST_CONSTANTS._spec_kw 
         scriptName   = TEST_CONSTANTS._test_yaml
         yaml_as_dict = parser.loadYAML( scriptName )
         key_lis      = parser.keyMiner( yaml_as_dict, TEST_CONSTANTS._value_for_key )
         self.assertEqual(oracle_value, key_lis[0] ,  TEST_CONSTANTS._common_error_string + oracle_value  )   
 
     def testKeyPath2(self):     
-        oracle_value = 'mountPath'
+        oracle_value = TEST_CONSTANTS._mount_path_kw 
         scriptName   = TEST_CONSTANTS._test_yaml
         yaml_as_dict = parser.loadYAML( scriptName )
         key_lis      = parser.keyMiner( yaml_as_dict, TEST_CONSTANTS._value_for_key )
