@@ -23,7 +23,7 @@ Need to ignore files like:
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/roles/container-engine/containerd/defaults/main.yml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/obtao@kubernetes/kubernetes/elastic-stack/values.yaml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-owners-service/src/main/resources/application.yml
-- /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-notifications-service/src/main/resources/application.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-notifications-service/src/main/resources/application.yml 
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/e2e/spec/restore.backup.values.yaml 
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/opendatahub-operator/deploy/olm-catalog/opendatahub-operator/0.3.0/opendatahub-operator.v0.3.0.clusterserviceversion.yaml  (`K8S ClusterServiceVersion` needs to be excuted by command line so no guarantee)
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/opendatahub-operator/deploy/olm-catalog/opendatahub-operator/0.2.0/opendatahub-operator.v0.2.0.clusterserviceversion.yaml (`K8S ClusterServiceVersion` needs to be excuted by command line so no guarantee)
@@ -53,7 +53,7 @@ Need to ignore files like:
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/roles/etcd/meta/main.yml 
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_servicemonitorCustomResourceDefinition.yaml 
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-vets-service/src/main/resources/application-k8s.yml 
-- /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-customers-service/src/main/resources/application-k8s.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-customers-service/src/main/resources/application-k8s.yml 
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-visits-service/src/main/resources/application-k8s.yml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-vets-service/src/main/resources/application.yml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-customers-service/src/main/resources/application.yml
@@ -65,8 +65,11 @@ Need to ignore files like:
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/contrib/kvm-setup/roles/kvm-setup/tasks/user.yml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/contrib/vault/roles/vault/meta/main.yml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/contrib/vault/roles/vault/defaults/main.yml
-
-
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/crds/SGCluster.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/koris/deploy/manifests/ext-cloud-openstack.yml (`kind: List`)
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/doc/data/descriptions/stackgres-operator.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/roles/download/tasks/prep_kubeadm_images.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/contrib/vault/roles/vault/tasks/shared/config_ca.yml
 
 
 
@@ -233,6 +236,8 @@ used in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/h
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/minecraft/values.yaml is TP as used in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/minecraft/templates/secrets.yaml`
 
 
+
+
 ##### False positive instances 
 
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubecf/deploy/helm/kubecf/values.yaml : invalid username 
@@ -253,3 +258,106 @@ by any helm charts
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/postgres/values-production.yaml and /Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/test/sample-secret-1.yaml are FPs as values are not used 
 
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/keycloak/values.yaml FP for passowrd as not strings are assigned 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/crds/SGBackup.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/data-image/airflow_image/prometheus_config.yml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_servicemonitorCustomResourceDefinition.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/dex/00-dex.yml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/demo-kubernetes-components/mongo-express.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/e2e/spec/sql-scripts.values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/e2e/spec/aks/backup-with-aks-storage.values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/e2e/spec/eks/backup-with-s3-storage.values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/githook/config/samples/2-v1alpha1_githooks.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/deploy/varnish.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/load-balancer/lego/deployment.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubecf/deploy/helm/kubecf/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/cert-manager/letsencrypt.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/cert-manager/letsencrypt.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/bank-vaults/vault-secrets-webhook/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/gitlab-runner/gitlab-runner-docker-deployment.yml
+
+^ FP due to parsing issues 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/varnish-coffee.yaml (`valueFrom:` inferring data from environment, reff: https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/). Also the follwoing: 
+
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/varnish-system.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/clusterwide/varnish.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-controller/varnish-coffee.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-controller/varnish-tea.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-varnish-ns/varnish-coffee.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-varnish-ns/varnish-tea.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/demo-kubernetes-components/mongo.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes/configurations/deployment.yml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/roles/network_plugin/calico/tasks/typha_certs.yml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/linode-kubernetes-engine-demo/test-mongo-express.yaml
+
+
+
+
+
+> FP in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/sni/values.yaml` and `/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/hello/values.yaml` (`key:` and `crt:` ) as these are not used 
+
+
+#### No Rolling Updates 
+
+##### True Positive Instances 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/deploy/varnish.yaml , TP, not using rolling update and also used by a deployment 
+> Also, the following:
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/varnish-coffee.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/varnish-system.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/clusterwide/varnish.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-controller/varnish-coffee.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-controller/varnish-tea.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-varnish-ns/varnish-tea.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/namespace/varnish.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/turkce-kubernetes/kubernetes-playground/imperative-declarative-yontemler/yaml/gcr-deployment.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/test/e2e/deleteTLSsecret/cafe.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/other.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/coffee.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/tea.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/clusterwide/other.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/clusterwide/coffee.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/clusterwide/tea.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-controller/coffee.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-controller/tea.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-varnish-ns/coffee.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-varnish-ns/tea.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/namespace/cafe.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/externalname/cafe.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/sni/beverage.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/hello/cafe.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/hello/cafe.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/basic-kubectl-commands/demo-test-deployment.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/basic-microservice-for-learning/kubernetes_dev/randomnum_svc.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/basic-microservice-for-learning/kubernetes_prod/randomnum_svc.yaml
+- 
+
+
+
+> Random example collected from Internet for testing
+```
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-test
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      service: http-server
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        service: http-server
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.10.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+```
+
+##### False Positive Instances 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/sni/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/hello/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/varnish_pod_template/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/hello/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/keycloak/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/tango-base/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/turkce-kubernetes/kubernetes-playground/replication-yontemlerine-genel-bakis/replication/rs.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/turkce-kubernetes/kubernetes-playground/replication-yontemlerine-genel-bakis/replication/rc.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/42_prometheus_Prometheus.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/values-tea.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/values-other.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/values-coffee.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/clusterwide/values-tea.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/clusterwide/values-other.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/clusterwide/values-coffee.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-controller/values-tea.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-controller/values-coffee.yaml, 
+
+^ all of these are FPs they do not use `type: RollingUpdate`, but they do not map to `kind: Deployment` 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment-result.yaml : this is a FP because even with `type: RollingUpdate` and `kind: Deployment` , the tool throws an alert 
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/obtao@kubernetes/kubernetes/app/php-fpm-deployment.yaml : this is a FP because even with `type: RollingUpdate` and `kind: Deployment` , the tool throws an alert 
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/obtao@kubernetes/kubernetes/app/nginx-deployment.yaml : this is a FP because even with `type: RollingUpdate` and `kind: Deployment` , the tool throws an alert 
+
