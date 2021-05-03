@@ -70,8 +70,9 @@ Need to ignore files like:
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/doc/data/descriptions/stackgres-operator.yaml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/roles/download/tasks/prep_kubeadm_images.yml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/contrib/vault/roles/vault/tasks/shared/config_ca.yml
-
-
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubecf/.gitlab/deploy/runner/kubernetes/values.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/roles/kubernetes-apps/cluster_roles/defaults/main.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/contrib/dind/roles/dind-host/tasks/main.yaml
 
 #### Helm charts 
 
@@ -317,6 +318,7 @@ by any helm charts
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/basic-kubectl-commands/demo-test-deployment.yaml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/basic-microservice-for-learning/kubernetes_dev/randomnum_svc.yaml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/basic-microservice-for-learning/kubernetes_prod/randomnum_svc.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubecf/.concourse/pipeline.yaml 
 - 
 
 
@@ -361,3 +363,35 @@ spec:
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/obtao@kubernetes/kubernetes/app/php-fpm-deployment.yaml : this is a FP because even with `type: RollingUpdate` and `kind: Deployment` , the tool throws an alert 
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/obtao@kubernetes/kubernetes/app/nginx-deployment.yaml : this is a FP because even with `type: RollingUpdate` and `kind: Deployment` , the tool throws an alert 
 
+
+#### Privilege Escalation
+
+##### True Positive Instances 
+
+> `/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/test/sample-pod.yaml` for the following
+```
+kind: Pod
+metadata:
+ name: sample-pod
+spec:
+ #hostNetwork: true
+ containers:
+ - name: sample-pod
+   #image: call518/oaas-init-container
+   image: call518/oaas-ocata
+   securityContext:
+     privileged: true
+```
+
+Same thing happens for 
+- `/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/test/sample-nfs-server.yaml`
+- `/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/test/sample-neutron.yaml`
+- `/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/test/sample-pod-1.yaml`
+- `/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-newton/nfs-server.yaml`
+- `/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-pike/nfs-server.yaml`
+- `/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/nfs-server.yaml`
+- 
+
+##### False Positive Instances 
+
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/turkce-kubernetes/kubernetes-playground/daemonset-ve-kullanimi/daemonset/fluentd-ds.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/calico-cumulus/demo-multicast/daemonset-pimd.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-extras/files/templates/calico/calico.yaml, this are FPs as `kind: DaemonSet` 
