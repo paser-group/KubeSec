@@ -38,6 +38,34 @@ Need to ignore files like:
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-frontend-service/src/main/resources/application-k8s.yml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-customers-service/src/main/resources/application-k8s.yml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-visits-service/src/main/resources/application-k8s.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/clusters//clouds.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/contrib/dind/group_vars/all/distro.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/opendatahub-operator/deploy/kafka/operator-objects/045-Crd-kafkamirrormaker.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/opendatahub-operator/deploy/kafka/operator-objects/040-Crd-kafka.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/onap_oom_automatic_installation/roles/oom_postconfigure/tasks/main.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/doc/data/descriptions/stackgres-operator.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/opendatahub-operator/deploy/crds/opendatahub_v1alpha1_opendatahub_cr.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/opendatahub-operator/roles/grafana/tasks/main.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/opendatahub-operator/deploy/kafka/operator-objects/042-Crd-kafkaconnects2i.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/opendatahub-operator/deploy/kafka/operator-objects/041-Crd-kafkaconnect.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_alertmanagerCustomResourceDefinition.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/contrib/dind/roles/dind-cluster/tasks/main.yaml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/roles/etcd/meta/main.yml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_servicemonitorCustomResourceDefinition.yaml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-vets-service/src/main/resources/application-k8s.yml 
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-customers-service/src/main/resources/application-k8s.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-visits-service/src/main/resources/application-k8s.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-vets-service/src/main/resources/application.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-customers-service/src/main/resources/application.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/spring-petclinic-visits-service/src/main/resources/application.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/roles/adduser/tasks/main.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/roles/bootstrap-os/molecule/default/molecule.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/roles/kubernetes/preinstall/meta/main.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/roles/kubernetes/client/tasks/main.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/contrib/kvm-setup/roles/kvm-setup/tasks/user.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/contrib/vault/roles/vault/meta/main.yml
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/contrib/vault/roles/vault/defaults/main.yml
+
 
 
 
@@ -187,3 +215,41 @@ Note to self: Other ways to store config maps are using Pod, with the `valueFrom
 
 
 
+#### Hard-coded Secrets 
+
+##### True positive instances 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/values.yaml ... user name and password 
+used in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/integrate-grafana-job.yaml `, so TP 
+
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/tango-base/values.yaml is TP as used in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/tango-base/templates/databaseds.yaml`, `/Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/tango-base/templates/tangodb.yaml` 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/archiver/values.yaml is TP as values used in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/archiver/templates/archiverdb.yaml`, `/Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/archiver/templates/cleaner.yaml`
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/dsh-lmc-prototype/values.yaml is TP as it used in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/dsh-lmc-prototype/templates/dslhm.yaml` 
+
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/minecraft/values.yaml is TP as used in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/minecraft/templates/secrets.yaml`
+
+
+##### False positive instances 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubecf/deploy/helm/kubecf/values.yaml : invalid username 
+```
+      bbs:
+        name: diego
+        password: ~
+        username: ~
+```
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/nextcloud/values.yaml , valid user name, but the values are not used
+by any helm charts 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/django-k8s-starter//rabbit-values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/postgres/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/keycloak/values.yaml,  and : valid user name and password but not used, so FP 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/partial-deployments/tango-db-standalone/values.yaml and /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/matomo/values.yaml are FP as values not used 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/postgres/values-production.yaml and /Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/test/sample-secret-1.yaml are FPs as values are not used 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/keycloak/values.yaml FP for passowrd as not strings are assigned 
