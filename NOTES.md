@@ -135,10 +135,8 @@ spec:
 so TP. 
 
 
-##### False  Positive Instances 
-
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/helm/cp-helm-charts/examples/ksql-demo.yaml 
-> This is an example of false positive as it default namespace is not used for a deployment 
+> This is an example of true positive as it default namespace is used for a pod 
 
 ```
 apiVersion: v1
@@ -147,6 +145,9 @@ metadata:
   name: ksql-demo
   namespace: default
 ```
+
+##### False  Positive Instances 
+
 
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/deploy/serviceaccount-varnish.yaml ... another example of a FP 
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/keycloak/ingress.yaml ... another example of a FP, as the default namespace is used in the file as a service, whcih is not used anywhere else 
@@ -383,6 +384,8 @@ spec:
      privileged: true
 ```
 
+`securityContext:  privileged: true` this is the part that is probelmatic 
+
 Same thing happens for 
 - `/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/test/sample-nfs-server.yaml`
 - `/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/test/sample-neutron.yaml`
@@ -395,3 +398,76 @@ Same thing happens for
 ##### False Positive Instances 
 
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/turkce-kubernetes/kubernetes-playground/daemonset-ve-kullanimi/daemonset/fluentd-ds.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/calico-cumulus/demo-multicast/daemonset-pimd.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-extras/files/templates/calico/calico.yaml, this are FPs as `kind: DaemonSet` 
+
+
+### Rules to detect secuirty anti-patterns: 
+
+- `Missing security context`: A kubernetes Pod or Deployment does not have security context specified i.e., the following is not used 
+```
+spec:
+  securityContext:
+```
+
+- `Over-allocated privilege`: A Kubernetes Pod or Deployment uses `allowPrivilegeEscalation=true` or `privileged: true` while specifying security context, i.e., the following is used
+```
+spec:
+ #hostNetwork: true
+ containers:
+ - name: sample-pod
+   #image: call518/oaas-init-container
+   image: call518/oaas-ocata
+   securityContext:
+     privileged: true
+``` 
+
+- `Default namespace`: A Kubernetes pod or deployment uses `namespace: default` 
+
+- `Insecure HTTP`: Use of `http://` as a value, where they relevant key maps back to a pod or deployment 
+
+- `Hard-coded secret`: Use or hard-coded user name and passwords , must map to a pod, deployment, configmap, or a helm deployment 
+
+- `Not rolling update`: not using `type: RollingUpdate` in a deployment as shown in below
+
+```
+> reff: https://tachingchen.com/blog/kubernetes-rolling-update-with-deployment/ 
+strategy:
+  # indicate which strategy we want for rolling update
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 1
+```
+
+- `Unrestricted Network`:  No NetworkPolicy for a pod. Need to remember _NetworkPolicies are an application-centric construct which allow you to specify how a pod is allowed to communicate with various network "entities" (we use the word "entity" here to avoid overloading the more common terms such as "endpoints" and "services", which have specific Kubernetes connotations) over the network._
+
+`kind: NetworkPolicy` needs to be in a YAML file, and the same file should also specify a pod selector label *x*, where *x* is a label of a pod. Example below: 
+
+```
+- podSelector:
+        matchLabels:
+          role: frontend
+```
+
+
+Another way is to use any one of the following:
+```
+spec:
+  podSelector: {}
+  ingress:
+  - {}
+```
+
+```
+spec:
+  podSelector: {}
+  egress:
+  - {}
+```
+
+- `Unrestricted Resource Request`:  No resource limit for Pod i.e. the following is not specified for a pod: both cpu and memory 
+must be present  
+```
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+```
