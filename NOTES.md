@@ -449,7 +449,7 @@ strategy:
 ```
 
 
-Another way is to use any one of the following:
+Another way is to use any one of the following that alllows all ingress and egress connections respectively:
 ```
 spec:
   podSelector: {}

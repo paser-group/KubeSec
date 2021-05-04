@@ -50,7 +50,34 @@ class TestParsing( unittest.TestCase ):
         scriptName   = TEST_CONSTANTS._test_yaml
         yaml_as_dict = parser.loadYAML( scriptName )
         key_lis      = list( parser.getValuesRecursively  ( yaml_as_dict ) )
-        self.assertEqual(oracle_value, len(key_lis) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )                     
+        self.assertEqual(oracle_value, len(key_lis) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )    
+
+    def testK8SYAMLValidity1(self):     
+        self.assertTrue( parser.checkIfValidK8SYaml(TEST_CONSTANTS._valid_test_yaml) , TEST_CONSTANTS._common_error_string + TEST_CONSTANTS._true_kw )
+
+    def testK8SYAMLValidity2(self):     
+        self.assertFalse( parser.checkIfValidK8SYaml(TEST_CONSTANTS._invalid_test_yaml1), TEST_CONSTANTS._common_error_string + TEST_CONSTANTS._false_kw )
+    
+    def testK8SYAMLValidity3(self):     
+        self.assertFalse( parser.checkIfValidK8SYaml(TEST_CONSTANTS._invalid_test_yaml2), TEST_CONSTANTS._common_error_string + TEST_CONSTANTS._false_kw )
+
+    def testK8SYAMLValidity4(self):     
+        self.assertFalse( parser.checkIfValidK8SYaml(TEST_CONSTANTS._invalid_test_yaml3), TEST_CONSTANTS._common_error_string + TEST_CONSTANTS._false_kw )
+
+    def testK8SYAMLValidity5(self):     
+        self.assertFalse( parser.checkIfValidK8SYaml(TEST_CONSTANTS._invalid_test_yaml4), TEST_CONSTANTS._common_error_string + TEST_CONSTANTS._false_kw )
+
+    def testK8SYAMLValidity6(self):     
+        self.assertFalse( parser.checkIfValidK8SYaml(TEST_CONSTANTS._invalid_test_yaml5 ), TEST_CONSTANTS._common_error_string + TEST_CONSTANTS._false_kw )
+
+    def testK8SYAMLValidity7(self):     
+        self.assertFalse( parser.checkIfValidK8SYaml(TEST_CONSTANTS._invalid_test_yaml6 ), TEST_CONSTANTS._common_error_string + TEST_CONSTANTS._false_kw )
+    
+    def testK8SYAMLValidity8(self):     
+        self.assertFalse( parser.checkIfValidK8SYaml(TEST_CONSTANTS._invalid_test_yaml7 ), TEST_CONSTANTS._common_error_string + TEST_CONSTANTS._false_kw )
+
+    def testK8SYAMLValidity9(self):     
+        self.assertFalse( parser.checkIfValidK8SYaml(TEST_CONSTANTS._invalid_test_yaml8 ), TEST_CONSTANTS._common_error_string + TEST_CONSTANTS._false_kw )
 
 if __name__ == '__main__':
     unittest.main()
