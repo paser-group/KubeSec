@@ -19,6 +19,10 @@ _invalid_test_yaml7 = 'TEST_ARTIFACTS/reso.app.yml'
 _invalid_test_yaml8 = 'TEST_ARTIFACTS/no.kind.yaml'
 _true_kw            = 'TRUE'
 _false_kw           = 'FALSE'
+_key_kw             = 'key'
+_delay_kw           = 'initialDelaySeconds'
+_privilege_kw       = 'allowPrivilegeEscalation'
+_name_kw            = 'name'
 
 
 _common_error_string = 'SHOULD BE '

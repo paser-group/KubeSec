@@ -21,7 +21,7 @@ def loadYAML( script_ ):
 def keyMiner(dic_, value):
   '''
   If you give a value, then this function gets the corresponding key, and the keys that call the key 
-  i.e. the whoel hierarchy 
+  i.e. the whole hierarchy 
   '''
   if dic_ == value:
     return [dic_]
@@ -88,11 +88,40 @@ def checkIfValidK8SYaml(path2yaml):
             val2ret = True 
     return val2ret
 
+
+def getValsFromKey(dict_, target, list_holder  ):
+    '''
+    If you give a key, then this function gets the corresponding values 
+    Multiple values are returned if there are keys with the same name  
+    '''    
+    if ( isinstance( dict_, dict ) ):
+        for key, value in dict_.items():
+            if isinstance(value, dict):
+                getValsFromKey(value, target, list_holder)
+            elif isinstance(value, list):
+                for ls in value:
+                    getValsFromKey(ls, target, list_holder)
+            elif key == target:
+                list_holder.append( value )
+
+
 if __name__=='__main__':
     dic = loadYAML('TEST_ARTIFACTS/dataimage.airflowimage.manifests.deployment.yaml')
     # getKeyRecursively( dic )
     # print('-'*100)
     # print( keyMiner(dic, '/usr/local/airflow/analytics' ) )
+    # temp_ = list (getValuesRecursively( dic  ) )
+    # print( len(temp_) )
 
-    temp_ = list (getValuesRecursively( dic  ) )
-    print( len(temp_) )
+    temp_ = []
+    getValsFromKey( dic,  'allowPrivilegeEscalation', temp_ )
+    temp_ = []
+    getValsFromKey( dic,  'name', temp_ )
+    temp_ = []
+    getValsFromKey( dic,  'mountPath', temp_ )
+    print(   temp_ ) 
+    # print( next(  getValFromKey( dic,  'runAsUser' ) ) )
+    # print( next(  getValFromKey( dic,  'mountPath' ) ) )
+    # print( next(  getValFromKey( dic,  'name' ) ) )
+    
+    

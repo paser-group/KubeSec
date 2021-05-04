@@ -79,5 +79,45 @@ class TestParsing( unittest.TestCase ):
     def testK8SYAMLValidity9(self):     
         self.assertFalse( parser.checkIfValidK8SYaml(TEST_CONSTANTS._invalid_test_yaml8 ), TEST_CONSTANTS._common_error_string + TEST_CONSTANTS._false_kw )
 
+    def testValueFromKey1(self):     
+        oracle_value = 53
+        scriptName   = TEST_CONSTANTS._test_yaml
+        yaml_as_dict = parser.loadYAML( scriptName )
+        temp_list    = []
+        parser.getValsFromKey(yaml_as_dict, TEST_CONSTANTS._name_kw , temp_list  )
+        self.assertEqual(oracle_value, len(temp_list) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )    
+
+    def testValueFromKey2(self):     
+        oracle_value = 15
+        scriptName   = TEST_CONSTANTS._test_yaml
+        yaml_as_dict = parser.loadYAML( scriptName )
+        temp_list    = []
+        parser.getValsFromKey(yaml_as_dict, TEST_CONSTANTS._mount_path_kw , temp_list  )
+        self.assertEqual(oracle_value, len(temp_list) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )    
+
+    def testValueFromKey3(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS._test_yaml
+        yaml_as_dict = parser.loadYAML( scriptName )
+        temp_list    = []
+        parser.getValsFromKey(yaml_as_dict, TEST_CONSTANTS._privilege_kw  , temp_list  )
+        self.assertEqual(oracle_value, len(temp_list) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+              
+    def testValueFromKey4(self):     
+        oracle_value = 2
+        scriptName   = TEST_CONSTANTS._test_yaml
+        yaml_as_dict = parser.loadYAML( scriptName )
+        temp_list    = []
+        parser.getValsFromKey(yaml_as_dict, TEST_CONSTANTS._delay_kw , temp_list  )
+        self.assertEqual(oracle_value, len(temp_list) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testValueFromKey5(self):     
+        oracle_value = 10
+        scriptName   = TEST_CONSTANTS._test_yaml
+        yaml_as_dict = parser.loadYAML( scriptName )
+        temp_list    = []
+        parser.getValsFromKey(yaml_as_dict, TEST_CONSTANTS._key_kw , temp_list  )
+        self.assertEqual(oracle_value, len(temp_list) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
 if __name__ == '__main__':
     unittest.main()
