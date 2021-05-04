@@ -1,0 +1,156 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: dex
+  namespace: kube-system
+  labels:
+    k8s-app: dex
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        k8s-app: dex
+    spec:
+      serviceAccountName: dex # This is created below
+      containers:
+      - image: quay.io/dexidp/dex:v2.10.0
+        name: dex
+        command: ["/usr/local/bin/dex", "serve", "/etc/dex/cfg/config.yaml"]
+
+        ports:
+        - name: https
+          containerPort: 5556
+
+        volumeMounts:
+        - name: config
+          mountPath: /etc/dex/cfg
+        - name: tls
+          mountPath: /etc/dex/tls
+
+        env:
+        - name: GITLAB_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: gitlab-client
+              key: client-id
+        - name: GITLAB_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: gitlab-client
+              key: client-secret
+
+      volumes:
+      - name: config
+        configMap:
+          name: dex
+          items:
+          - key: config.yaml
+            path: config.yaml
+      - name: tls
+        secret:
+          secretName: dex.tls
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: dex
+  namespace: kube-system
+  labels:
+    k8s-app: dex
+data:
+  config.yaml: |
+    # 1.1 Substitute this with your Floating IP
+    issuer: https://%%FLOATING_IP%%:32000
+    storage:
+      type: kubernetes
+      config:
+        inCluster: true
+    web:
+      https: 0.0.0.0:5556
+      tlsCert: /etc/dex/tls/tls.crt
+      tlsKey: /etc/dex/tls/tls.key
+    connectors:
+      - type: gitlab
+        id: gitlab
+        name: Gitlab
+        config:
+          # 1.2 (Optional): Enter the URL of your Gitlab instance
+          baseURL: https://gitlab.com
+          # Those environment variables are automatically substituted by
+          # mounting the secret 'gitlab-client'
+          clientID: $GITLAB_CLIENT_ID
+          clientSecret: $GITLAB_CLIENT_SECRET
+          # 1.3 The URL Gitlab redirects to. Substitute with with your
+          # Floating IP
+          redirectURI: https://%%FLOATING_IP%%:32000/callback
+    oauth2:
+      skipApprovalScreen: true
+
+    staticClients:
+    - id: example-app
+      redirectURIs:
+      # 1.4 The URL Dex redirects to. Substitute with with your Floating IP
+      - 'http://%%FLOATING_IP%%:5555/callback'
+      name: 'Example App'
+      # base64 for 'example-app-secret'
+      secret: ZXhhbXBsZS1hcHAtc2VjcmV0
+
+    enablePasswordDB: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dex
+  namespace: kube-system
+  labels:
+    k8s-app: dex
+spec:
+  type: NodePort
+  ports:
+  - name: dex
+    port: 5556
+    protocol: TCP
+    targetPort: 5556
+    nodePort: 32000
+  selector:
+    k8s-app: dex
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dex
+  namespace: kube-system
+  labels:
+    k8s-app: dex
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: dex
+  namespace: kube-system
+  labels:
+    k8s-app: dex
+rules:
+- apiGroups: ["dex.coreos.com"] # API group created by dex
+  resources: ["*"]
+  verbs: ["*"]
+- apiGroups: ["apiextensions.k8s.io"]
+  resources: ["customresourcedefinitions"]
+  verbs: ["create"] # To manage its own resources, dex must be able to create customresourcedefinitions
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: dex
+  namespace: kube-system
+  labels:
+    k8s-app: dex
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: dex
+subjects:
+- kind: ServiceAccount
+  name: dex           # Service account assigned to the dex pod, created above
+  namespace: kube-system  # The namespace dex is running in
