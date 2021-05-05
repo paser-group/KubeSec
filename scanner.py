@@ -117,7 +117,6 @@ def scanSingleManifest( path_to_script ):
     # print(templ_match_) 
     # print(valid_taints) 
 
-
     return within_match_, templ_match_, valid_taints 
 
 
@@ -126,5 +125,6 @@ if __name__ == '__main__':
     # test_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment-result.yaml'
     # scanSingleManifest(test_yaml) 
     # another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/values.yaml'
-    another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/minecraft/values.yaml'
-    scanSingleManifest( another_yaml ) 
+    # another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/minecraft/values.yaml'
+    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/hello/values.yaml'
+    scanSingleManifest( fp_yaml ) 
