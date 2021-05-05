@@ -16,6 +16,12 @@ VALUE_KW                     = 'values'
 SERVICE_KW                   = 'services'
 INGRESS_KW                   = 'k8s-ingress'
 YAML_SKIPPING_TEXT           = ''
+YAML_EXTENSION               = 'yaml'
+YML_EXTENSION                = 'yml'
+TEMPLATES_DIR_KW             = '/templates/'
+DOT_SYMBOL                   = '.'
+HELM_VALUE_KW                = 'Values' 
+VALU_FROM_KW                 = 'valueFrom'
 
 SECRET_USER_LIST             = ['user']
 SECRET_PASSWORD_LIST         = ['pwd', 'password', 'passwd', 'admin_pass'] 

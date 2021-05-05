@@ -6,8 +6,6 @@ Parser to file YAML files
 
 import yaml
 import constants 
-key_lis = []
-
 
 def loadYAML( script_ ):
     dict2ret = {}
@@ -112,21 +110,26 @@ def checkIfValidHelm(path_script):
     return val_ret
 
 
+def readYAMLAsStr( path_script ):
+    yaml_as_str = constants.YAML_SKIPPING_TEXT
+    with open( path_script , constants.FILE_READ_FLAG) as file_:
+        yaml_as_str = file_.read()
+    return yaml_as_str
+
+
 if __name__=='__main__':
-    dic = loadYAML('TEST_ARTIFACTS/dataimage.airflowimage.manifests.deployment.yaml')
+    dic = loadYAML('/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/templates/integrate-grafana-job.yaml')
     # getKeyRecursively( dic )
     # print('-'*100)
     # print( keyMiner(dic, '/usr/local/airflow/analytics' ) )
-    # temp_ = list (getValuesRecursively( dic  ) )
-    # print( len(temp_) )
 
-    temp_ = []
-    getValsFromKey( dic,  'allowPrivilegeEscalation', temp_ )
-    temp_ = []
-    getValsFromKey( dic,  'name', temp_ )
-    temp_ = []
-    getValsFromKey( dic,  'mountPath', temp_ )
-    print(   temp_ ) 
+    # temp_ = []
+    # getValsFromKey( dic,  'allowPrivilegeEscalation', temp_ )
+    # temp_ = []
+    # getValsFromKey( dic,  'name', temp_ )
+    # temp_ = []
+    # getValsFromKey( dic,  'mountPath', temp_ )
+    # print(   temp_ ) 
     # print( next(  getValFromKey( dic,  'runAsUser' ) ) )
     # print( next(  getValFromKey( dic,  'mountPath' ) ) )
     # print( next(  getValFromKey( dic,  'name' ) ) )

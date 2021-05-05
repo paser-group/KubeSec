@@ -5,6 +5,7 @@ Code to detect security anti-patterns
 '''
 import parser 
 import constants 
+import graphtaint 
 
 
 def isValidUserName(uName): 
@@ -107,12 +108,23 @@ def scanSingleManifest( path_to_script ):
     elif ( parser.checkIfValidHelm( path_to_script )) :
         dict_secret = scanForSecrets( yaml_dict )
     
-    return dict_secret 
+    '''
+    taint tracking zone for secret dictionary 
+    '''
+    # print(dict_secret)
+    within_match_, templ_match_, valid_taints  = graphtaint.mineSecretGraph(path_to_script, yaml_dict, dict_secret) 
+    # print(within_match_) 
+    # print(templ_match_) 
+    # print(valid_taints) 
+
+
+    return within_match_, templ_match_, valid_taints 
 
 
 
 if __name__ == '__main__':
     # test_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment-result.yaml'
     # scanSingleManifest(test_yaml) 
-    another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/sni/values.yaml'
+    # another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/values.yaml'
+    another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/minecraft/values.yaml'
     scanSingleManifest( another_yaml ) 
