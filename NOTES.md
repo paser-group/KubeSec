@@ -225,7 +225,7 @@ Note to self: Other ways to store config maps are using Pod, with the `valueFrom
 ##### True positive instances 
 
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/values.yaml ... user name and password 
-used in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/integrate-grafana-job.yaml `, so TP 
+used in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/templates/integrate-grafana-job.yaml`, so TP 
 
 
 > `/Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/tango-base/values.yaml` is TP as used in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/tango-base/templates/databaseds.yaml`, `/Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/tango-base/templates/tangodb.yaml` 
