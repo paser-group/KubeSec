@@ -14,6 +14,7 @@ HELM_KW                      = 'helm'
 CHART_KW                     = 'chart'
 VALUE_KW                     = 'values'
 SERVICE_KW                   = 'services'
+INGRESS_KW                   = 'k8s-ingress'
 YAML_SKIPPING_TEXT           = ''
 
 SECRET_USER_LIST             = ['user']
@@ -21,3 +22,5 @@ SECRET_PASSWORD_LIST         = ['pwd', 'password', 'passwd', 'admin_pass']
 FORBIDDEN_USER_NAMES         = ['domain', 'group', 'mode', 'schema', 'email', '_tenant', '_tree_dn', '_attribute', '_emulation', '_allow_', '_emulation', '%(', '_age'] 
 FORBIDDEN_PASS_NAMES         = ['_auth', '_file', '_path', '_age', '_content', '_hash'] 
 INVALID_SECRET_CONFIG_VALUES = [ ':undef', '[]', '/',  'hiera', 'unset', 'undefined', '%(' ]  
+LEGIT_KEY_NAMES              = ['crt', 'key']
+VALID_KEY_STRING             = ['-----BEGIN CERTIFICATE-----', '-----BEGIN RSA PRIVATE KEY-----']

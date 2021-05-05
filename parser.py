@@ -107,7 +107,7 @@ def getValsFromKey(dict_, target, list_holder  ):
 
 def checkIfValidHelm(path_script):
     val_ret = False 
-    if ( (constants.HELM_KW in path_script) or (constants.CHART_KW in path_script) or (constants.SERVICE_KW in path_script) )  and (constants.VALUE_KW in path_script) :
+    if ( (constants.HELM_KW in path_script) or (constants.CHART_KW in path_script) or (constants.SERVICE_KW in path_script) or (constants.INGRESS_KW in path_script) )  and (constants.VALUE_KW in path_script) :
         val_ret = True 
     return val_ret
 

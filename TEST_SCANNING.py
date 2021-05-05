@@ -81,5 +81,19 @@ class TestParsing( unittest.TestCase ):
         secret_dict  = scanner.scanForSecrets( yaml_as_dict )
         self.assertEqual(oracle_value, len(secret_dict) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )              
 
+    def testSecret11(self):     
+        oracle_value = 2 
+        scriptName   = TEST_CONSTANTS._cert_yaml
+        yaml_as_dict = parser.loadYAML( scriptName )
+        secret_dict  = scanner.scanForSecrets( yaml_as_dict )
+        self.assertEqual(oracle_value, len(secret_dict) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )              
+
+    def testSecret12(self):     
+        oracle_value = 2
+        scriptName   = TEST_CONSTANTS._rsa_key_yaml
+        yaml_as_dict = parser.loadYAML( scriptName )
+        secret_dict  = scanner.scanForSecrets( yaml_as_dict )
+        self.assertEqual(oracle_value, len(secret_dict) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )              
+
 if __name__ == '__main__':
     unittest.main()

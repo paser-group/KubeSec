@@ -1,0 +1,68 @@
+apps:
+  coffee:
+    image: nginxdemos/hello:plain-text
+    replicas: 2
+  tea:
+    image: nginxdemos/hello:plain-text
+    replicas: 3
+
+ingress:
+  name: cafe-ingress
+  rules:
+  - host: cafe.example.com
+    paths:
+    - path: /tea
+      app: tea
+    - path: /coffee
+      app: coffee
+  tlsSecrets:
+  - name: cafe-tls-secret
+    crt: |
+      -----BEGIN CERTIFICATE-----
+      MIIDWTCCAkECFHb8EN0l0QwiR4eKKIW6h172z+JrMA0GCSqGSIb3DQEBCwUAMGgx
+      CzAJBgNVBAYTAkRFMRAwDgYDVQQIDAdIYW1idXJnMRAwDgYDVQQHDAdIYW1idXJn
+      MRowGAYDVQQKDBFHcmVlbiBNaWRnZXQgQ2FmZTEZMBcGA1UEAwwQY2FmZS5leGFt
+      cGxlLmNvbTAgFw0yMDA1MDQxNzA5NTlaGA8yMTIwMDQxMDE3MDk1OVowaDELMAkG
+      A1UEBhMCREUxEDAOBgNVBAgMB0hhbWJ1cmcxEDAOBgNVBAcMB0hhbWJ1cmcxGjAY
+      BgNVBAoMEUdyZWVuIE1pZGdldCBDYWZlMRkwFwYDVQQDDBBjYWZlLmV4YW1wbGUu
+      Y29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAts0HCq6fq9gv0uEa
+      3iOruZ3GnctdCoeGjrQQ4Fh2cQoMm/i3pkDUt6x2pLTQhxlN3oH3WEo1a24r/3S8
+      Xfy6Xf0Pti+dDiCqAwMd6veu56RItVMO1pmx1wDjGFTuplpnPRtz8EKsaKYfjZd1
+      BabdhkWhsA9g3nns8+lqeNbvebhk7hiv9lpgDWAnBie+hioan4WQdPZm1/bANH6o
+      +oWDu1o6Gdrk/iaj2pR73VTFsR2UEmSTpXa35W7/nsmgADIc4RovU+9ho1I4/fSy
+      jgVlZVBz29yLaDyNuoZljzNhvGqq1wW6Jq/v1uBOPxNH1k3ZQJl4jlG0tsoASnm7
+      mr9hewIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQBMNCVYMTdlaNaTjJ5Cznk9Gd+u
+      TSIFmOCetTOt3l0Xe0bSTxboT6Oz9nFDMP2A2HRK/GTp25ec+Ek1iiCIF47RcsGp
+      Cdug+x4wQVP3pxakJ/odFN1ReZGZCjNwBltxlRXwJhArK5PWmQppmMZPrW1UYW8y
+      x+m5UREzOzWga6EIlhpMEfgNa0BNCL/2gPaz2MpKXq5We93IDe2O0nlRrrVoDHU2
+      GFMhTpWSLkloaMzIMlcKR0IGyezG9waVgsliS00bYKp8eRJ5SqCUYvCMuApjoyzW
+      N2w59p6t5xE7Ktb0cmhZg83ISPTBlGqVJxF0clLob5nWyeutXNkP/KOi38PI
+      -----END CERTIFICATE-----
+    key: |
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEpAIBAAKCAQEAts0HCq6fq9gv0uEa3iOruZ3GnctdCoeGjrQQ4Fh2cQoMm/i3
+      pkDUt6x2pLTQhxlN3oH3WEo1a24r/3S8Xfy6Xf0Pti+dDiCqAwMd6veu56RItVMO
+      1pmx1wDjGFTuplpnPRtz8EKsaKYfjZd1BabdhkWhsA9g3nns8+lqeNbvebhk7hiv
+      9lpgDWAnBie+hioan4WQdPZm1/bANH6o+oWDu1o6Gdrk/iaj2pR73VTFsR2UEmST
+      pXa35W7/nsmgADIc4RovU+9ho1I4/fSyjgVlZVBz29yLaDyNuoZljzNhvGqq1wW6
+      Jq/v1uBOPxNH1k3ZQJl4jlG0tsoASnm7mr9hewIDAQABAoIBAES7vsQTeNIijYjb
+      P0D7ZJx8aKv4RVmqL7wElLvmR1KllqwmztbiVZlibZHssuO5bgAWGizGamOkn0KE
+      YDduyZyBhKDaMlGXkpVjXKJ20vsiWHxlaJTkYWwYV0tU1A8UuvDNG8DhMPaAUCjr
+      JAMmBPFxySPsBF5itefYgkJBfvXi7sobaCM6A75D+dBLMeq2q+YbIQH/cAojHYfV
+      7ypyQ1QaY+wsDiCM6n9Qjk4krmHZ/z39y8mO71ytFcMfJJad8LKM5J4p9Qu99qeb
+      IRDOT/Sb9QXLXWTeCDv5JWPYyFH2u3e/8GsvQLbXYYbfWLNoU6RDaFSc2wmkOwUH
+      U8pSCDECgYEA3KIQcme//6B2jP31Coa2f8hsENd0nL+EDR9erXLSUga2l0YNPJZj
+      W6VnNdaeGq92B7Wxgj+dSeeSBdIRhXwABOHHjruG+gotdRRyoO1ldw7mJjN/q3Wx
+      A1fpJ+J00S1ZO1FbukKZmR7smTS7i73a8V7At3dyjCG6WxErP3N5NM8CgYEA1Bp5
+      yYIH8oJmPsuJt501k9nU4SdxxQJpb6uZ9QCBqbEsGkWE3vtLErlU8Rnm2HuirMvD
+      8Q3OsuoupdCTChrJJ04oL/2r60oTGapeDe4BuRM+DRAZ2trCwXy3nT26bZ/DJtur
+      Hqvt0tey9ee9MiVHWF2biZejd+KMUxPCCoZVS5UCgYEApbz8m+SCH3Yb+DgB7oFZ
+      8M3PGCuxxto7SVxKVANQKRwv551Q7jWOt9adnJz3Mdai1JHRoaVF87GISOUQEnUe
+      0owEy5zlfUlN8oiEv4z1zqUbkJDZFCUZ7wgH9tUvqb7mLCAmxtmm5paLZ19sj0H0
+      iaMDJA8PtmLTyfswwL5uy5MCgYEArdBMgU+nx5oIw+j0IJ4aK+FUzHYQi4vgb3zG
+      m7ogh7kDFTxnGHwCF4P9Ed9SB5G5y7ToC4BvJLs4IvX7qUouEaHA2SMeYaDAakXs
+      8albjBkyvm21Yl3nP7w+lALj5bYIrK1TW701FZVhuJaBurhF8So0rdqwQSxMJkCI
+      wSs4dskCgYBr1LO3GINSwGHt73ueZDtnvFvO+EFDaOFFbsEd14O1mluM4+WrIZky
+      inZCvygJWzgHF9LCOpoAZxHykMNrEomidpxViAlpBzb/C5CnpzlfiVBqLN3NvOxG
+      zdkoq6BiZnznsVgoHyP7TQlUX94ahVT01yZ0njPk2aYVipPWUoHQMQ==
+      -----END RSA PRIVATE KEY-----

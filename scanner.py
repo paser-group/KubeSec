@@ -19,6 +19,12 @@ def isValidPasswordName(pName):
         valid = False  
     return valid
 
+def isValidKey(keyName): 
+    valid = False 
+    if( any(z_ in keyName for z_ in constants.LEGIT_KEY_NAMES ) ): 
+        valid = True   
+    return valid    
+
 def checkIfValidSecret(single_config_val):
     flag2Ret = False 
     # print(type( single_config_val ), single_config_val  )
@@ -55,6 +61,24 @@ def scanPasswords(k_ , val_lis ):
                 hard_coded_pwds.append( val_ )
     return hard_coded_pwds
 
+
+def checkIfValidKeyValue(single_config_val):
+    flag2Ret = False 
+    if ( isinstance( single_config_val, str ) ):
+        if ( any(x_ in single_config_val for x_ in constants.VALID_KEY_STRING ) ):
+            flag2Ret = True 
+    return flag2Ret
+
+def scanKeys(k_, val_lis):
+    hard_coded_keys = []
+    k_ = k_.lower()
+    if( isValidKey( k_ )    ):
+        for val_ in val_lis:
+            if (checkIfValidKeyValue( val_ ) ): 
+                hard_coded_keys.append( val_ )
+    return hard_coded_keys    
+
+
 def scanForSecrets(yaml_d): 
     key_lis, dic2ret_secret   = [], {} 
     parser.getKeyRecursively( yaml_d, key_lis )
@@ -65,9 +89,10 @@ def scanForSecrets(yaml_d):
         unameList = scanUserName( key_, value_list  )
         # print(unameList)
         passwList = scanPasswords( key_, value_list  )
-        if( len(unameList) > 0  )  or ( len(passwList) > 0  ) :
-            dic2ret_secret[key_] =  ( unameList, passwList ) 
-    # print(dic2ret_secret)
+        keyList   = scanKeys( key_, value_list )
+        # print(keyList)
+        if( len(unameList) > 0  )  or ( len(passwList) > 0  ) or ( len(keyList) > 0  ) :
+            dic2ret_secret[key_] =  ( unameList, passwList, keyList ) 
     return dic2ret_secret
 
 
@@ -89,5 +114,5 @@ def scanSingleManifest( path_to_script ):
 if __name__ == '__main__':
     # test_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment-result.yaml'
     # scanSingleManifest(test_yaml) 
-    another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubecf/deploy/helm/kubecf/values.yaml'
+    another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/sni/values.yaml'
     scanSingleManifest( another_yaml ) 
