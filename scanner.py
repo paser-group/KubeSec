@@ -152,11 +152,37 @@ def scanSingleManifest( path_to_script ):
     return within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi 
 
 
+def scanForHTTP( path2script ):
+    if parser.checkIfValidK8SYaml( path2script ):
+        yaml_d   = parser.loadYAML( path2script )
+        all_vals = parser.getValuesRecursively( yaml_d ) 
+        for val_ in all_vals:
+            if constants.HTTP_KW in val_:
+                key_lis   = []
+                parser.getKeyRecursively(yaml_d, key_lis) 
+                just_keys = [x_[0] for x_ in key_lis] 
+                if ( constants.SPEC_KW in just_keys ):
+                    print(val_)
+                    print(just_keys) 
+                    print('Non ConfigMap Branch')               
+                else: 
+                    val_holder = [] 
+                    parser.getValsFromKey(yaml_d, constants.KIND_KEY_NAME, val_holder)
+                    if ( constants.CONFIGMAP_KW in val_holder ):
+                        sh_files_configmaps = graphtaint.getTaintsFromConfigMaps( path2script  )
+                        # print(val_)
+                        # print(just_keys)  
+                        print(sh_files_configmaps) 
+
+
+
 
 if __name__ == '__main__':
     # test_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment-result.yaml'
     # scanSingleManifest(test_yaml) 
     # another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/values.yaml'
     # another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/minecraft/values.yaml'
-    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/turkce-kubernetes/kubernetes-playground/daemonset-ve-kullanimi/daemonset/fluentd-ds.yaml'
-    scanSingleManifest( fp_yaml ) 
+
+    tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
+    tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-queens/configMap-horizon-setup.yaml'
+    scanForHTTP( tp_yaml )

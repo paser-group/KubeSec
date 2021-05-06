@@ -420,6 +420,8 @@ spec:
      privileged: true
 ``` 
 
+( **COMPLETED** )
+
 - `Default namespace`: A Kubernetes pod or deployment uses `namespace: default` 
 
 - `Insecure HTTP`: Use of `http://` as a value, where they relevant key maps back to a pod or deployment 

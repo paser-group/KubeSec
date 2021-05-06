@@ -99,7 +99,36 @@ def mineSecretGraph( path2script, yaml_dict , secret_dict ):
     return within_match_head, templ_match_list, valid_taints 
 
 
+def getSHFiles(path_to_dir):
+    valid_  = [] 
+    for root_, _, files_ in os.walk( path_to_dir ):
+       for file_ in files_:
+           full_p_file = os.path.join(root_, file_)
+           if(os.path.exists(full_p_file)):
+             if (full_p_file.endswith( constants.SH_EXTENSION  )  ):
+               valid_.append(full_p_file)
+    return valid_ 
 
+
+def readBashAsStr( path_sh_script ):
+    _as_str = constants.YAML_SKIPPING_TEXT
+    with open( path_sh_script , constants.FILE_READ_FLAG) as file_:
+        _as_str = file_.read()
+    return _as_str
+
+def getTaintsFromConfigMaps( script_path ):
+    list2Return = [] 
+    config_map_dir  = os.path.dirname( script_path )  + constants.SLASH_SYMBOL    
+    script_name     = script_path.replace( config_map_dir, constants.YAML_SKIPPING_TEXT )
+    sh_files = getSHFiles( config_map_dir )
+    for sh_file in sh_files:
+        sh_content = readBashAsStr( sh_file )
+        if script_name in sh_content:
+            sh_match_cnt  = sh_content.count( script_name )
+            for l_ in range( sh_match_cnt ):
+                list2Return.append(  sh_file  )
+    return list2Return
+    
 
 
 # if __name__=='__main__':

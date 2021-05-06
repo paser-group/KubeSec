@@ -28,6 +28,10 @@ SECU_CONT_KW                 = 'securityContext'
 CONTAINER_KW                 = 'containers'
 SPEC_KW                      = 'spec'
 DEAMON_KW                    = 'DaemonSet' 
+HTTP_KW                      = 'http://'
+CONFIGMAP_KW                 = 'ConfigMap'
+SLASH_SYMBOL                 = '/'
+SH_EXTENSION                 = 'sh'
 
 SECRET_USER_LIST             = ['user']
 SECRET_PASSWORD_LIST         = ['pwd', 'password', 'passwd', 'admin_pass'] 
