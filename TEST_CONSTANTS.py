@@ -52,6 +52,7 @@ _http_script12      = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-d
 _http_script13      = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_prometheusCustomResourceDefinition.yaml'
 _http_script14      = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/advanced-kubernetes-workshop/lb/glb-configmap-var.yaml'
 _http_script15      = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/gitlab-runner/gitlab-runner-docker-configmap.yml'
+_http_script16      = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/grafana/values.yaml'
 
 _value_for_key      = '/usr/local/airflow/analytics'
 _mount_path_kw      = 'mountPath' 

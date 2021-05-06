@@ -174,6 +174,20 @@ class TestHTTPGraphs( unittest.TestCase ):
         res_dic      = scanner.scanForHTTP(scriptName) 
         self.assertEqual(oracle_value, len( res_dic   ) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
+    def testHTTPGraphV17(self):     
+        '''
+        this one tests if empty lists for a HTTP_DICT is returned. If empty list, then HTTP declared but not used 
+        '''
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS._http_script16 
+        res_dic      = scanner.scanForHTTP(scriptName) 
+        self.assertEqual(oracle_value, len( res_dic[1]  ) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testHTTPGraphV18(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS._http_script16 
+        res_dic      = scanner.scanForHTTP(scriptName) 
+        self.assertEqual(oracle_value, len( res_dic  ) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
 if __name__ == '__main__':
     unittest.main()

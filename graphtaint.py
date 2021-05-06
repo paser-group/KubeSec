@@ -66,6 +66,12 @@ def getValidTaints(  lis_template_matches ):
 
 
 def mineSecretGraph( path2script, yaml_dict , secret_dict ):
+    '''
+    This method looks at YAML files in Helm templates. 
+    Works only for secrets. 
+    Need to provide script path, script dict, dictionary of secrets that appear for the script  
+    '''
+
     within_match_head = None 
     hierarchy_list = []
     for k_, v_ in secret_dict.items():
@@ -79,7 +85,7 @@ def mineSecretGraph( path2script, yaml_dict , secret_dict ):
                     hierarchy_list.append( (h_key, k_ , v_) )
                 '''
                 the purpose of composite hierarchy keys is to get nested values that are referenced 
-                takign 2 strings at a time 
+                taking 2 strings at a time 
                 '''
                 for compo_h_key in compo_hiera_keys:
                     hierarchy_list.append( ( compo_h_key, k_, v_  ) )
@@ -130,5 +136,30 @@ def getTaintsFromConfigMaps( script_path ):
     return list2Return
     
 
+
+def mineViolationGraph(path2script, yaml_dict, taint_value, k_ ):
+    '''
+    This method looks at YAML files in Helm templates. 
+    Works for all types. 
+    Need to provide script path, script dict, value identified as smell, key for which value occurs 
+    '''
+    hierarchy_list = [] 
+    hierarchy_keys = parser.keyMiner(yaml_dict, taint_value)
+    hierarchy_keys = [x_ for x_ in hierarchy_keys if x_ != constants.YAML_SKIPPING_TEXT ] 
+    compo_hiera_keys = [ constants.DOT_SYMBOL.join(str_) for str_ in combinations( hierarchy_keys , 2 )] ## take 2 strings at a time 
+    # print(compo_hiera_keys) 
+    for h_key in hierarchy_keys:
+        hierarchy_list.append( (h_key, k_ , taint_value) )
+    '''
+    the purpose of composite hierarchy keys is to get nested values that are referenced 
+    taking 2 strings at a time 
+    '''
+    for compo_h_key in compo_hiera_keys:
+        hierarchy_list.append( ( compo_h_key, k_, taint_value  ) )
+    
+    templ_match_list = []
+    templ_match_list = getMatchingTemplates( path2script, hierarchy_list  )    
+
+    return templ_match_list
 
 # if __name__=='__main__':

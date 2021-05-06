@@ -155,20 +155,35 @@ def scanSingleManifest( path_to_script ):
 def scanForHTTP( path2script ):
     sh_files_configmaps = {} 
     http_count = 0 
-    if parser.checkIfValidK8SYaml( path2script ):
+    if parser.checkIfValidK8SYaml( path2script ) or parser.checkIfValidHelm( path2script ):
         yaml_d   = parser.loadYAML( path2script )
         all_vals = parser.getValuesRecursively( yaml_d ) 
         all_vals = [x_ for x_ in all_vals if isinstance(x_, str) ] 
         for val_ in all_vals:
-            # print(val_)
-            if constants.HTTP_KW in val_:
+            # if (constants.HTTP_KW in val_ ) and ( (constants.WWW_KW in val_) and (constants.ORG_KW in val_) ):
+            if (constants.HTTP_KW in val_ ) :
                 key_lis   = []
                 parser.getKeyRecursively(yaml_d, key_lis) 
                 just_keys = [x_[0] for x_ in key_lis] 
                 if ( constants.SPEC_KW in just_keys ):
+                    '''
+                    this branch is for HTTP values coming from Deplyoment manifests  
+                    '''                    
                     http_count += 1 
                     sh_files_configmaps[http_count] =  val_ 
+                elif( parser.checkIfValidHelm( path2script ) ):
+                    '''
+                    this branch is for HTTP values coming from Values.yaml in HELM charts  
+                    '''
+                    http_count += 1 
+                    matching_keys = parser.keyMiner(yaml_d, val_)
+                    key_ = matching_keys[-1]  
+                    infected_list = graphtaint.mineViolationGraph(path2script, yaml_d, val_, key_) 
+                    sh_files_configmaps[http_count] = infected_list
                 else: 
+                    '''
+                    this branch is for HTTP values coming from ConfigMaps 
+                    '''                    
                     val_holder = [] 
                     parser.getValsFromKey(yaml_d, constants.KIND_KEY_NAME, val_holder)
                     if ( constants.CONFIGMAP_KW in val_holder ):
@@ -194,5 +209,5 @@ if __name__ == '__main__':
 
     # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
 
-    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/resources/gangway.yaml'
+    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/grafana/values.yaml'
     scanForHTTP( fp_yaml )

@@ -214,7 +214,7 @@ Note to self: Other ways to store config maps are using Pod, with the `valueFrom
 
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/resources/gangway.yaml, used values go nowhere, so FP. Also, as this is not a validly formatted manifest, tool will not detect HTTP instances, which is correct. 
 
-> /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/sdp-prototype/Chart.yaml and /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/skuid/Chart.yaml FP as URL from another website 
+
 
 
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/grafana/values.yaml, part of a Helm chart, but used no where , so FP 
@@ -476,3 +476,7 @@ must be present
         memory: "128Mi"
         cpu: "500m"
 ```
+
+### Limitations 
+
+- Tool will report FP isntances for /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/sdp-prototype/Chart.yaml and /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/skuid/Chart.yaml ... extra check will generate a lot of false negatives 

@@ -32,6 +32,9 @@ HTTP_KW                      = 'http://'
 CONFIGMAP_KW                 = 'ConfigMap'
 SLASH_SYMBOL                 = '/'
 SH_EXTENSION                 = 'sh'
+WWW_KW                       = 'www'
+ORG_KW                       = 'org'
+CONFIG_KW                    = 'configuration'
 
 SECRET_USER_LIST             = ['user']
 SECRET_PASSWORD_LIST         = ['pwd', 'password', 'passwd', 'admin_pass'] 
