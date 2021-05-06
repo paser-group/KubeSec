@@ -153,26 +153,35 @@ def scanSingleManifest( path_to_script ):
 
 
 def scanForHTTP( path2script ):
+    sh_files_configmaps = {} 
+    http_count = 0 
     if parser.checkIfValidK8SYaml( path2script ):
         yaml_d   = parser.loadYAML( path2script )
         all_vals = parser.getValuesRecursively( yaml_d ) 
+        all_vals = [x_ for x_ in all_vals if isinstance(x_, str) ] 
         for val_ in all_vals:
+            # print(val_)
             if constants.HTTP_KW in val_:
                 key_lis   = []
                 parser.getKeyRecursively(yaml_d, key_lis) 
                 just_keys = [x_[0] for x_ in key_lis] 
                 if ( constants.SPEC_KW in just_keys ):
-                    print(val_)
-                    print(just_keys) 
-                    print('Non ConfigMap Branch')               
+                    http_count += 1 
+                    sh_files_configmaps[http_count] =  val_ 
                 else: 
                     val_holder = [] 
                     parser.getValsFromKey(yaml_d, constants.KIND_KEY_NAME, val_holder)
                     if ( constants.CONFIGMAP_KW in val_holder ):
-                        sh_files_configmaps = graphtaint.getTaintsFromConfigMaps( path2script  )
+                        http_count += 1 
+                        infected_list = graphtaint.getTaintsFromConfigMaps( path2script  ) 
+                        sh_files_configmaps[http_count] = infected_list
+                        
                         # print(val_)
                         # print(just_keys)  
-                        print(sh_files_configmaps) 
+    
+    # print(sh_files_configmaps) 
+    return sh_files_configmaps 
+
 
 
 
@@ -183,6 +192,7 @@ if __name__ == '__main__':
     # another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/values.yaml'
     # another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/minecraft/values.yaml'
 
-    tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
-    tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-queens/configMap-horizon-setup.yaml'
-    scanForHTTP( tp_yaml )
+    # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
+
+    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/resources/gangway.yaml'
+    scanForHTTP( fp_yaml )

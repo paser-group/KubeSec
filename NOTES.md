@@ -204,19 +204,22 @@ and `/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-queens/co
 Note to self: Other ways to store config maps are using Pod, with the `valueFrom:  configMapKeyRef: name` tag and through Volumes with the `configMap: name:` tag. Reff: https://kubernetes.io/docs/concepts/configuration/configmap/
 
 
-> `/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-elastic-logging//kibana-deployment.yaml` , `/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/gitlab/gitlab-deployment.yml` are TPs: `kind: Deployment` 
+>  `/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/gitlab/gitlab-deployment.yml` are TPs: `kind: Deployment` 
 
 ##### False  Positive Instances 
 
-> /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_alertmanagerCustomResourceDefinition.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_prometheusCustomResourceDefinition.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_prometheusruleCustomResourceDefinition.yaml :  parsing issues 
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_alertmanagerCustomResourceDefinition.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_prometheusCustomResourceDefinition.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_prometheusruleCustomResourceDefinition.yaml :  _CustomResourceDefinition_ does not go into deployments ... so FPs 
 
-> /Users/arahman/K8S_REPOS/GITLAB_REPOS/advanced-kubernetes-workshop/lb/glb-configmap-var.yaml, has a configmap called `nginx`, which is never used in the repo `/Users/arahman/K8S_REPOS/GITLAB_REPOS/advanced-kubernetes-workshop/` so FP. Same for `/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/gitlab-runner/gitlab-runner-docker-configmap.yml` 
+> `/Users/arahman/K8S_REPOS/GITLAB_REPOS/advanced-kubernetes-workshop/lb/glb-configmap-var.yaml`, has a configmap called `nginx`, which is never used in the repo `/Users/arahman/K8S_REPOS/GITLAB_REPOS/advanced-kubernetes-workshop/` so FP. Same for `/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/gitlab-runner/gitlab-runner-docker-configmap.yml` 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/resources/gangway.yaml, used values go nowhere, so FP. Also, as this is not a validly formatted manifest, tool will not detect HTTP instances, which is correct. 
+
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/sdp-prototype/Chart.yaml and /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/skuid/Chart.yaml FP as URL from another website 
+
 
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/grafana/values.yaml, part of a Helm chart, but used no where , so FP 
 
-> /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/resources/gangway.yaml, used values go nowhere, so FP 
 
-> /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/sdp-prototype/Chart.yaml and /Users/arahman/K8S_REPOS/GITLAB_REPOS/skampi/charts/skampi/charts/skuid/Chart.yaml FP as URL from another website 
 
 
 
