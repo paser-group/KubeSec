@@ -424,7 +424,7 @@ spec:
 
 - `Insecure HTTP`: Use of `http://` as a value, where they relevant key maps back to a pod or deployment 
 
-- `Hard-coded secret`: Use or hard-coded user name and passwords , must map to a pod, deployment, configmap, or a helm deployment 
+- `Hard-coded secret`: Use or hard-coded user name and passwords , must map to a pod, deployment, configmap, or a helm deployment ( **COMPLETED** )
 
 - `Not rolling update`: not using `type: RollingUpdate` in a deployment as shown in below
 

@@ -100,13 +100,13 @@ class TestFalsePositives( unittest.TestCase ):
     def testSecret1(self):     
         oracle_value = TEST_CONSTANTS._none_kw
         scriptName   = TEST_CONSTANTS._fp_script1
-        within_match_, _, _  = scanner.scanSingleManifest( scriptName )
+        within_match_, _, _ , _ = scanner.scanSingleManifest( scriptName )
         self.assertTrue( within_match_ == None ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testSecret2(self):     
         oracle_value = 0
         scriptName   = TEST_CONSTANTS._fp_script1
-        _, templ_match , _  = scanner.scanSingleManifest( scriptName )
+        _, templ_match , _ , _ = scanner.scanSingleManifest( scriptName )
         self.assertEqual( oracle_value,  len(templ_match) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testSecret3(self):     
@@ -119,7 +119,7 @@ class TestFalsePositives( unittest.TestCase ):
     def testSecret4(self):     
         oracle_value = 0
         scriptName   = TEST_CONSTANTS._fp_script2
-        _, templ_match , _  = scanner.scanSingleManifest( scriptName )
+        _, templ_match , _ , _ = scanner.scanSingleManifest( scriptName )
         self.assertEqual( oracle_value,  len(templ_match) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testSecret5(self):     
@@ -132,7 +132,7 @@ class TestFalsePositives( unittest.TestCase ):
     def testSecret6(self):     
         oracle_value = 0
         scriptName   = TEST_CONSTANTS._fp_script3
-        _, _ , taint_map_ls  = scanner.scanSingleManifest( scriptName )
+        _, _ , taint_map_ls , _ = scanner.scanSingleManifest( scriptName )
         self.assertEqual( oracle_value,  len(taint_map_ls) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testSecret7(self):     
@@ -145,7 +145,7 @@ class TestFalsePositives( unittest.TestCase ):
     def testSecret8(self):     
         oracle_value = 0
         scriptName   = TEST_CONSTANTS._fp_script4
-        _, templ_matches , _  = scanner.scanSingleManifest( scriptName )
+        _, templ_matches , _ , _ = scanner.scanSingleManifest( scriptName )
         self.assertEqual( oracle_value,  len(templ_matches) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testSecret9(self):     
@@ -158,7 +158,7 @@ class TestFalsePositives( unittest.TestCase ):
     def testSecret10(self):     
         oracle_value = 0
         scriptName   = TEST_CONSTANTS._fp_script5
-        _, _ , taint_map_ls  = scanner.scanSingleManifest( scriptName )
+        _, _ , taint_map_ls , _ = scanner.scanSingleManifest( scriptName )
         self.assertEqual( oracle_value,  len(taint_map_ls) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testSecret11(self):     
@@ -171,7 +171,7 @@ class TestFalsePositives( unittest.TestCase ):
     def testSecret12(self):     
         oracle_value = 0
         scriptName   = TEST_CONSTANTS._fp_script6
-        _, template_matches , _  = scanner.scanSingleManifest( scriptName )
+        _, template_matches , _, _  = scanner.scanSingleManifest( scriptName )
         self.assertEqual( oracle_value,  len(template_matches) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testSecret13(self):     
@@ -198,7 +198,7 @@ class TestFalsePositives( unittest.TestCase ):
     def testSecret16(self):     
         oracle_value = 0
         scriptName   = TEST_CONSTANTS._fp_script9
-        _, template_matches , _  = scanner.scanSingleManifest( scriptName )
+        _, template_matches , _ , _ = scanner.scanSingleManifest( scriptName )
         self.assertEqual( oracle_value,  len(template_matches) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testSecret17(self):     
@@ -211,20 +211,53 @@ class TestFalsePositives( unittest.TestCase ):
     def testSecret18(self):     
         oracle_value = 0
         scriptName   = TEST_CONSTANTS._fp_script10 
-        _, _ , taint_map_lis  = scanner.scanSingleManifest( scriptName )
+        _, _ , taint_map_lis , _ = scanner.scanSingleManifest( scriptName )
         self.assertEqual( oracle_value,  len(taint_map_lis) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testSecret19(self):     
         oracle_value = 0
         scriptName   = TEST_CONSTANTS._fp_script10 
-        _, templ_matches , _  = scanner.scanSingleManifest( scriptName )
+        _, templ_matches , _ , _ = scanner.scanSingleManifest( scriptName )
         self.assertEqual( oracle_value,  len(templ_matches) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testSecret20(self):     
         oracle_value = TEST_CONSTANTS._none_kw 
         scriptName   = TEST_CONSTANTS._fp_script10 
-        within , _ , _  = scanner.scanSingleManifest( scriptName )
+        within , _ , _, _  = scanner.scanSingleManifest( scriptName )
         self.assertTrue( within == None ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+
+class TestOverPrivilegedContainers( unittest.TestCase ):
+
+    def testPrivilege1(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS._privi_scrip1 
+        _, _, _, privi_dict = scanner.scanSingleManifest( scriptName )
+        self.assertEqual( oracle_value,  len( privi_dict ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testPrivilege2(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS._privi_scrip2
+        _, _, _, privi_dict = scanner.scanSingleManifest( scriptName )
+        self.assertEqual( oracle_value,  len( privi_dict ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testPrivilege3(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS._privi_scrip3
+        _, _, _, privi_dict = scanner.scanSingleManifest( scriptName )
+        self.assertEqual( oracle_value,  len( privi_dict ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testPrivilege4(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS._privi_scrip4
+        _, _, _, privi_dict = scanner.scanSingleManifest( scriptName )
+        self.assertEqual( oracle_value,  len( privi_dict ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testPrivilege5(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS._privi_scrip5
+        _, _, _, privi_dict = scanner.scanSingleManifest( scriptName )
+        self.assertEqual( oracle_value,  len( privi_dict ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
 if __name__ == '__main__':
     unittest.main()

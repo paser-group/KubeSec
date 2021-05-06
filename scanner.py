@@ -97,6 +97,33 @@ def scanForSecrets(yaml_d):
     return dic2ret_secret
 
 
+def scanForOverPrivileges(script_path):
+    key_count , privi_dict_return = 0, {} 
+    kind_values = [] 
+    checkVal = parser.checkIfValidK8SYaml( script_path )
+    if(checkVal): 
+        yaml_dict = parser.loadYAML( script_path )
+        key_lis   = []
+        parser.getKeyRecursively(yaml_dict, key_lis) 
+        just_keys = [x_[0] for x_ in key_lis] 
+        if ( constants.KIND_KEY_NAME in just_keys ):
+            parser.getValsFromKey( yaml_dict, constants.KIND_KEY_NAME, kind_values )
+        '''
+        For the tiem being Kind:DeamonSet is not a legit sink because they do not directly provision deplyoments 
+        '''
+        if ( constants.PRIVI_KW in just_keys ) and ( constants.DEAMON_KW not in kind_values  ) :
+            privilege_values = []
+            parser.getValsFromKey( yaml_dict, constants.PRIVI_KW , privilege_values )
+            # print(privilege_values) 
+            for value_ in privilege_values:
+                    if value_ == True: 
+                        key_lis_holder = parser.keyMiner(yaml_dict, value_ ) 
+                        if(constants.SPEC_KW in key_lis_holder) and (constants.CONTAINER_KW in key_lis_holder) and (constants.SECU_CONT_KW in key_lis_holder) and (constants.PRIVI_KW in key_lis_holder):
+                            key_count += 1
+                            privi_dict_return[key_count] = value_, key_lis_holder 
+    return privi_dict_return 
+
+
 def scanSingleManifest( path_to_script ):
     checkVal = parser.checkIfValidK8SYaml( path_to_script )
     # print(checkVal) 
@@ -112,12 +139,17 @@ def scanSingleManifest( path_to_script ):
     taint tracking zone for secret dictionary 
     '''
     # print(dict_secret)
-    within_match_, templ_match_, valid_taints  = graphtaint.mineSecretGraph(path_to_script, yaml_dict, dict_secret) 
+    within_secret_, templ_secret_, valid_taint_secr  = graphtaint.mineSecretGraph(path_to_script, yaml_dict, dict_secret) 
     # print(within_match_) 
     # print(templ_match_) 
     # print(valid_taints) 
+    '''
+    taint tracking for over privileges 
+    '''
+    valid_taint_privi  = scanForOverPrivileges( path_to_script )
+    # print(valid_taint_privi) 
 
-    return within_match_, templ_match_, valid_taints 
+    return within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi 
 
 
 
@@ -126,5 +158,5 @@ if __name__ == '__main__':
     # scanSingleManifest(test_yaml) 
     # another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/values.yaml'
     # another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/minecraft/values.yaml'
-    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/hello/values.yaml'
+    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/turkce-kubernetes/kubernetes-playground/daemonset-ve-kullanimi/daemonset/fluentd-ds.yaml'
     scanSingleManifest( fp_yaml ) 

@@ -1,0 +1,119 @@
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: nfs-server
+#  labels:
+#    app: nfs-server
+#spec:
+#  ports:
+#  - port: 111
+#    protocol: TCP
+#    name: nfs-111-tcp
+#  - port: 111
+#    protocol: UDP
+#    name: nfs-111-udp
+#  - port: 2049
+#    protocol: TCP
+#    name: nfs-2049-tcp
+#  #sessionAffinity: ClientIP
+#  #clusterIP: None
+#  #type: NodePort # Or LoadBalancer in production w/ proper security
+#  #type: LoadBalancer
+#  selector:
+#    app: nfs-server
+#
+#---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nfs-server
+spec:
+  nodeSelector:
+    nfs-server: "true"
+  restartPolicy: Always
+  initContainers:
+  - name: wait1
+    #imagePullPolicy: Always
+    imagePullPolicy: IfNotPresent
+    image: call518/oaas-init-container:1.0
+    envFrom:
+      - configMapRef:
+          name: env-common
+    volumeMounts:
+    - name: init-container-scripts
+      mountPath: /init-container-scripts
+    command: ["/bin/bash","-c","/init-container-scripts/init-check-etcd.sh"]
+  containers:
+  - name: nfs-server
+    image: call518/oaas-nfs-server:1.0
+    securityContext:
+      privileged: true
+    ports:
+    - containerPort: 111
+      protocol: TCP
+    - containerPort: 111
+      protocol: UDP
+    - containerPort: 2049
+      protocol: TCP
+    volumeMounts:
+    - name: pvc-nfs-server
+      mountPath: /data
+    envFrom:
+      - configMapRef:
+          name: env-common
+    env:
+    - name: MY_POD_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
+    - name: SHARED_DIRECTORY
+      value: /data
+    - name: SYNC
+      value: "true"
+    - name: FSID
+      value: "true"
+    command:
+      - "bash"
+      - "-c"
+      - |
+        until [ "$CHECK_ETCD_NFS_SERVER_IP" == "$MY_POD_IP" ];
+        do
+          echo "`date +"[%Y-%m-%d %H:%M:%S]"` Putting nfs-server to etcd....... waiting...";
+          curl -s -L "http://$DISCOVERY_SERVICE/v2/keys/oaas/$K8S_NFS_SERVER_IP_ETC_KEY" -XPUT -d value="$MY_POD_IP";
+          CHECK_ETCD_NFS_SERVER_IP=$(curl --connect-timeout 3 -s -L "http://$DISCOVERY_SERVICE/v2/keys/oaas/$K8S_NFS_SERVER_IP_ETC_KEY" -XGET | jq -r .node.value)
+          sleep 5;
+        done;
+        echo "`date +"[%Y-%m-%d %H:%M:%S]"` OK~ etcd for nfs-server is ready~~ (etcd's nfs-server IP: $CHECK_ETCD_NFS_SERVER_IP)";
+        rm -rf /data/*;
+        mkdir -p /data/pv/galera-{0,1,2};
+        mkdir -p /data/pv/mongodb-{0,1,2};
+        mkdir -p /data/pv/rabbitmq-{0,1,2};
+        mkdir -p /data/pv/glance-images;
+        mkdir -p /data/pv/zookeeper-{0,1,2};
+        mkdir -p /data/pv/cinder-volumes;
+        mkdir -p /data/pv/cinder-backups;
+        #mkdir -p /data/pv/cinder-lock_path;
+        #mkdir -p /data/pv/nova-server-lock_path;
+        #mkdir -p /data/pv/nova-compute-lock_path;
+        mkdir -p /data/pv/nova-compute-images;
+        mkdir -p /data/pv/nova-compute-instances;
+        mkdir -p /data/pv/ceilometer-gnocchi;
+        chmod 777 /data/pv/cinder-* /data/pv/zookeeper-*
+        /usr/bin/nfsd.sh;
+    lifecycle:
+      preStop:
+        exec:
+          command:
+          - /bin/sh
+          - -c
+          - >
+            curl -s -L "http://$DISCOVERY_SERVICE/v2/keys/oaas/$K8S_NFS_SERVER_IP_ETC_KEY" -XDELETE;
+  volumes:
+  - name: init-container-scripts
+    configMap:
+      name: init-container-scripts
+      defaultMode: 0755
+  - name: pvc-nfs-server
+    persistentVolumeClaim:
+      claimName: pvc-nfs-server

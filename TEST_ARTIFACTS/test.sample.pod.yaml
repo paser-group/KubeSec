@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Pod
+metadata:
+ name: sample-pod
+spec:
+ #hostNetwork: true
+ containers:
+ - name: sample-pod
+   #image: call518/oaas-init-container
+   image: call518/oaas-ocata
+   securityContext:
+     privileged: true
+#   ports:
+#   - containerPort: 3306
+   command:
+     - "bash"
+     - "-c"
+     - |
+       service rsyslog restart;
+       printenv MY_NODE_NAME MY_NODE_IP MY_POD_NAME MY_POD_NAMESPACE;
+       printenv MY_POD_IP MY_POD_SERVICE_ACCOUNT;
+       tail -F /var/log/syslog;
+   envFrom:
+     - configMapRef:
+         name: env-common
+   env:
+     - name: MY_NODE_NAME
+       valueFrom:
+         fieldRef:
+           fieldPath: spec.nodeName
+     - name: MY_NODE_IP
+       valueFrom:
+         fieldRef:
+           fieldPath: status.hostIP
+     - name: MY_POD_NAME
+       valueFrom:
+         fieldRef:
+           fieldPath: metadata.name
+     - name: MY_POD_NAMESPACE
+       valueFrom:
+         fieldRef:
+           fieldPath: metadata.namespace
+     - name: MY_POD_IP
+       valueFrom:
+         fieldRef:
+           fieldPath: status.podIP
+   volumeMounts:
+   - name: openstack-openrc
+     mountPath: /root/openrc
+ volumes:
+ - name: openstack-openrc
+   configMap:
+     name: openstack-openrc
+     defaultMode: 0755

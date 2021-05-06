@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+ name: sample-nfs-server
+spec:
+ #hostNetwork: true
+ containers:
+ - name: sample-nfs-server
+   image: call518/oaas-nfs-server
+   securityContext:
+     privileged: true
+#   ports:
+#   - containerPort: 3306
+   command:
+     - "bash"
+     - "-c"
+     - |
+       service rsyslog restart;
+       tail -F /var/log/messages;
+   env:
+#     - name: MY_POD_NAME
+#       valueFrom:
+#         fieldRef:
+#           fieldPath: metadata.name
+#     - name: MY_POD_NAMESPACE
+#       valueFrom:
+#         fieldRef:
+#           fieldPath: metadata.namespace
+#     - name: MY_POD_IP
+#       valueFrom:
+#         fieldRef:
+#           fieldPath: status.podIP

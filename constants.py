@@ -23,6 +23,11 @@ TEMPLATES_DIR_KW             = '/templates/'
 DOT_SYMBOL                   = '.'
 HELM_VALUE_KW                = 'Values' 
 VALU_FROM_KW                 = 'valueFrom'
+PRIVI_KW                     = 'privileged'
+SECU_CONT_KW                 = 'securityContext'
+CONTAINER_KW                 = 'containers'
+SPEC_KW                      = 'spec'
+DEAMON_KW                    = 'DaemonSet' 
 
 SECRET_USER_LIST             = ['user']
 SECRET_PASSWORD_LIST         = ['pwd', 'password', 'passwd', 'admin_pass'] 

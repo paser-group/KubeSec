@@ -32,6 +32,12 @@ _fp_script7         = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubecf/deploy/helm/
 _fp_script8         = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/multi-controller/varnish-tea.yaml'
 _fp_script9         = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/sni/values.yaml'
 _fp_script10        = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/hello/values.yaml'
+_privi_scrip1       = 'TEST_ARTIFACTS/test.sample.pod.yaml'
+_privi_scrip2       = 'TEST_ARTIFACTS/sample-nfs-server.yaml'
+_privi_scrip3       = 'TEST_ARTIFACTS/artifact.nfs.server.yaml'
+_privi_scrip4       = 'TEST_ARTIFACTS/deamonset1.yaml'
+_privi_scrip5       = 'TEST_ARTIFACTS/calico.yaml'
+
 _value_for_key      = '/usr/local/airflow/analytics'
 _mount_path_kw      = 'mountPath' 
 _spec_kw            = 'spec'

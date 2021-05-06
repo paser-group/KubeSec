@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata: 
+  name: data-collector-ds
+spec: 
+  template: 
+    metadata: 
+      labels: 
+        app: data-collector-agent
+    spec: 
+      containers: 
+        - 
+          image: fluent/fluentd
+          name: fluentd-elasticsearch
+          resources: 
+            limits: 
+              memory: 200Mi
+            requests: 
+              cpu: 100m
+              memory: 200Mi
+          securityContext: 
+            privileged: true
+          volumeMounts: 
+            - 
+              mountPath: /var
+              name: varlog
+            - 
+              mountPath: /var/lib/docker/containers
+              name: varlibdockercontainers
+              readOnly: true
+      nodeSelector: 
+        app: collector-node
+      volumes: 
+        - 
+          hostPath: 
+            path: /var
+          name: varlog
+        - 
+          hostPath: 
+            path: /var/lib/docker/containers
+          name: varlibdockercontainers
