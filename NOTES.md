@@ -1,7 +1,7 @@
-### Exploration of Shamim's work 
+### Integrating Taint Tracking for Kubernetes 
 
 
-#### File types 
+#### File types  ( **COMPLETED** ) 
 
 Shamim is scanning all YAML files. Need to find YAML files that describe K8S deployments. 
 Need to ignore files like: 
@@ -74,13 +74,13 @@ Need to ignore files like:
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/roles/kubernetes-apps/cluster_roles/defaults/main.yml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-sigs-kubespray/contrib/dind/roles/dind-host/tasks/main.yaml
 
-#### Helm charts 
+#### Helm charts  ( **COMPLETED** ) 
 
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/helm/cp-helm-charts/charts/cp-control-center/templates 
 
 Example of how charts are used. No secuirty violations 
 
-#### Default namespace 
+#### Default namespace  ( **TODO** ) 
 
 ##### True Positive Instances 
 
@@ -174,7 +174,7 @@ metadata:
 If the selector is available in a `kind:Deployment` only then we can determine it as a TP. So far not seeing any deployments that
 match, so FP 
 
-#### Insecure HTTP 
+#### Insecure HTTP  ( **COMPLETED** ) 
 
 ##### True Positive Instances 
 
@@ -223,7 +223,7 @@ Note to self: Other ways to store config maps are using Pod, with the `valueFrom
 
 
 
-#### Hard-coded Secrets 
+#### Hard-coded Secrets  ( **COMPLETED** ) 
 
 ##### True positive instances 
 
@@ -288,7 +288,7 @@ by any helm charts
 > FP in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/sni/values.yaml` and `/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/hello/values.yaml` (`key:` and `crt:` ) as these are not used 
 
 
-#### No Rolling Updates 
+#### No Rolling Updates  ( **TODO** ) 
 
 ##### True Positive Instances 
 
@@ -368,7 +368,7 @@ spec:
 > /Users/arahman/K8S_REPOS/GITLAB_REPOS/obtao@kubernetes/kubernetes/app/nginx-deployment.yaml : this is a FP because even with `type: RollingUpdate` and `kind: Deployment` , the tool throws an alert 
 
 
-#### Privilege Escalation
+#### Privilege Escalation   ( **COMPLETED** ) 
 
 ##### True Positive Instances 
 
@@ -405,13 +405,13 @@ Same thing happens for
 
 ### Rules to detect secuirty anti-patterns: 
 
-- `Missing security context`: A kubernetes Pod or Deployment does not have security context specified i.e., the following is not used 
+- `Missing security context`: ( **COMPLETED** ) A kubernetes Pod or Deployment does not have security context specified i.e., the following is not used 
 ```
 spec:
   securityContext:
 ```
 
-- `Over-allocated privilege`: A Kubernetes Pod or Deployment uses `allowPrivilegeEscalation=true` or `privileged: true` while specifying security context, i.e., the following is used
+- `Over-allocated privilege`: ( **COMPLETED** ) A Kubernetes Pod or Deployment uses `allowPrivilegeEscalation=true` or `privileged: true` while specifying security context, i.e., the following is used
 ```
 spec:
  #hostNetwork: true
@@ -422,16 +422,13 @@ spec:
    securityContext:
      privileged: true
 ``` 
+- `Default namespace`:  ( **TODO** )  A Kubernetes pod or deployment uses `namespace: default` 
 
-( **COMPLETED** )
-
-- `Default namespace`: A Kubernetes pod or deployment uses `namespace: default` 
-
-- `Insecure HTTP`: Use of `http://` as a value, where they relevant key maps back to a pod or deployment 
+- `Insecure HTTP`: Use of `http://` as a value, where they relevant key maps back to a pod or deployment ( **COMPLETED** )
 
 - `Hard-coded secret`: Use or hard-coded user name and passwords , must map to a pod, deployment, configmap, or a helm deployment ( **COMPLETED** )
 
-- `Not rolling update`: not using `type: RollingUpdate` in a deployment as shown in below
+- `Not rolling update`:  ( **TODO** )  not using `type: RollingUpdate` in a deployment as shown in below
 
 ```
 > reff: https://tachingchen.com/blog/kubernetes-rolling-update-with-deployment/ 
@@ -443,7 +440,7 @@ strategy:
     maxUnavailable: 1
 ```
 
-- `Unrestricted Network`:  No NetworkPolicy for a pod. Need to remember _NetworkPolicies are an application-centric construct which allow you to specify how a pod is allowed to communicate with various network "entities" (we use the word "entity" here to avoid overloading the more common terms such as "endpoints" and "services", which have specific Kubernetes connotations) over the network._
+- `Unrestricted Network`:  ( **TODO** )   No NetworkPolicy for a pod. Need to remember _NetworkPolicies are an application-centric construct which allow you to specify how a pod is allowed to communicate with various network "entities" (we use the word "entity" here to avoid overloading the more common terms such as "endpoints" and "services", which have specific Kubernetes connotations) over the network._
 
 `kind: NetworkPolicy` needs to be in a YAML file, and the same file should also specify a pod selector label *x*, where *x* is a label of a pod. Example below: 
 
@@ -469,7 +466,7 @@ spec:
   - {}
 ```
 
-- `Unrestricted Resource Request`:  No resource limit for Pod i.e. the following is not specified for a pod: both cpu and memory 
+- `Unrestricted Resource Request`:  ( **TODO** )   No resource limit for Pod i.e. the following is not specified for a pod: both cpu and memory 
 must be present  
 ```
       limits:

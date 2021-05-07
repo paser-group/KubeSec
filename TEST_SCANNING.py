@@ -259,5 +259,32 @@ class TestOverPrivilegedContainers( unittest.TestCase ):
         _, _, _, privi_dict = scanner.scanSingleManifest( scriptName )
         self.assertEqual( oracle_value,  len( privi_dict ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
+
+class TestMissingSecuContext( unittest.TestCase ):
+
+    def testMissing1(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS._no_secu_cont_yaml1
+        res_dic = scanner.scanForMissingSecurityContext( scriptName )
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testMissing2(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS._no_secu_cont_yaml1
+        res_dic = scanner.scanForMissingSecurityContext( scriptName )
+        self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testPresent1(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS._no_secu_cont_yaml2
+        res_dic = scanner.scanForMissingSecurityContext( scriptName )
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testPresent2(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS._no_secu_cont_yaml2 
+        res_dic = scanner.scanForMissingSecurityContext( scriptName )
+        self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
 if __name__ == '__main__':
     unittest.main()

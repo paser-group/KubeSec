@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gitlab-runner-docker
+  namespace: gitlab
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: docker-runner
+        app: gitlab-runner
+    spec:
+      containers:
+      - name: gitlab-runner-docker
+        image: gitlab/gitlab-runner:alpine-v9.0.0
+        command: ["/bin/bash", "/scripts/entrypoint"]
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: REGISTRATION_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: gitlab-secrets
+              key: initial_shared_runners_registration_token
+        resources:
+          limits:
+            memory: 500Mi
+            cpu: 600m
+          requests:
+            memory: 500Mi
+            cpu: 600m
+        volumeMounts:
+        - name: scripts
+          mountPath: /scripts
+        - name: var-run-docker-sock
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: var-run-docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+      - name: scripts
+        configMap:
+          name: gitlab-runner-scripts

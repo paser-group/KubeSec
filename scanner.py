@@ -197,6 +197,27 @@ def scanForHTTP( path2script ):
     # print(sh_files_configmaps) 
     return sh_files_configmaps 
 
+def scanForMissingSecurityContext(path_scrpt):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_scrpt )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_scrpt )
+        key_lis = [] 
+        parser.getKeyRecursively(yaml_di, key_lis)
+        yaml_values =  parser.getValuesRecursively(yaml_di)
+        if (constants.SECU_CONT_KW  not in key_lis): 
+            cnt += 1 
+            prop_value = constants.YAML_SKIPPING_TEXT 
+            if ( constants.DEPLOYMENT_KW in yaml_values ) : 
+                prop_value = constants.DEPLOYMENT_KW
+                lis.append( prop_value )
+            elif ( constants.POD_KW in yaml_values ) :
+                prop_value = constants.POD_KW 
+                lis.append( prop_value )
+            dic[ cnt ] = lis
+    # print(dic) 
+    return dic 
+
 
 
 
@@ -209,5 +230,5 @@ if __name__ == '__main__':
 
     # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
 
-    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/grafana/values.yaml'
-    scanForHTTP( fp_yaml )
+    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/nfs-server.yaml'
+    scanForMissingSecurityContext( fp_yaml )
