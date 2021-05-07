@@ -80,7 +80,7 @@ Need to ignore files like:
 
 Example of how charts are used. No secuirty violations 
 
-#### Default namespace  ( **TODO** ) 
+#### Default namespace  ( **COMPLETED** ) 
 
 ##### True Positive Instances 
 
@@ -422,11 +422,11 @@ spec:
    securityContext:
      privileged: true
 ``` 
-- `Default namespace`:  ( **TODO** )  A Kubernetes pod or deployment uses `namespace: default` 
+- `Default namespace`:  ( **COMPLETED** )  A Kubernetes pod or deployment uses `namespace: default` 
 
-- `Insecure HTTP`: Use of `http://` as a value, where they relevant key maps back to a pod or deployment ( **COMPLETED** )
+- `Insecure HTTP`: ( **COMPLETED** )  Use of `http://` as a value, where they relevant key maps back to a pod or deployment
 
-- `Hard-coded secret`: Use or hard-coded user name and passwords , must map to a pod, deployment, configmap, or a helm deployment ( **COMPLETED** )
+- `Hard-coded secret`: ( **COMPLETED** ) Use or hard-coded user name and passwords , must map to a pod, deployment, configmap, or a helm deployment 
 
 - `Not rolling update`:  ( **TODO** )  not using `type: RollingUpdate` in a deployment as shown in below
 
@@ -466,7 +466,7 @@ spec:
   - {}
 ```
 
-- `Unrestricted Resource Request`:  ( **TODO** )   No resource limit for Pod i.e. the following is not specified for a pod: both cpu and memory 
+- `Unrestricted Resource Request`:  ( **TODO** )   No resource limit for Deployment or Pod i.e. the following is not specified for a pod: both cpu and memory 
 must be present  
 ```
       limits:

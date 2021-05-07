@@ -162,4 +162,27 @@ def mineViolationGraph(path2script, yaml_dict, taint_value, k_ ):
 
     return templ_match_list
 
+def mineServiceGraph( script_path, dict_yaml, src_val ): 
+    '''
+    This method looks at YAML files that have kind:Service , and checks if used in another YAML with kind:Deployment 
+    Works for all types. 
+    Need to provide script path, script dict, value identified as smell 
+    '''
+    ret_lis = [] 
+    svc_dir     = os.path.dirname( script_path )  + constants.SLASH_SYMBOL    
+    yaml_files  = getYAMLFiles( svc_dir )    
+    for yaml_f in yaml_files:
+        if( parser.checkIfValidK8SYaml( yaml_f ) ):
+            sink_yaml_dict = parser.loadYAML( yaml_f ) 
+            sink_val_li_   = list(  parser.getValuesRecursively(sink_yaml_dict) )
+            if( src_val in sink_val_li_ ) and ( constants.DEPLOYMENT_KW in sink_val_li_ ) : 
+                    sink_keys = parser.keyMiner(sink_yaml_dict, src_val)
+                    if constants.K8S_APP_KW in sink_keys: 
+                        ret_lis.append( (yaml_f, sink_keys  ) )
+    return ret_lis 
+
+
+
+
+
 # if __name__=='__main__':

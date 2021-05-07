@@ -236,6 +236,16 @@ def scanForDefaultNamespace(path_scrpt):
             elif ( constants.POD_KW in all_values ) :
                 prop_value = constants.POD_KW 
                 lis.append( prop_value )
+            else: 
+                holder_ = [] 
+                parser.getValsFromKey(yaml_di, constants.KIND_KEY_NAME, holder_ )
+                if ( constants.K8S_SERVICE_KW in holder_ ): 
+                    srv_val_li_ = [] 
+                    parser.getValsFromKey( yaml_di, constants.K8S_APP_KW, srv_val_li_  ) 
+                    for srv_val in srv_val_li_:
+                        lis = graphtaint.mineServiceGraph( path_scrpt, yaml_di, srv_val )
+
+
             dic[ cnt ] = lis
     # print(dic) 
     return dic 
@@ -250,5 +260,5 @@ if __name__ == '__main__':
 
     # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
 
-    _yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/helm/cp-helm-charts/examples/ksql-demo.yaml'
+    _yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/data-image/airflow_image/manifests/services.yml'
     scanForDefaultNamespace( _yaml )

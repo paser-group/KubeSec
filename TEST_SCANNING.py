@@ -299,7 +299,7 @@ class TestDefaultNamespace( unittest.TestCase ):
     def testPresent2(self):     
         oracle_value = constants.DEPLOYMENT_KW 
         scriptName   = TEST_CONSTANTS._dflt_nspace_yaml1 
-        res_dic = scanner.scanForMissingSecurityContext( scriptName )
+        res_dic = scanner.scanForDefaultNamespace( scriptName )
         self.assertEqual( oracle_value,   res_dic[1][0] ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testPresent3(self):     
@@ -311,8 +311,39 @@ class TestDefaultNamespace( unittest.TestCase ):
     def testPresent4(self):     
         oracle_value = constants.POD_KW  
         scriptName   = TEST_CONSTANTS._dflt_nspace_yaml2 
-        res_dic = scanner.scanForMissingSecurityContext( scriptName )
+        res_dic = scanner.scanForDefaultNamespace( scriptName )
         self.assertEqual( oracle_value,   res_dic[1][0] ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testMissing1(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS._dflt_nspace_yaml3
+        res_dic = scanner.scanForDefaultNamespace( scriptName )
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testMissing2(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS._dflt_nspace_yaml3
+        res_dic = scanner.scanForDefaultNamespace( scriptName )
+        self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+
+    def testTaintPresence1(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS._dflt_nspace_yaml4 
+        res_dic = scanner.scanForDefaultNamespace( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testTaintPresence2(self):     
+        oracle_value = 2
+        scriptName   = TEST_CONSTANTS._dflt_nspace_yaml4 
+        res_dic = scanner.scanForDefaultNamespace( scriptName )
+        self.assertEqual( oracle_value,  len( res_dic[1][0] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testTaintPresence3(self):     
+        oracle_value = TEST_CONSTANTS.test_sink_nspace_yam 
+        scriptName   = TEST_CONSTANTS._dflt_nspace_yaml4 
+        res_dic = scanner.scanForDefaultNamespace( scriptName )
+        self.assertEqual( oracle_value,   res_dic[1][0][0] ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
 if __name__ == '__main__':
     unittest.main()
