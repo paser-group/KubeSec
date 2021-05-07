@@ -2,6 +2,7 @@ import unittest
 import TEST_CONSTANTS 
 import parser
 import scanner 
+import constants 
 
 class TestScanning( unittest.TestCase ):
 
@@ -269,7 +270,7 @@ class TestMissingSecuContext( unittest.TestCase ):
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testMissing2(self):     
-        oracle_value = 0
+        oracle_value = 1
         scriptName   = TEST_CONSTANTS._no_secu_cont_yaml1
         res_dic = scanner.scanForMissingSecurityContext( scriptName )
         self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
@@ -285,6 +286,33 @@ class TestMissingSecuContext( unittest.TestCase ):
         scriptName   = TEST_CONSTANTS._no_secu_cont_yaml2 
         res_dic = scanner.scanForMissingSecurityContext( scriptName )
         self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+
+class TestDefaultNamespace( unittest.TestCase ):
+
+    def testPresent1(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS._dflt_nspace_yaml1 
+        res_dic = scanner.scanForDefaultNamespace( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testPresent2(self):     
+        oracle_value = constants.DEPLOYMENT_KW 
+        scriptName   = TEST_CONSTANTS._dflt_nspace_yaml1 
+        res_dic = scanner.scanForMissingSecurityContext( scriptName )
+        self.assertEqual( oracle_value,   res_dic[1][0] ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testPresent3(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS._dflt_nspace_yaml2
+        res_dic = scanner.scanForDefaultNamespace( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testPresent4(self):     
+        oracle_value = constants.POD_KW  
+        scriptName   = TEST_CONSTANTS._dflt_nspace_yaml2 
+        res_dic = scanner.scanForMissingSecurityContext( scriptName )
+        self.assertEqual( oracle_value,   res_dic[1][0] ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
 if __name__ == '__main__':
     unittest.main()

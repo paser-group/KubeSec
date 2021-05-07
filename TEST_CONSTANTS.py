@@ -55,6 +55,8 @@ _http_script15      = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-d
 _http_script16      = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/grafana/values.yaml'
 _no_secu_cont_yaml1 = 'TEST_ARTIFACTS/no.secu.nfs.yaml'
 _no_secu_cont_yaml2 = 'TEST_ARTIFACTS/no.secu.present.yaml'
+_dflt_nspace_yaml1  = 'TEST_ARTIFACTS/present.deployment.default.yaml'
+_dflt_nspace_yaml2  = 'TEST_ARTIFACTS/present.default.ksql.yaml'
 
 _value_for_key      = '/usr/local/airflow/analytics'
 _mount_path_kw      = 'mountPath' 

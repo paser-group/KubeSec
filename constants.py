@@ -36,7 +36,8 @@ WWW_KW                       = 'www'
 ORG_KW                       = 'org'
 CONFIG_KW                    = 'configuration'
 DEPLOYMENT_KW                = 'Deployment' 
-POD_KW                       = 'Pod' 
+POD_KW                       = 'Pod'
+DEFAULT_KW                   = 'default' 
 
 SECRET_USER_LIST             = ['user']
 SECRET_PASSWORD_LIST         = ['pwd', 'password', 'passwd', 'admin_pass'] 

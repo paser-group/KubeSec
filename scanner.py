@@ -157,7 +157,7 @@ def scanForHTTP( path2script ):
     http_count = 0 
     if parser.checkIfValidK8SYaml( path2script ) or parser.checkIfValidHelm( path2script ):
         yaml_d   = parser.loadYAML( path2script )
-        all_vals = parser.getValuesRecursively( yaml_d ) 
+        all_vals = list (parser.getValuesRecursively( yaml_d )  )
         all_vals = [x_ for x_ in all_vals if isinstance(x_, str) ] 
         for val_ in all_vals:
             # if (constants.HTTP_KW in val_ ) and ( (constants.WWW_KW in val_) and (constants.ORG_KW in val_) ):
@@ -204,7 +204,7 @@ def scanForMissingSecurityContext(path_scrpt):
         yaml_di = parser.loadYAML( path_scrpt )
         key_lis = [] 
         parser.getKeyRecursively(yaml_di, key_lis)
-        yaml_values =  parser.getValuesRecursively(yaml_di)
+        yaml_values = list( parser.getValuesRecursively(yaml_di) )
         if (constants.SECU_CONT_KW  not in key_lis): 
             cnt += 1 
             prop_value = constants.YAML_SKIPPING_TEXT 
@@ -219,6 +219,26 @@ def scanForMissingSecurityContext(path_scrpt):
     return dic 
 
 
+def scanForDefaultNamespace(path_scrpt):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_scrpt )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_scrpt )
+        key_lis = parser.keyMiner(yaml_di, constants.DEFAULT_KW)
+        if (len(key_lis) > 0 ) : 
+            all_values = list( parser.getValuesRecursively(yaml_di)  )
+            # print(all_values)
+            cnt += 1 
+            prop_value = constants.YAML_SKIPPING_TEXT 
+            if ( constants.DEPLOYMENT_KW in all_values ) : 
+                prop_value = constants.DEPLOYMENT_KW
+                lis.append( prop_value )
+            elif ( constants.POD_KW in all_values ) :
+                prop_value = constants.POD_KW 
+                lis.append( prop_value )
+            dic[ cnt ] = lis
+    # print(dic) 
+    return dic 
 
 
 
@@ -230,5 +250,5 @@ if __name__ == '__main__':
 
     # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
 
-    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/nfs-server.yaml'
-    scanForMissingSecurityContext( fp_yaml )
+    _yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/spring-petclinic-kubernetes/helm/cp-helm-charts/examples/ksql-demo.yaml'
+    scanForDefaultNamespace( _yaml )
