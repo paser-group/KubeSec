@@ -345,5 +345,31 @@ class TestDefaultNamespace( unittest.TestCase ):
         res_dic = scanner.scanForDefaultNamespace( scriptName )
         self.assertEqual( oracle_value,   res_dic[1][0][0] ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
+class TestResourceLimits( unittest.TestCase ):
+
+    def testAbsent1(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.reso_yaml1
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent2(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.reso_yaml3 
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent3(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.reso_yaml4 
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testPresent1(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.reso_yaml2
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
 if __name__ == '__main__':
     unittest.main()

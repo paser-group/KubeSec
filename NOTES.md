@@ -264,11 +264,11 @@ by any helm charts
 
 > */Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/keycloak/values.yaml* FP for passowrd as not strings are assigned 
 
-> /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/crds/SGBackup.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/data-image/airflow_image/prometheus_config.yml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_servicemonitorCustomResourceDefinition.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/dex/00-dex.yml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/demo-kubernetes-components/mongo-express.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/e2e/spec/sql-scripts.values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/e2e/spec/aks/backup-with-aks-storage.values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/e2e/spec/eks/backup-with-s3-storage.values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/githook/config/samples/2-v1alpha1_githooks.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/deploy/varnish.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/load-balancer/lego/deployment.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubecf/deploy/helm/kubecf/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/cert-manager/letsencrypt.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/bank-vaults/vault-secrets-webhook/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/gitlab-runner/gitlab-runner-docker-deployment.yml
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/crds/SGBackup.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/data-image/airflow_image/prometheus_config.yml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/00_operator_servicemonitorCustomResourceDefinition.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/dex/00-dex.yml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/demo-kubernetes-components/mongo-express.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/e2e/spec/sql-scripts.values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/e2e/spec/aks/backup-with-aks-storage.values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/e2e/spec/eks/backup-with-s3-storage.values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/githook/config/samples/2-v1alpha1_githooks.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/deploy/varnish.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/load-balancer/lego/deployment.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubecf/deploy/helm/kubecf/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/cert-manager/letsencrypt.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/configuration/bank-vaults/vault-secrets-webhook/values.yaml, /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/gitlab-runner/gitlab-runner-docker-deployment.yml 
 
 ^ FP due to parsing issues 
 
-> /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/varnish-coffee.yaml (`valueFrom:` inferring data from environment, reff: https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/). Also the follwoing: 
+> /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/varnish-coffee.yaml (`valueFrom:` inferring data from environment, reff: https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/). Also the following: 
 
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/cluster-and-ns-wide/varnish-system.yaml
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/architectures/clusterwide/varnish.yaml
@@ -466,13 +466,14 @@ spec:
   - {}
 ```
 
-- `Unrestricted Resource Request`:  ( **TODO** )   No resource limit for Deployment or Pod i.e. the following is not specified for a pod: both cpu and memory 
+- `Unrestricted Resource Request`:  ( **COMPLETED** )   No resource limit for Deployment or Pod i.e. the following is not specified for a pod: both cpu and memory 
 must be present  
 ```
       limits:
         memory: "128Mi"
         cpu: "500m"
 ```
+
 
 ### Limitations 
 

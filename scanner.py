@@ -251,6 +251,30 @@ def scanForDefaultNamespace(path_scrpt):
     return dic 
 
 
+def scanForResourceLimits(path_scrpt):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_scrpt )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_scrpt )
+        temp_ls = [] 
+        parser.getKeyRecursively(yaml_di, temp_ls) 
+        key_list = [ x_[0] for x_ in temp_ls  ]
+        if ( (constants.CONTAINER_KW in key_list) and (constants.LIMITS_KW not in key_list ) and ( (constants.CPU_KW not in key_list)  or (constants.MEMORY_KW not in key_list) ) ):
+            cnt += 1 
+            if( len(temp_ls) > 0 ):
+                all_values = list( parser.getValuesRecursively(yaml_di)  )
+                # print(all_values)
+                prop_value = constants.YAML_SKIPPING_TEXT 
+                if ( constants.DEPLOYMENT_KW in all_values ) : 
+                    prop_value = constants.DEPLOYMENT_KW
+                    lis.append( prop_value )
+                elif ( constants.POD_KW in all_values ) :
+                    prop_value = constants.POD_KW 
+                    lis.append( prop_value )
+            dic[ cnt ] = lis
+    # print(dic) 
+    return dic 
+
 
 if __name__ == '__main__':
     # test_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment-result.yaml'
@@ -260,5 +284,8 @@ if __name__ == '__main__':
 
     # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
 
-    _yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/data-image/airflow_image/manifests/services.yml'
-    scanForDefaultNamespace( _yaml )
+    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/data-image/airflow_image/manifests/deployment.yaml'
+    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/obtao@kubernetes/kubernetes/app/nginx-deployment.yaml'
+    tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment-result.yaml'
+    
+    scanForResourceLimits( fp_yaml )

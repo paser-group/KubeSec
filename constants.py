@@ -40,6 +40,9 @@ POD_KW                       = 'Pod'
 DEFAULT_KW                   = 'default' 
 K8S_SERVICE_KW               = 'Service'
 K8S_APP_KW                   = 'app'
+LIMITS_KW                    = 'limits'
+CPU_KW                       = 'cpu'
+MEMORY_KW                    = 'memory' 
 
 SECRET_USER_LIST             = ['user']
 SECRET_PASSWORD_LIST         = ['pwd', 'password', 'passwd', 'admin_pass'] 
