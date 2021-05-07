@@ -371,5 +371,108 @@ class TestResourceLimits( unittest.TestCase ):
         res_dic = scanner.scanForResourceLimits( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
+
+class TestMissingRollingUpdate( unittest.TestCase ):
+
+    def testAbsent1(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml1 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent2(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml2 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent3(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml3 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent4(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml4
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent5(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml4
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+
+    def testAbsent6(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml5 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+
+    def testAbsent7(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml6 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent8(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml6 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testPresent1(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml7  
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testPresent2(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml7 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testPresent3(self):     
+        oracle_value = constants.DEPLOYMENT_KW 
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml7 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  res_dic[1][0]  ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testPresent4(self):     
+        oracle_value = constants.DEPLOYMENT_KW 
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml8 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  res_dic[1][0]  ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+    def testPresent5(self):     
+        oracle_value = constants.DEPLOYMENT_KW 
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml9 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  res_dic[1][0]  ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+    def testPresent6(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml9 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+    def testPresent7(self):     
+        oracle_value = constants.DEPLOYMENT_KW 
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml10 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  res_dic[1][0]  ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+    def testPresent8(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml10 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+    def testPresent9(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml11 
+        res_dic = scanner.scanForRollingUpdates( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+
 if __name__ == '__main__':
     unittest.main()

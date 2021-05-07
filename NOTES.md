@@ -288,7 +288,7 @@ by any helm charts
 > FP in `/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/sni/values.yaml` and `/Users/arahman/K8S_REPOS/GITLAB_REPOS/k8s-ingress/examples/tls/hello/values.yaml` (`key:` and `crt:` ) as these are not used 
 
 
-#### No Rolling Updates  ( **TODO** ) 
+#### No Rolling Updates  ( **COMPLETED** ) 
 
 ##### True Positive Instances 
 
@@ -428,7 +428,7 @@ spec:
 
 - `Hard-coded secret`: ( **COMPLETED** ) Use or hard-coded user name and passwords , must map to a pod, deployment, configmap, or a helm deployment 
 
-- `Not rolling update`:  ( **TODO** )  not using `type: RollingUpdate` in a deployment as shown in below
+- `Not rolling update`:  ( **COMPLETED** )  not using `type: RollingUpdate` in a deployment as shown in below
 
 ```
 > reff: https://tachingchen.com/blog/kubernetes-rolling-update-with-deployment/ 

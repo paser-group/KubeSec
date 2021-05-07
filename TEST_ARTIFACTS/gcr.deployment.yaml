@@ -1,0 +1,22 @@
+  
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gcr0-deployment
+  labels:
+    app: gcr0-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gcr0
+  template:
+    metadata:
+      labels:
+        app: gcr0
+    spec:
+      containers:
+      - name: gcr
+        image: gcr.io/google_containers/echoserver:1.4
+        ports:
+        - containerPort: 8080

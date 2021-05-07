@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata: 
+  name: hello-rs
+spec: 
+  replicas: 2
+  selector: 
+    matchLabels: 
+      app: hello-rs
+  template: 
+    metadata: 
+      labels: 
+        app: hello-rs
+        environment: dev
+    spec: 
+      containers: 
+        - image: "gcr.io/google_containers/echoserver:1.4"
+          name: hello-rs
+          ports: 
+            - containerPort: 8080
+

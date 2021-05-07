@@ -276,6 +276,32 @@ def scanForResourceLimits(path_scrpt):
     return dic 
 
 
+
+def scanForRollingUpdates(path_script ):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_script )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_script )
+        temp_ls = [] 
+        parser.getKeyRecursively(yaml_di, temp_ls) 
+        key_list = [ x_[0] for x_ in temp_ls  ]
+        if ( (constants.STRATEGY_KW not in key_list ) and  (constants.ROLLING_UPDATE_KW not in key_list)   ):
+            cnt += 1 
+            if( len(temp_ls) > 0 ):
+                all_values = list( parser.getValuesRecursively(yaml_di)  )
+                # print(all_values)
+                prop_value = constants.YAML_SKIPPING_TEXT 
+                if ( constants.DEPLOYMENT_KW in all_values ) and ( constants.VAL_ROLLING_UPDATE_KW not in all_values ) : 
+                    prop_value = constants.DEPLOYMENT_KW
+                    lis.append( prop_value )
+                elif ( constants.POD_KW in all_values ) and ( constants.VAL_ROLLING_UPDATE_KW not in all_values )  :
+                    prop_value = constants.POD_KW 
+                    lis.append( prop_value )
+            dic[ cnt ] = lis
+    # print(dic) 
+    return dic     
+
+
 if __name__ == '__main__':
     # test_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment-result.yaml'
     # scanSingleManifest(test_yaml) 
@@ -285,7 +311,7 @@ if __name__ == '__main__':
     # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
 
     fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/data-image/airflow_image/manifests/deployment.yaml'
-    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/obtao@kubernetes/kubernetes/app/nginx-deployment.yaml'
-    tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment-result.yaml'
+    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/42_prometheus_Prometheus.yaml'
+    tp_yaml = 'TEST_ARTIFACTS/roll.present.demo.yaml'
     
-    scanForResourceLimits( fp_yaml )
+    scanForRollingUpdates( tp_yaml )

@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: varnish
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: varnish-ingress
+  template:
+    metadata:
+      labels:
+        app: varnish-ingress
+    spec:
+      serviceAccountName: varnish-ingress
+      securityContext:
+        # group varnish in the varnish and haproxy containers
+        # The varnish and haproxy users belong to this group.
+        fsGroup: 998
+      containers:
+      - image: varnish-ingress/varnish
+        imagePullPolicy: IfNotPresent
+        name: varnish-ingress
+        ports:
+        - name: http
+          containerPort: 80
+        - name: k8s
+          containerPort: 8080
+        volumeMounts:
+        - name: adm-secret
+          mountPath: "/var/run/varnish"
+          readOnly: true
+        - name: varnish-home
+          mountPath: "/var/run/varnish-home"
+        - name: offload
+          mountPath: "/var/run/offload"
+        livenessProbe:
+          exec:
+            command:
+            - /usr/bin/pgrep
+            - -P
+            - "0"
+            - varnishd
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: k8s
+        args:
+          - -n
+          - /var/run/varnish-home
+      - image: varnish-ingress/haproxy
+        imagePullPolicy: IfNotPresent
+        name: varnish-ingress-offloader
+        ports:
+        - name: tls
+          containerPort: 443
+        - name: k8s
+          containerPort: 8443
+        volumeMounts:
+        - name: tls-cert
+          mountPath: "/etc/ssl/private"
+        - name: offload
+          mountPath: "/var/run/offload"
+        env:
+          - name: SECRET_DATAPLANEAPI
+            valueFrom:
+              secretKeyRef:
+                name: adm-secret
+                key: dataplaneapi
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        livenessProbe:
+          exec:
+            command:
+            - /usr/bin/pgrep
+            - -P
+            - "0"
+            - haproxy
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: k8s
+      volumes:
+      - name: adm-secret
+        secret:
+          secretName: adm-secret
+          items:
+          - key: admin
+            path: _.secret
+      - name: tls-cert
+        emptyDir: {}
+      - name: varnish-home
+        emptyDir:
+          medium: "Memory"
+      - name: offload
+        emptyDir: {}
