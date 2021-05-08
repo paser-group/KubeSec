@@ -440,7 +440,7 @@ strategy:
     maxUnavailable: 1
 ```
 
-- `Unrestricted Network`:  ( **TODO** )   No NetworkPolicy for a pod. Need to remember _NetworkPolicies are an application-centric construct which allow you to specify how a pod is allowed to communicate with various network "entities" (we use the word "entity" here to avoid overloading the more common terms such as "endpoints" and "services", which have specific Kubernetes connotations) over the network._
+- `Unrestricted Network`:  ( **COMPLETED** )   No NetworkPolicy for a pod. Need to remember _NetworkPolicies are an application-centric construct which allow you to specify how a pod is allowed to communicate with various network "entities" (we use the word "entity" here to avoid overloading the more common terms such as "endpoints" and "services", which have specific Kubernetes connotations) over the network._
 
 `kind: NetworkPolicy` needs to be in a YAML file, and the same file should also specify a pod selector label *x*, where *x* is a label of a pod. Example below: 
 

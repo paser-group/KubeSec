@@ -473,6 +473,15 @@ class TestMissingRollingUpdate( unittest.TestCase ):
         res_dic = scanner.scanForRollingUpdates( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
+class TestMissingNetPolicy( unittest.TestCase ):
+
+    def testAbsent1(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.net_policy_yaml 
+        res_dic = scanner.scanForMissingNetworkPolicy( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+
 
 if __name__ == '__main__':
     unittest.main()

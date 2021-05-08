@@ -46,6 +46,10 @@ MEMORY_KW                    = 'memory'
 STRATEGY_KW                  = 'strategy'
 ROLLING_UPDATE_KW            = 'rollingUpdate'
 VAL_ROLLING_UPDATE_KW        = 'RollingUpdate'
+NET_POLICY_KW                = 'NetworkPolicy'
+POD_SELECTOR_KW              = 'podSelector'
+MATCH_LABEL_KW               = 'matchLabels'
+
 
 SECRET_USER_LIST             = ['user']
 SECRET_PASSWORD_LIST         = ['pwd', 'password', 'passwd', 'admin_pass'] 

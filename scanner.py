@@ -302,6 +302,25 @@ def scanForRollingUpdates(path_script ):
     return dic     
 
 
+def scanForMissingNetworkPolicy(path_script ):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_script )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_script )
+        all_values = list( parser.getValuesRecursively(yaml_di)  )
+        if ( constants.NET_POLICY_KW not in all_values ):
+            cnt += 1 
+            temp_ls = [] 
+            parser.getKeyRecursively(yaml_di, temp_ls) 
+            key_list = [ x_[0] for x_ in temp_ls  ]
+            if ( (constants.SPEC_KW in key_list ) and  (constants.POD_SELECTOR_KW in key_list) and  (constants.MATCH_LABEL_KW in key_list) ):
+                for src_val in all_values:
+                    lis  = graphtaint.mineNetPolGraph(path_script, yaml_di, src_val, key_list )
+            dic[ cnt ] = lis
+    # print(dic) 
+    return dic  
+
+
 if __name__ == '__main__':
     # test_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment-result.yaml'
     # scanSingleManifest(test_yaml) 
@@ -311,7 +330,7 @@ if __name__ == '__main__':
     # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
 
     fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/data-image/airflow_image/manifests/deployment.yaml'
-    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/42_prometheus_Prometheus.yaml'
+    fp_yaml = 'TEST_ARTIFACTS/k8s.doc.network.yaml'
     tp_yaml = 'TEST_ARTIFACTS/roll.present.demo.yaml'
     
-    scanForRollingUpdates( tp_yaml )
+    scanForMissingNetworkPolicy( fp_yaml )
