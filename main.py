@@ -9,12 +9,15 @@ import constants
 
 def getCountFromAnalysis(ls_):
     list2ret           = []
+    within_sec_cnt     = 0 
     for tup_ in ls_:
         dir_name       = tup_[0]
         script_name    = tup_[1]        
-        within_secret  = tup_[2]
-        templa_secret  = tup_[3]                
-        taint_secret   = tup_[4]         
+        within_secret  = tup_[2] ### format: ('data', 'password', ([], ['MTIzNAo='], [])) => (<name>, <type>, <data_list>) ... need the list of the last tuple
+        if isinstance( within_secret, tuple ):
+            within_sec_cnt = len( within_secret[-1][1] )
+        templa_secret  = tup_[3]       ### format: a list , we will not use this in dumping       
+        taint_secret   = tup_[4]       ###   format: a list 
         privilege_dic  = tup_[5]
         http_dict      = tup_[6]        
         secuContextDic = tup_[7]
@@ -23,9 +26,7 @@ def getCountFromAnalysis(ls_):
         rollUpdateDic  = tup_[10]
         netPolicyDict  = tup_[11]                
 
-        print( within_secret )
-
-        list2ret.append(  ( dir_name, script_name, len(privilege_dic), len(http_dict), len(secuContextDic), len(nSpaceDict), len(absentResoDict), len(rollUpdateDic), len(netPolicyDict)  )  )
+        list2ret.append(  ( dir_name, script_name, within_sec_cnt, len(taint_secret), len(privilege_dic), len(http_dict), len(secuContextDic), len(nSpaceDict), len(absentResoDict), len(rollUpdateDic), len(netPolicyDict)  )  )
     return list2ret
 
 
@@ -40,7 +41,7 @@ if __name__ =='__main__':
     content_as_ls   = scanner.runScanner( ORG_DIR )
     df_all          = pd.DataFrame( getCountFromAnalysis( content_as_ls ) )
 
-    # df_all.to_csv( OUTPUT_FILE_CSV, header= constants.CSV_HEADER , index=False, encoding= constants.CSV_ENCODING ) 
+    df_all.to_csv( OUTPUT_FILE_CSV, header= constants.CSV_HEADER , index=False, encoding= constants.CSV_ENCODING ) 
 
 
 

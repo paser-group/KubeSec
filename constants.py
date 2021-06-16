@@ -62,5 +62,5 @@ LEGIT_KEY_NAMES              = ['crt', 'key']
 VALID_KEY_STRING             = ['-----BEGIN CERTIFICATE-----', '-----BEGIN RSA PRIVATE KEY-----']
 
 
-CSV_HEADER                   = ['ORG', 'YAML_FULL_PATH']
+CSV_HEADER                   = ['DIR', 'YAML_FULL_PATH', 'UNFILTERED_SECRET', 'VALID_TAINT_SECRET', 'LEAST_PRIVIL', 'INSECURE_HTTP', 'NO_SECU_CONTEXT', 'NO_DEFAULT_NSPACE', 'NO_RESO', 'NO_ROLLING_UPDATE', 'NO_NETWORK_POLICY']
 CSV_ENCODING                 = 'latin-1'

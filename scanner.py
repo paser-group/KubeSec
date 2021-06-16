@@ -356,6 +356,7 @@ def scanForMissingNetworkPolicy(path_script ):
 
 
 
+
 def runScanner(dir2scan):
     all_content = [] 
     all_yml_files = getYAMLFiles(dir2scan)
@@ -392,8 +393,6 @@ if __name__ == '__main__':
 
     # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
 
-    fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/data-image/airflow_image/manifests/deployment.yaml'
-    fp_yaml = 'TEST_ARTIFACTS/k8s.doc.network.yaml'
-    tp_yaml = 'TEST_ARTIFACTS/roll.present.demo.yaml'
-    
+    # fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/data-image/airflow_image/manifests/deployment.yaml'
+    fp_yaml = 'TEST_ARTIFACTS/k8s.doc.network.yaml'    
     scanForMissingNetworkPolicy( fp_yaml )
