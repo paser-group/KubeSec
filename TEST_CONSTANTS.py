@@ -76,6 +76,8 @@ fp_rolling_yaml9    = 'TEST_ARTIFACTS/roll.present.deploy.yaml'
 fp_rolling_yaml10   = 'TEST_ARTIFACTS/roll.present.demo.yaml'
 fp_rolling_yaml11   = 'TEST_ARTIFACTS/fp.concourse.yaml'
 net_policy_yaml     = 'TEST_ARTIFACTS/k8s.doc.network.yaml'
+tp_secucont_no_yaml = 'TEST_ARTIFACTS/tp_secu_context_miss.yaml'
+fp_secucont_no_yaml = 'TEST_ARTIFACTS/fp_secu_context_miss.yaml'
 
 _value_for_key      = '/usr/local/airflow/analytics'
 _mount_path_kw      = 'mountPath' 

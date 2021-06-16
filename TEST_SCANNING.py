@@ -264,16 +264,16 @@ class TestOverPrivilegedContainers( unittest.TestCase ):
 class TestMissingSecuContext( unittest.TestCase ):
 
     def testMissing1(self):     
-        oracle_value = 1
+        oracle_value = 0
         scriptName   = TEST_CONSTANTS._no_secu_cont_yaml1
         res_dic = scanner.scanForMissingSecurityContext( scriptName )
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testMissing2(self):     
         oracle_value = 1
-        scriptName   = TEST_CONSTANTS._no_secu_cont_yaml1
+        scriptName   = TEST_CONSTANTS.tp_secucont_no_yaml 
         res_dic = scanner.scanForMissingSecurityContext( scriptName )
-        self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testPresent1(self):     
         oracle_value = 1
@@ -286,6 +286,18 @@ class TestMissingSecuContext( unittest.TestCase ):
         scriptName   = TEST_CONSTANTS._no_secu_cont_yaml2 
         res_dic = scanner.scanForMissingSecurityContext( scriptName )
         self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+    def testPresent3(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_secucont_no_yaml 
+        res_dic = scanner.scanForMissingSecurityContext( scriptName )
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )   
+
+    def testPresent4(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS._no_secu_cont_yaml1
+        res_dic = scanner.scanForMissingSecurityContext( scriptName )
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )                 
 
 
 class TestDefaultNamespace( unittest.TestCase ):

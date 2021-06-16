@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: hello-dep
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hello-dep
+    spec:
+      containers:
+      - name: hello-dep
+        image: gcr.io/google_containers/echoserver:1.4
+        ports:
+        - containerPort: 8080
