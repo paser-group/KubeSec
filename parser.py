@@ -19,7 +19,8 @@ def loadYAML( script_ ):
 def keyMiner(dic_, value):
   '''
   If you give a value, then this function gets the corresponding key, and the keys that call the key 
-  i.e. the whole hierarchy 
+  i.e. the whole hierarchy
+  Returns None if no value is found  
   '''
   if dic_ == value:
     return [dic_]
@@ -114,6 +115,9 @@ def readYAMLAsStr( path_script ):
     with open( path_script , constants.FILE_READ_FLAG) as file_:
         yaml_as_str = file_.read()
     return yaml_as_str
+
+
+
 
 
 if __name__=='__main__':

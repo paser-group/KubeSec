@@ -6,24 +6,50 @@ Code to detect security anti-patterns
 import parser 
 import constants 
 import graphtaint 
+import os 
+import pandas as pd 
 
+def getYAMLFiles(path_to_dir):
+    valid_  = [] 
+    for root_, dirs, files_ in os.walk( path_to_dir ):
+       for file_ in files_:
+           full_p_file = os.path.join(root_, file_)
+           if(os.path.exists(full_p_file)):
+             if (full_p_file.endswith( constants.YML_EXTENSION  )  or full_p_file.endswith( constants.YAML_EXTENSION  )  ):
+               valid_.append(full_p_file)
+    return valid_ 
 
 def isValidUserName(uName): 
     valid = True
-    if( any(z_ in uName for z_ in constants.FORBIDDEN_USER_NAMES ) ): 
+    if (isinstance( uName , str)  ): 
+        if( any(z_ in uName for z_ in constants.FORBIDDEN_USER_NAMES )   ): 
+            valid = False   
+        else: 
+            valid = True    
+    else: 
         valid = False   
     return valid
 
 def isValidPasswordName(pName): 
     valid = True
-    if( any(z_ in pName for z_ in constants.FORBIDDEN_PASS_NAMES) ): 
-        valid = False  
+    if (isinstance( pName , str)  ): 
+        if( any(z_ in pName for z_ in constants.FORBIDDEN_PASS_NAMES) )  : 
+            valid = False  
+        else: 
+            valid = True    
+    else: 
+        valid = False               
     return valid
 
 def isValidKey(keyName): 
     valid = False 
-    if( any(z_ in keyName for z_ in constants.LEGIT_KEY_NAMES ) ): 
-        valid = True   
+    if ( isinstance( keyName, str )  ):
+        if( any(z_ in keyName for z_ in constants.LEGIT_KEY_NAMES ) ) : 
+            valid = True   
+        else: 
+            valid = False     
+    else: 
+        valid = False                      
     return valid    
 
 def checkIfValidSecret(single_config_val):
@@ -43,7 +69,8 @@ def checkIfValidSecret(single_config_val):
 
 def scanUserName(k_ , val_lis ):
     hard_coded_unames = []
-    k_ = k_.lower()    
+    if isinstance(k_, str):
+        k_ = k_.lower()    
     # print('INSPECTING:', k_) 
     if( isValidUserName( k_ )   and any(x_ in k_ for x_ in constants.SECRET_USER_LIST )  ):
         # print( val_lis ) 
@@ -55,7 +82,8 @@ def scanUserName(k_ , val_lis ):
 
 def scanPasswords(k_ , val_lis ):
     hard_coded_pwds = []
-    k_ = k_.lower()
+    if isinstance(k_, str):
+        k_ = k_.lower()    
     if( isValidPasswordName( k_ )   and any(x_ in k_ for x_ in constants.SECRET_PASSWORD_LIST )  ):
         for val_ in val_lis:
             if (checkIfValidSecret( val_ ) ): 
@@ -72,7 +100,8 @@ def checkIfValidKeyValue(single_config_val):
 
 def scanKeys(k_, val_lis):
     hard_coded_keys = []
-    k_ = k_.lower()
+    if isinstance(k_, str):
+        k_ = k_.lower()    
     if( isValidKey( k_ )    ):
         for val_ in val_lis:
             if (checkIfValidKeyValue( val_ ) ): 
@@ -125,6 +154,10 @@ def scanForOverPrivileges(script_path):
 
 
 def scanSingleManifest( path_to_script ):
+    '''
+    While it is named as `scanSingleManifest` 
+    it can only do taint tracking for secrets and over privileges 
+    '''
     checkVal = parser.checkIfValidK8SYaml( path_to_script )
     # print(checkVal) 
     # initializing 
@@ -225,25 +258,26 @@ def scanForDefaultNamespace(path_scrpt):
         cnt = 0 
         yaml_di = parser.loadYAML( path_scrpt )
         key_lis = parser.keyMiner(yaml_di, constants.DEFAULT_KW)
-        if (len(key_lis) > 0 ) : 
-            all_values = list( parser.getValuesRecursively(yaml_di)  )
-            # print(all_values)
-            cnt += 1 
-            prop_value = constants.YAML_SKIPPING_TEXT 
-            if ( constants.DEPLOYMENT_KW in all_values ) : 
-                prop_value = constants.DEPLOYMENT_KW
-                lis.append( prop_value )
-            elif ( constants.POD_KW in all_values ) :
-                prop_value = constants.POD_KW 
-                lis.append( prop_value )
-            else: 
-                holder_ = [] 
-                parser.getValsFromKey(yaml_di, constants.KIND_KEY_NAME, holder_ )
-                if ( constants.K8S_SERVICE_KW in holder_ ): 
-                    srv_val_li_ = [] 
-                    parser.getValsFromKey( yaml_di, constants.K8S_APP_KW, srv_val_li_  ) 
-                    for srv_val in srv_val_li_:
-                        lis = graphtaint.mineServiceGraph( path_scrpt, yaml_di, srv_val )
+        if (isinstance( key_lis, list ) ):
+            if (len(key_lis) > 0 ) : 
+                all_values = list( parser.getValuesRecursively(yaml_di)  )
+                # print(all_values)
+                cnt += 1 
+                prop_value = constants.YAML_SKIPPING_TEXT 
+                if ( constants.DEPLOYMENT_KW in all_values ) : 
+                    prop_value = constants.DEPLOYMENT_KW
+                    lis.append( prop_value )
+                elif ( constants.POD_KW in all_values ) :
+                    prop_value = constants.POD_KW 
+                    lis.append( prop_value )
+                else: 
+                    holder_ = [] 
+                    parser.getValsFromKey(yaml_di, constants.KIND_KEY_NAME, holder_ )
+                    if ( constants.K8S_SERVICE_KW in holder_ ): 
+                        srv_val_li_ = [] 
+                        parser.getValsFromKey( yaml_di, constants.K8S_APP_KW, srv_val_li_  ) 
+                        for srv_val in srv_val_li_:
+                            lis = graphtaint.mineServiceGraph( path_scrpt, yaml_di, srv_val )
 
 
             dic[ cnt ] = lis
@@ -319,6 +353,35 @@ def scanForMissingNetworkPolicy(path_script ):
             dic[ cnt ] = lis
     # print(dic) 
     return dic  
+
+
+
+def runScanner(dir2scan):
+    all_content = [] 
+    all_yml_files = getYAMLFiles(dir2scan)
+    for yml_ in all_yml_files:
+        if( parser.checkIfValidK8SYaml( yml_ ) ) or (  parser.checkIfValidHelm( yml_ ) ) :
+            print(constants.ANLYZING_KW + yml_)
+            # get secrets and over privileges 
+            within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi  = scanSingleManifest( yml_ )
+            # get insecure HTTP            
+            http_dict             = scanForHTTP( yml_ )
+            # get missing security context 
+            absentSecuContextDict = scanForMissingSecurityContext( yml_ )
+            # get use of default namespace 
+            defaultNameSpaceDict  = scanForDefaultNamespace( yml_ )
+            # get missing resource limit 
+            absentResourceDict    = scanForResourceLimits( yml_ )
+            # get absent rolling update count 
+            rollingUpdateDict     = scanForRollingUpdates( yml_ )
+            # get absent network policy count 
+            absentNetPolicyDic    = scanForMissingNetworkPolicy( yml_ )
+            all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic ) )
+            print(constants.SIMPLE_DASH_CHAR ) 
+
+
+    return all_content
+
 
 
 if __name__ == '__main__':

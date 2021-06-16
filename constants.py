@@ -49,6 +49,8 @@ VAL_ROLLING_UPDATE_KW        = 'RollingUpdate'
 NET_POLICY_KW                = 'NetworkPolicy'
 POD_SELECTOR_KW              = 'podSelector'
 MATCH_LABEL_KW               = 'matchLabels'
+ANLYZING_KW                  = 'Analyzing... '
+SIMPLE_DASH_CHAR             = '-----'
 
 
 SECRET_USER_LIST             = ['user']
@@ -58,3 +60,7 @@ FORBIDDEN_PASS_NAMES         = ['_auth', '_file', '_path', '_age', '_content', '
 INVALID_SECRET_CONFIG_VALUES = [ ':undef', '[]', '/',  'hiera', 'unset', 'undefined', '%(' ]  
 LEGIT_KEY_NAMES              = ['crt', 'key']
 VALID_KEY_STRING             = ['-----BEGIN CERTIFICATE-----', '-----BEGIN RSA PRIVATE KEY-----']
+
+
+CSV_HEADER                   = ['ORG', 'YAML_FULL_PATH']
+CSV_ENCODING                 = 'latin-1'
