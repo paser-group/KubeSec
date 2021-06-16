@@ -112,6 +112,10 @@ def scanKeys(k_, val_lis):
 def scanForSecrets(yaml_d): 
     key_lis, dic2ret_secret   = [], {} 
     parser.getKeyRecursively( yaml_d, key_lis )
+    '''
+    if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+    as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+    '''    
     for key_data  in key_lis:
         key_     = key_data[0]
         value_list = [] 
@@ -134,11 +138,15 @@ def scanForOverPrivileges(script_path):
         yaml_dict = parser.loadYAML( script_path )
         key_lis   = []
         parser.getKeyRecursively(yaml_dict, key_lis) 
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
         just_keys = [x_[0] for x_ in key_lis] 
         if ( constants.KIND_KEY_NAME in just_keys ):
             parser.getValsFromKey( yaml_dict, constants.KIND_KEY_NAME, kind_values )
         '''
-        For the tiem being Kind:DeamonSet is not a legit sink because they do not directly provision deplyoments 
+        For the time being Kind:DeamonSet is not a legit sink because they do not directly provision deplyoments 
         '''
         if ( constants.PRIVI_KW in just_keys ) and ( constants.DEAMON_KW not in kind_values  ) :
             privilege_values = []
@@ -197,6 +205,10 @@ def scanForHTTP( path2script ):
             if (constants.HTTP_KW in val_ ) :
                 key_lis   = []
                 parser.getKeyRecursively(yaml_d, key_lis) 
+                '''
+                if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+                as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+                '''
                 just_keys = [x_[0] for x_ in key_lis] 
                 if ( constants.SPEC_KW in just_keys ):
                     '''
@@ -238,16 +250,24 @@ def scanForMissingSecurityContext(path_scrpt):
         key_lis = [] 
         parser.getKeyRecursively(yaml_di, key_lis)
         yaml_values = list( parser.getValuesRecursively(yaml_di) )
-        if (constants.SECU_CONT_KW  not in key_lis): 
-            cnt += 1 
-            prop_value = constants.YAML_SKIPPING_TEXT 
-            if ( constants.DEPLOYMENT_KW in yaml_values ) : 
-                prop_value = constants.DEPLOYMENT_KW
-                lis.append( prop_value )
-            elif ( constants.POD_KW in yaml_values ) :
-                prop_value = constants.POD_KW 
-                lis.append( prop_value )
-            dic[ cnt ] = lis
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
+        real_key_lis = [x_[0] for x_ in key_lis]
+        # print(real_key_lis) 
+        if (constants.SECU_CONT_KW  not in real_key_lis)  and ( constants.CONTAINER_KW in real_key_lis ): 
+            occurrences = real_key_lis.count( constants.CONTAINER_KW )
+            for _ in range( occurrences ):
+                cnt += 1 
+                prop_value = constants.YAML_SKIPPING_TEXT 
+                if ( constants.DEPLOYMENT_KW in yaml_values ) : 
+                    prop_value = constants.DEPLOYMENT_KW
+                    lis.append( prop_value )
+                elif ( constants.POD_KW in yaml_values ) :
+                    prop_value = constants.POD_KW 
+                    lis.append( prop_value )
+                dic[ cnt ] = lis
     # print(dic) 
     return dic 
 
@@ -292,6 +312,10 @@ def scanForResourceLimits(path_scrpt):
         yaml_di = parser.loadYAML( path_scrpt )
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
         key_list = [ x_[0] for x_ in temp_ls  ]
         if ( (constants.CONTAINER_KW in key_list) and (constants.LIMITS_KW not in key_list ) and ( (constants.CPU_KW not in key_list)  or (constants.MEMORY_KW not in key_list) ) ):
             cnt += 1 
@@ -318,6 +342,10 @@ def scanForRollingUpdates(path_script ):
         yaml_di = parser.loadYAML( path_script )
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
         key_list = [ x_[0] for x_ in temp_ls  ]
         if ( (constants.STRATEGY_KW not in key_list ) and  (constants.ROLLING_UPDATE_KW not in key_list)   ):
             cnt += 1 
@@ -346,6 +374,10 @@ def scanForMissingNetworkPolicy(path_script ):
             cnt += 1 
             temp_ls = [] 
             parser.getKeyRecursively(yaml_di, temp_ls) 
+            '''
+            if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+            as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+            '''
             key_list = [ x_[0] for x_ in temp_ls  ]
             if ( (constants.SPEC_KW in key_list ) and  (constants.POD_SELECTOR_KW in key_list) and  (constants.MATCH_LABEL_KW in key_list) ):
                 for src_val in all_values:
@@ -391,8 +423,6 @@ if __name__ == '__main__':
     # another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/values.yaml'
     # another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/minecraft/values.yaml'
 
-    # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
-
-    # fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/data-image/airflow_image/manifests/deployment.yaml'
-    fp_yaml = '/Users/arahman/K8S_REPOS/TEST_REPOS/OpenStack-on-Kubernetes/src-newton/glance-pv.yaml'    
-    scanSingleManifest( fp_yaml ) 
+    # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/turkce-kubernetes/kubernetes-playground/replication-yontemlerine-genel-bakis/replication/deployment.yaml'
+    fp_yaml = 'TEST_ARTIFACTS/no.secu.nfs.yaml' 
+    scanForMissingSecurityContext( fp_yaml ) 
