@@ -97,5 +97,7 @@ _privilege_kw       = 'allowPrivilegeEscalation'
 _name_kw            = 'name'
 _none_kw            = 'NONE'
 
+_sample_output_dir  = '/Users/arahman/K8S_REPOS/TEST_REPOS/'
+_sample_df_field1   = 'INSECURE_HTTP'
 
 _common_error_string = 'SHOULD BE '
