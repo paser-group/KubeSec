@@ -99,5 +99,15 @@ _none_kw            = 'NONE'
 
 _sample_output_dir  = '/Users/arahman/K8S_REPOS/TEST_REPOS/'
 _sample_df_field1   = 'INSECURE_HTTP'
+df_yaml_path_field  = 'YAML_FULL_PATH'
+_integ_fp_scrip1    = '/Users/arahman/K8S_REPOS/TEST_REPOS/OpenStack-on-Kubernetes/src-newton/glance-pv.yaml'
+_integ_fp_scrip2    = '/Users/arahman/K8S_REPOS/TEST_REPOS/OpenStack-on-Kubernetes/src-newton/nfs-server.yaml'
+_integ_fp_scrip3    = '/Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-tutorial-series-youtube/container-communication-k8s-networking/nginx-sidecar-container.yaml'
+_integ_fp_scrip4    = '/Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-gitlab-demo/gitlab/gitlab-config-storage.yml'
+_integ_fp_scrip5    = '/Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-gitlab-demo/gitlab/postgresql-configmap.yml'
+_integ_fp_scrip6    = '/Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-gitlab-demo/gitlab-runner/gitlab-runner-docker-deployment.yml'
+_integ_fp_scrip7    = '/Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-gitlab-demo/load-balancer/nginx/tcp-configmap.yaml'
+_sample_df_field2   = 'UNFILTERED_SECRET'
+
 
 _common_error_string = 'SHOULD BE '

@@ -173,9 +173,9 @@ def scanSingleManifest( path_to_script ):
     '''
     # print(dict_secret)
     within_secret_, templ_secret_, valid_taint_secr  = graphtaint.mineSecretGraph(path_to_script, yaml_dict, dict_secret) 
-    # print(within_match_) 
-    # print(templ_match_) 
-    # print(valid_taints) 
+    # print(within_secret_) 
+    # print(templ_secret_) 
+    # print(valid_taint_secr) 
     '''
     taint tracking for over privileges 
     '''
@@ -394,5 +394,5 @@ if __name__ == '__main__':
     # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
 
     # fp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/data-image/airflow_image/manifests/deployment.yaml'
-    fp_yaml = 'TEST_ARTIFACTS/k8s.doc.network.yaml'    
-    scanForMissingNetworkPolicy( fp_yaml )
+    fp_yaml = '/Users/arahman/K8S_REPOS/TEST_REPOS/OpenStack-on-Kubernetes/src-newton/glance-pv.yaml'    
+    scanSingleManifest( fp_yaml ) 
