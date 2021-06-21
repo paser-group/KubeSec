@@ -33,8 +33,11 @@ def getCountFromAnalysis(ls_):
 
 
 if __name__ =='__main__':
-    ORG_DIR         = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/'
-    OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V3_GITLAB_OUTPUT.csv'
+    ORG_DIR         = '/Users/arahman/K8S_REPOS/GITHUB_REPOS/'
+    OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V3_GITHUB_OUTPUT.csv'
+
+    # ORG_DIR         = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/'
+    # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V3_GITLAB_OUTPUT.csv'
 
     # ORG_DIR         = '/Users/arahman/K8S_REPOS/TEST_REPOS/'
     # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V3_TEST_OUTPUT.csv'

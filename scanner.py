@@ -390,27 +390,33 @@ def scanForMissingNetworkPolicy(path_script ):
 
 
 def runScanner(dir2scan):
-    all_content = [] 
+    all_content   = [] 
     all_yml_files = getYAMLFiles(dir2scan)
+    val_cnt       = 0 
     for yml_ in all_yml_files:
-        if( parser.checkIfValidK8SYaml( yml_ ) ) or (  parser.checkIfValidHelm( yml_ ) ) :
-            print(constants.ANLYZING_KW + yml_)
-            # get secrets and over privileges 
-            within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi  = scanSingleManifest( yml_ )
-            # get insecure HTTP            
-            http_dict             = scanForHTTP( yml_ )
-            # get missing security context 
-            absentSecuContextDict = scanForMissingSecurityContext( yml_ )
-            # get use of default namespace 
-            defaultNameSpaceDict  = scanForDefaultNamespace( yml_ )
-            # get missing resource limit 
-            absentResourceDict    = scanForResourceLimits( yml_ )
-            # get absent rolling update count 
-            rollingUpdateDict     = scanForRollingUpdates( yml_ )
-            # get absent network policy count 
-            absentNetPolicyDic    = scanForMissingNetworkPolicy( yml_ )
-            all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic ) )
-            print(constants.SIMPLE_DASH_CHAR ) 
+        '''
+        Need to filter out `.github/workflows.yml files` first 
+        '''
+        if(parser.checkIfWeirdYAML ( yml_  )  == False): 
+            if( parser.checkIfValidK8SYaml( yml_ ) ) or (  parser.checkIfValidHelm( yml_ ) ) :
+                val_cnt = val_cnt + 1 
+                print(constants.ANLYZING_KW + yml_ + constants.COUNT_PRINT_KW + str(val_cnt) )
+                # get secrets and over privileges 
+                within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi  = scanSingleManifest( yml_ )
+                # get insecure HTTP            
+                http_dict             = scanForHTTP( yml_ )
+                # get missing security context 
+                absentSecuContextDict = scanForMissingSecurityContext( yml_ )
+                # get use of default namespace 
+                defaultNameSpaceDict  = scanForDefaultNamespace( yml_ )
+                # get missing resource limit 
+                absentResourceDict    = scanForResourceLimits( yml_ )
+                # get absent rolling update count 
+                rollingUpdateDict     = scanForRollingUpdates( yml_ )
+                # get absent network policy count 
+                absentNetPolicyDic    = scanForMissingNetworkPolicy( yml_ )
+                all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic ) )
+                print(constants.SIMPLE_DASH_CHAR ) 
 
 
     return all_content

@@ -7,6 +7,15 @@ Parser to file YAML files
 import yaml
 import constants 
 
+def checkIfWeirdYAML(yaml_script):
+    '''
+    to filter invalid YAMLs such as ./github/workflows/ 
+    '''
+    val = False
+    if ( any(x_ in yaml_script for x_ in constants.WEIRD_PATHS  ) ):
+        val = True 
+    return val 
+
 def loadYAML( script_ ):
     dict2ret = {}
     with open(script_, constants.FILE_READ_FLAG  ) as yml_content :
@@ -43,7 +52,8 @@ def getKeyRecursively(  dict_, list2hold,  depth_ = 0  ) :
     gives you ALL keys in a regular/nested dictionary 
     '''
     if  isinstance(dict_, dict) :
-        for key_, val_ in sorted(dict_.items(), key=lambda x: x[0]):              
+        # for key_, val_ in sorted(dict_.items(), key=lambda x: x[0]):    
+        for key_, val_ in sorted(dict_.items(), key = lambda x: x[0] if ( isinstance(x[0], str) ) else str(x[0])  ):    
             if isinstance(val_, dict):
                 list2hold.append( (key_, depth_) )
                 depth_ += 1 

@@ -51,6 +51,8 @@ POD_SELECTOR_KW              = 'podSelector'
 MATCH_LABEL_KW               = 'matchLabels'
 ANLYZING_KW                  = 'Analyzing... '
 SIMPLE_DASH_CHAR             = '-----'
+WEIRD_PATHS                  = ['github/workflows/', '.github/', '.travis.yml']
+COUNT_PRINT_KW               = ' COUNT: '
 
 
 SECRET_USER_LIST             = ['user']
