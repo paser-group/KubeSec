@@ -2,7 +2,7 @@
 
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 
-[![Actions Status](https://github.com/paser-group/TaintPup/workflows/Build%20KubeTaint/badge.svg)](https://github.com/Build%20TaintPupp/actions)
+[![Actions Status](https://github.com/paser-group/KubeSec/workflows/Build%20KubeTaint/badge.svg)](https://github.com/Build%20TaintPupp/actions)
 
 
 # Taintube: Taint Tracking for Secuirty Analysis of Kubernetes Manifests 
