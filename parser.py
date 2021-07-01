@@ -97,12 +97,10 @@ def checkIfValidK8SYaml(path2yaml):
             val2ret = True 
     return val2ret
 
-
+'''
 def getValsFromKey(dict_, target, list_holder  ):
-    '''
-    If you give a key, then this function gets the corresponding values 
-    Multiple values are returned if there are keys with the same name  
-    '''    
+    # If you give a key, then this function gets the corresponding values 
+    # Multiple values are returned if there are keys with the same name  
     if ( isinstance( dict_, dict ) ):
         for key, value in dict_.items():
             if isinstance(value, dict):
@@ -112,6 +110,24 @@ def getValsFromKey(dict_, target, list_holder  ):
                     getValsFromKey(ls, target, list_holder)
             elif key == target:
                 list_holder.append( value )
+''' 
+
+def getValsFromKey(dict_, target, list_holder  ):
+    '''
+    If you give a key, then this function gets the corresponding values 
+    Multiple values are returned if there are keys with the same name  
+    '''    
+    if ( isinstance( dict_, dict ) ):
+        for key, value in dict_.items():
+            # print( key, len(key) , target, len( target ), value  )
+            if key == target:
+                list_holder.append( value )
+            else: 
+                if isinstance(value, dict):
+                    getValsFromKey(value, target, list_holder)
+                elif isinstance(value, list):
+                    for ls in value:
+                        getValsFromKey(ls, target, list_holder)
 
 def checkIfValidHelm(path_script):
     val_ret = False 

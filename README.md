@@ -9,9 +9,7 @@
 
 ## Collaborators 
 
-Akond Rahman (Lead) 
-Shazibul Islam Shamim 
-Farhat Lamia Barsha 
+Akond Rahman (Lead), Shazibul Islam Shamim, and Farhat Lamia Barsha 
 
 ### Details 
 
