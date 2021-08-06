@@ -392,7 +392,6 @@ def scanForTruePID(path_script ):
     if ( parser.checkIfValidK8SYaml( path_script )  ): 
         cnt = 0 
         yaml_di = parser.loadYAML( path_script )
-        all_values = list( parser.getValuesRecursively(yaml_di)  )
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
         '''
@@ -417,7 +416,6 @@ def scanForTrueIPC(path_script ):
     if ( parser.checkIfValidK8SYaml( path_script )  ): 
         cnt = 0 
         yaml_di = parser.loadYAML( path_script )
-        all_values = list( parser.getValuesRecursively(yaml_di)  )
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
         '''
@@ -435,6 +433,24 @@ def scanForTrueIPC(path_script ):
                 dic[ cnt ] = []
     return dic  
 
+def scanDockerSock(path_script ):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_script )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_script )
+        temp_ls = [] 
+        parser.getKeyRecursively(yaml_di, temp_ls) 
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
+        key_list = [ x_[0] for x_ in temp_ls  ]
+        if ( all( z_ in key_list for z_ in constants.DOCKERSOCK_KW_LIST )  ) :
+            all_values = list( parser.getValuesRecursively(yaml_di)  )
+            if (constants.DOCKERSOCK_STRING in all_values) and (constants.DOCKERSOCK_PATH_KW in all_values):
+                cnt += 1 
+                dic[ cnt ] = []
+    return dic  
 
 def runScanner(dir2scan):
     all_content   = [] 
@@ -462,12 +478,87 @@ def runScanner(dir2scan):
                 rollingUpdateDict     = scanForRollingUpdates( yml_ )
                 # get absent network policy count 
                 absentNetPolicyDic    = scanForMissingNetworkPolicy( yml_ )
-                all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic ) )
+                # get hostPIDs where True is assigned 
+                pid_dic               = scanForTruePID( yml_ )
+                # get hostIPCs where True is assigned 
+                ipc_dic               = scanForTrueIPC( yml_ )
+                # scan for docker sock paths: /var.run/docker.sock 
+                dockersock_dic        = scanDockerSock( yml_ )
+                # scan for hostNetwork where True is assigned 
+                host_net_dic          = scanForHostNetwork( yml_ )
+                # scan for CAP SYS 
+                cap_sys_dic           = scanForCAPSYS( yml_ )
+                # scan for Host Aliases 
+                host_alias_dic        = scanForHostAliases( yml_ )
+                all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic, pid_dic, ipc_dic, dockersock_dic, host_net_dic, cap_sys_dic, host_alias_dic ) )
                 print(constants.SIMPLE_DASH_CHAR ) 
 
 
     return all_content
 
+
+def scanForHostNetwork(path_script ):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_script )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_script )
+        temp_ls = [] 
+        parser.getKeyRecursively(yaml_di, temp_ls) 
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
+        key_list = [ x_[0] for x_ in temp_ls  ]
+        if (constants.SPEC_KW in key_list ) and ( constants.HOST_NET_KW in key_list ) :
+            vals_for_net = [] 
+            parser.getValsFromKey(yaml_di, constants.HOST_NET_KW, vals_for_net)
+            # print(vals_for_net)
+            vals_for_net = [str(z_) for z_ in vals_for_net if isinstance( z_,  bool) ]
+            vals_for_net = [z_.lower() for z_ in vals_for_net]
+            if constants.TRUE_LOWER_KW in vals_for_net: 
+                cnt += 1 
+                dic[ cnt ] = []
+    return dic  
+
+
+def scanForCAPSYS(path_script ):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_script )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_script )
+        temp_ls = [] 
+        parser.getKeyRecursively(yaml_di, temp_ls) 
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
+        key_list = [ x_[0] for x_ in temp_ls  ]
+        # print('ASI_MAMA', key_list)
+        if ( all( z_ in key_list for z_ in constants.CAPSYS_KW_LIST )  ) :
+            relevant_values = parser.getValuesRecursively(yaml_di)
+            if (constants.CAPSYS_ADMIN_STRING in relevant_values) :
+                cnt += 1 
+                dic[ cnt ] = []
+    return dic  
+
+def scanForHostAliases(path_script ):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_script )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_script )
+        temp_ls = [] 
+        parser.getKeyRecursively(yaml_di, temp_ls) 
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
+        key_list = [ x_[0] for x_ in temp_ls  ]
+        if ( constants.HOST_ALIAS_KW in key_list ) :
+                cnt += 1 
+                relevant_values = [] 
+                parser.getValsFromKey(yaml_di, constants.HOST_ALIAS_KW, relevant_values)
+                dic[ cnt ] = relevant_values
+    return dic  
 
 
 if __name__ == '__main__':
@@ -483,6 +574,13 @@ if __name__ == '__main__':
     # tp_http = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
     # scanForHTTP( tp_http )
 
-    tp_pid  = '/Users/arahman/K8S_REPOS/GITHUB_REPOS/kubernetes-ckad/01.kubernetes-in-action/Chapter13/pod-with-host-pid-and-ipc.yaml'
-    pid_dic = scanForTrueIPC( tp_pid )
-    print(pid_dic)
+    # tp_pid  = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/32_node_daemonSet.yaml'
+    # a_dict  = scanForHostNetwork( tp_pid )
+
+    # tp_docker_sock   = 'TEST_ARTIFACTS/docker.sock.yaml' 
+    # docker_sock_dict = scanDockerSock( tp_docker_sock )
+
+    cap_sys_yaml = 'TEST_ARTIFACTS/cap.sys.yaml'
+    a_dict       = scanForHostAliases( cap_sys_yaml )
+    
+    print(a_dict)

@@ -14,7 +14,7 @@ import constants
 class TestSimpleIntegration( unittest.TestCase ):
 
     def testOutputColums(self):     
-        oracle_value  = 11
+        oracle_value  = 17
         dirName       = TEST_CONSTANTS._sample_output_dir 
         content_as_ls = scanner.runScanner( dirName )
         df_all        = pd.DataFrame(  main.getCountFromAnalysis( content_as_ls ) )

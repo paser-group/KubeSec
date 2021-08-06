@@ -494,9 +494,15 @@ class TestMissingNetPolicy( unittest.TestCase ):
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 class TestHostIssues( unittest.TestCase ):
 
-    def testHostPIDPresence(self):     
+    def testHostPIDPresenceV1(self):     
         oracle_value = 1
         scriptName   = TEST_CONSTANTS.tp_host_ipc_yaml 
+        res_dic      = scanner.scanForTruePID( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testHostPIDPresenceV2(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.tp_host_net_yaml
         res_dic      = scanner.scanForTruePID( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
@@ -506,17 +512,53 @@ class TestHostIssues( unittest.TestCase ):
         res_dic      = scanner.scanForTruePID( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
-    def testHostIPCPresence(self):     
+    def testDockerSockPresence(self):     
         oracle_value = 1
-        scriptName   = TEST_CONSTANTS.tp_host_ipc_yaml 
-        res_dic      = scanner.scanForTrueIPC( scriptName ) 
+        scriptName   = TEST_CONSTANTS.tp_docker_sock_yaml
+        res_dic      = scanner.scanDockerSock( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
-    def testHostIPCAbsence(self):     
+    def testDockerSockAbsence(self):     
         oracle_value = 0
         scriptName   = TEST_CONSTANTS.net_policy_yaml 
-        res_dic      = scanner.scanForTrueIPC( scriptName ) 
+        res_dic      = scanner.scanDockerSock( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testHostNetworkPresence(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.tp_host_net_yaml
+        res_dic      = scanner.scanForHostNetwork( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testHostNetworkAbsence(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.net_policy_yaml 
+        res_dic      = scanner.scanForHostNetwork( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testCAPSYSPresence(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.tp_cap_sys_yaml
+        res_dic      = scanner.scanForCAPSYS( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testCAPSYSAbsence(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.net_policy_yaml 
+        res_dic      = scanner.scanForCAPSYS( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+    def testHostAliasPresence(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.tp_cap_sys_yaml
+        res_dic      = scanner.scanForHostAliases( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testHostAliasAbsence(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.net_policy_yaml 
+        res_dic      = scanner.scanForHostAliases( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
 
 if __name__ == '__main__':
     unittest.main()

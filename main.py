@@ -26,8 +26,14 @@ def getCountFromAnalysis(ls_):
         absentResoDict = tup_[9]                 
         rollUpdateDic  = tup_[10]
         netPolicyDict  = tup_[11]                
+        pidfDict       = tup_[12]                
+        ipcDict        = tup_[13]                 
+        dockersockDic  = tup_[14]
+        hostNetDict    = tup_[15]                        
+        cap_sys_dic    = tup_[16]
+        host_alias_dic = tup_[17]
             
-        list2ret.append(  ( dir_name, script_name, within_sec_cnt, len(taint_secret), len(privilege_dic), len(http_dict), len(secuContextDic), len(nSpaceDict), len(absentResoDict), len(rollUpdateDic), len(netPolicyDict)  )  )
+        list2ret.append(  ( dir_name, script_name, within_sec_cnt, len(taint_secret), len(privilege_dic), len(http_dict), len(secuContextDic), len(nSpaceDict), len(absentResoDict), len(rollUpdateDic), len(netPolicyDict), len(pidfDict), len(ipcDict), len(dockersockDic), len(hostNetDict), len(cap_sys_dic), len(host_alias_dic)  )  )
     return list2ret
 
 

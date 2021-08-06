@@ -147,7 +147,10 @@ def readYAMLAsStr( path_script ):
 
 
 if __name__=='__main__':
-    dic = loadYAML('/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/templates/integrate-grafana-job.yaml')
+    yaml_path = 'TEST_ARTIFACTS/docker.sock.yaml'
+    dic       = loadYAML(yaml_path)
+    # print(dic)
+    # dic = loadYAML('/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/templates/integrate-grafana-job.yaml')
     # getKeyRecursively( dic )
     # print('-'*100)
     # print( keyMiner(dic, '/usr/local/airflow/analytics' ) )
