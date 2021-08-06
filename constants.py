@@ -53,6 +53,9 @@ ANLYZING_KW                  = 'Analyzing... '
 SIMPLE_DASH_CHAR             = '-----'
 WEIRD_PATHS                  = ['github/workflows/', '.github/', '.travis.yml']
 COUNT_PRINT_KW               = ' COUNT: ' 
+HOST_PID_KW                  = 'hostPID'
+HOST_IPC_KW                  = 'hostIPC'
+TRUE_LOWER_KW                = 'true' 
 
 
 SECRET_USER_LIST             = ['user']

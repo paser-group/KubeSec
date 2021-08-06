@@ -235,7 +235,8 @@ def scanForHTTP( path2script ):
                         http_count += 1 
                         infected_list = graphtaint.getTaintsFromConfigMaps( path2script  ) 
                         sh_files_configmaps[http_count] = infected_list
-                        
+                        # print('ASI_MAMA:', sh_files_configmaps) 
+                        # print( val_holder )
                         # print(val_)
                         # print(just_keys)  
     
@@ -386,7 +387,53 @@ def scanForMissingNetworkPolicy(path_script ):
     # print(dic) 
     return dic  
 
+def scanForTruePID(path_script ):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_script )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_script )
+        all_values = list( parser.getValuesRecursively(yaml_di)  )
+        temp_ls = [] 
+        parser.getKeyRecursively(yaml_di, temp_ls) 
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
+        key_list = [ x_[0] for x_ in temp_ls  ]
+        if (constants.SPEC_KW in key_list ) and ( constants.HOST_PID_KW in key_list ) :
+            vals_for_pid = [] 
+            parser.getValsFromKey(yaml_di, constants.HOST_PID_KW, vals_for_pid)
+            # print(vals_for_pid)
+            vals_for_pid = [str(z_) for z_ in vals_for_pid if isinstance( z_,  bool) ]
+            vals_for_pid = [z_.lower() for z_ in vals_for_pid]
+            if constants.TRUE_LOWER_KW in vals_for_pid: 
+                cnt += 1 
+                dic[ cnt ] = []
+    return dic  
 
+
+def scanForTrueIPC(path_script ):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_script )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_script )
+        all_values = list( parser.getValuesRecursively(yaml_di)  )
+        temp_ls = [] 
+        parser.getKeyRecursively(yaml_di, temp_ls) 
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
+        key_list = [ x_[0] for x_ in temp_ls  ]
+        if (constants.SPEC_KW in key_list ) and ( constants.HOST_IPC_KW in key_list ) :
+            vals_for_ipc = [] 
+            parser.getValsFromKey(yaml_di, constants.HOST_IPC_KW, vals_for_ipc)
+            vals_for_ipc = [str(z_) for z_ in vals_for_ipc if isinstance( z_,  bool) ]
+            vals_for_ipc = [z_.lower() for z_ in vals_for_ipc]
+            if constants.TRUE_LOWER_KW in vals_for_ipc: 
+                cnt += 1 
+                dic[ cnt ] = []
+    return dic  
 
 
 def runScanner(dir2scan):
@@ -430,5 +477,12 @@ if __name__ == '__main__':
     # another_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/justin@kubernetes/src/services/minecraft/values.yaml'
 
     # tp_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/turkce-kubernetes/kubernetes-playground/replication-yontemlerine-genel-bakis/replication/deployment.yaml'
-    fp_yaml = 'TEST_ARTIFACTS/no.secu.nfs.yaml' 
-    scanForMissingSecurityContext( fp_yaml ) 
+    # fp_yaml = 'TEST_ARTIFACTS/no.secu.nfs.yaml' 
+    # scanForMissingSecurityContext( fp_yaml ) 
+
+    # tp_http = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
+    # scanForHTTP( tp_http )
+
+    tp_pid  = '/Users/arahman/K8S_REPOS/GITHUB_REPOS/kubernetes-ckad/01.kubernetes-in-action/Chapter13/pod-with-host-pid-and-ipc.yaml'
+    pid_dic = scanForTrueIPC( tp_pid )
+    print(pid_dic)

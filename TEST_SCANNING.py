@@ -492,8 +492,31 @@ class TestMissingNetPolicy( unittest.TestCase ):
         scriptName   = TEST_CONSTANTS.net_policy_yaml 
         res_dic = scanner.scanForMissingNetworkPolicy( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+class TestHostIssues( unittest.TestCase ):
 
+    def testHostPIDPresence(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.tp_host_ipc_yaml 
+        res_dic      = scanner.scanForTruePID( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
+    def testHostPIDAbsence(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.net_policy_yaml 
+        res_dic      = scanner.scanForTruePID( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testHostIPCPresence(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.tp_host_ipc_yaml 
+        res_dic      = scanner.scanForTrueIPC( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testHostIPCAbsence(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.net_policy_yaml 
+        res_dic      = scanner.scanForTrueIPC( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
 if __name__ == '__main__':
     unittest.main()

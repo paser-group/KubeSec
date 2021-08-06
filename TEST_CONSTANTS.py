@@ -78,6 +78,7 @@ fp_rolling_yaml11   = 'TEST_ARTIFACTS/fp.concourse.yaml'
 net_policy_yaml     = 'TEST_ARTIFACTS/k8s.doc.network.yaml'
 tp_secucont_no_yaml = 'TEST_ARTIFACTS/tp_secu_context_miss.yaml'
 fp_secucont_no_yaml = 'TEST_ARTIFACTS/fp_secu_context_miss.yaml'
+tp_host_ipc_yaml    = 'TEST_ARTIFACTS/host-ipc-pid-true.yaml'
 
 _value_for_key      = '/usr/local/airflow/analytics'
 _mount_path_kw      = 'mountPath' 
