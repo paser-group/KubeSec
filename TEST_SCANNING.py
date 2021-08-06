@@ -524,7 +524,7 @@ class TestHostIssues( unittest.TestCase ):
         res_dic      = scanner.scanDockerSock( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
-    def testHostNetworkPresence(self):     
+    def testHostNetworkPresenceV1(self):     
         oracle_value = 1
         scriptName   = TEST_CONSTANTS.tp_host_net_yaml
         res_dic      = scanner.scanForHostNetwork( scriptName ) 
@@ -557,6 +557,12 @@ class TestHostIssues( unittest.TestCase ):
         oracle_value = 0
         scriptName   = TEST_CONSTANTS.net_policy_yaml 
         res_dic      = scanner.scanForHostAliases( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testHostNetworkPresenceV2(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.tp_host_net_yaml2 
+        res_dic      = scanner.scanForHostNetwork( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
 

@@ -574,13 +574,13 @@ if __name__ == '__main__':
     # tp_http = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
     # scanForHTTP( tp_http )
 
-    # tp_pid  = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/koris/addons/prometheus/32_node_daemonSet.yaml'
-    # a_dict  = scanForHostNetwork( tp_pid )
+    tp_pid  = 'TEST_ARTIFACTS/tp.host.net2.yaml'
+    a_dict  = scanForHostNetwork( tp_pid )
 
     # tp_docker_sock   = 'TEST_ARTIFACTS/docker.sock.yaml' 
     # docker_sock_dict = scanDockerSock( tp_docker_sock )
 
-    cap_sys_yaml = 'TEST_ARTIFACTS/cap.sys.yaml'
-    a_dict       = scanForHostAliases( cap_sys_yaml )
+    # cap_sys_yaml = 'TEST_ARTIFACTS/cap.sys.yaml'
+    # a_dict       = scanForHostAliases( cap_sys_yaml )
     
     print(a_dict)
