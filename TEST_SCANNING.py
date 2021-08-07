@@ -565,6 +565,17 @@ class TestHostIssues( unittest.TestCase ):
         res_dic      = scanner.scanForHostNetwork( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
+    def testAllowPrivilegePresence(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.tp_allow_privilege 
+        res_dic      = scanner.scanAllowPrivileges( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAllowPrivilegeAbsence(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.net_policy_yaml 
+        res_dic      = scanner.scanAllowPrivileges( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
 if __name__ == '__main__':
     unittest.main()

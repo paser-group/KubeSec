@@ -490,7 +490,9 @@ def runScanner(dir2scan):
                 cap_sys_dic           = scanForCAPSYS( yml_ )
                 # scan for Host Aliases 
                 host_alias_dic        = scanForHostAliases( yml_ )
-                all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic, pid_dic, ipc_dic, dockersock_dic, host_net_dic, cap_sys_dic, host_alias_dic ) )
+                # scan for allowPrivilegeEscalation 
+                allow_privi_dic       = scanAllowPrivileges( yml_ )
+                all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic, pid_dic, ipc_dic, dockersock_dic, host_net_dic, cap_sys_dic, host_alias_dic, allow_privi_dic ) )
                 print(constants.SIMPLE_DASH_CHAR ) 
 
 
@@ -561,6 +563,30 @@ def scanForHostAliases(path_script ):
     return dic  
 
 
+def scanAllowPrivileges(path_script ):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_script )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_script )
+        temp_ls = [] 
+        parser.getKeyRecursively(yaml_di, temp_ls) 
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
+        key_list = [ x_[0] for x_ in temp_ls  ]
+        # print(key_list)
+        if ( all( var in key_list for var in constants.ALLOW_PRIVI_KW_LIST ) ) :
+                cnt += 1 
+                relevant_values = [] 
+                parser.getValsFromKey(yaml_di, constants.ALLOW_PRIVILEGE_KW, relevant_values)
+                relevant_values = [str(x_) for x_ in relevant_values if isinstance(x_, bool)]
+                relevant_values = [x_.lower() for x_ in relevant_values]
+                if constants.TRUE_LOWER_KW in relevant_values:
+                    dic[cnt] = [] 
+    return dic  
+
+
 if __name__ == '__main__':
     # test_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment-result.yaml'
     # scanSingleManifest(test_yaml) 
@@ -574,8 +600,8 @@ if __name__ == '__main__':
     # tp_http = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/OpenStack-on-Kubernetes/src-ocata/configMap-glance-setup.yaml'
     # scanForHTTP( tp_http )
 
-    tp_pid  = 'TEST_ARTIFACTS/tp.host.net2.yaml'
-    a_dict  = scanForHostNetwork( tp_pid )
+    # tp_pid  = 'TEST_ARTIFACTS/tp.host.net2.yaml'
+    # a_dict  = scanForHostNetwork( tp_pid )
 
     # tp_docker_sock   = 'TEST_ARTIFACTS/docker.sock.yaml' 
     # docker_sock_dict = scanDockerSock( tp_docker_sock )
@@ -583,4 +609,7 @@ if __name__ == '__main__':
     # cap_sys_yaml = 'TEST_ARTIFACTS/cap.sys.yaml'
     # a_dict       = scanForHostAliases( cap_sys_yaml )
     
+    allow_privi_yaml = 'TEST_ARTIFACTS/allow.privilege.yaml'
+    a_dict           = scanAllowPrivileges( allow_privi_yaml  )
+
     print(a_dict)

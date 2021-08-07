@@ -83,6 +83,7 @@ tp_docker_sock_yaml = 'TEST_ARTIFACTS/docker.sock.yaml'
 tp_host_net_yaml    = 'TEST_ARTIFACTS/host-net-tp.yaml'
 tp_cap_sys_yaml     = 'TEST_ARTIFACTS/cap.sys.yaml'
 tp_host_net_yaml2   = 'TEST_ARTIFACTS/tp.host.net2.yaml'
+tp_allow_privilege  = 'TEST_ARTIFACTS/allow.privilege.yaml'
 
 _value_for_key      = '/usr/local/airflow/analytics'
 _mount_path_kw      = 'mountPath' 
