@@ -577,5 +577,39 @@ class TestHostIssues( unittest.TestCase ):
         res_dic      = scanner.scanAllowPrivileges( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
+    def testAnotherDockerSock(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.another_dockersock 
+        res_dic      = scanner.scanDockerSock( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+
+class TestSecCompIssues( unittest.TestCase ):
+
+    def testUnconfinedSecComp(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.tp_seccomp_unconf
+        res_dic      = scanner.scanForUnconfinedSeccomp( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testNeutralSecComp1(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_seccomp_unconf
+        res_dic      = scanner.scanForUnconfinedSeccomp( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testNeutralSecComp2(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_rolling_yaml7
+        res_dic      = scanner.scanForUnconfinedSeccomp( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testNeutralSecComp3(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.tp_host_net_yaml
+        res_dic      = scanner.scanForUnconfinedSeccomp( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -33,8 +33,9 @@ def getCountFromAnalysis(ls_):
         cap_sys_dic    = tup_[16]
         host_alias_dic = tup_[17]
         allow_priv_dic = tup_[18]
+        unconfined_dic = tup_[19]
             
-        list2ret.append(  ( dir_name, script_name, within_sec_cnt, len(taint_secret), len(privilege_dic), len(http_dict), len(secuContextDic), len(nSpaceDict), len(absentResoDict), len(rollUpdateDic), len(netPolicyDict), len(pidfDict), len(ipcDict), len(dockersockDic), len(hostNetDict), len(cap_sys_dic), len(host_alias_dic), len(allow_priv_dic)  )  )
+        list2ret.append(  ( dir_name, script_name, within_sec_cnt, len(taint_secret), len(privilege_dic), len(http_dict), len(secuContextDic), len(nSpaceDict), len(absentResoDict), len(rollUpdateDic), len(netPolicyDict), len(pidfDict), len(ipcDict), len(dockersockDic), len(hostNetDict), len(cap_sys_dic), len(host_alias_dic), len(allow_priv_dic), len(unconfined_dic)  )  )
     return list2ret
 
 
@@ -45,13 +46,13 @@ if __name__ =='__main__':
     '''
     #TODO 
     # ORG_DIR         = '/Users/arahman/K8S_REPOS/GITHUB_REPOS/'
-    # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V4_GITHUB_OUTPUT.csv'
+    # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V7_GITHUB_OUTPUT.csv'
 
     # ORG_DIR         = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/'
-    # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V5_GITLAB_OUTPUT.csv'
+    # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V7_GITLAB_OUTPUT.csv'
 
     ORG_DIR         = '/Users/arahman/K8S_REPOS/TEST_REPOS/'
-    OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V5_TEST_OUTPUT.csv'
+    OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V7_TEST_OUTPUT.csv'
 
     content_as_ls   = scanner.runScanner( ORG_DIR )
     df_all          = pd.DataFrame( getCountFromAnalysis( content_as_ls ) )

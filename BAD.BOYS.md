@@ -21,9 +21,14 @@
 - /Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-gitlab-demo/load-balancer/nginx/tcp-configmap.yaml
 
 
-##### Save for Taintube
+##### Save for Taintube (ALREADY HANDLED)
 - /Users/arahman/K8S_REPOS/TEST_REPOS/OpenStack-on-Kubernetes/src-newton/configMap-horizon-setup.yaml 
 - /Users/arahman/K8S_REPOS/TEST_REPOS/OpenStack-on-Kubernetes/src-newton/configMap-neutron-server-setup.yaml 
 - /Users/arahman/K8S_REPOS/TEST_REPOS/OpenStack-on-Kubernetes/src-queens/configMap-openstack-openrc.yaml 
 - /Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-tutorial-series-youtube/container-communication-k8s-networking/postgres.yaml 
 - /Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-gitlab-demo/gitlab/gitlab-deployment.yml
+
+###### KubeSec can handle but we can't (NONE EXISTS YET)
+
+##### Parsing is still a problem (LEAVE AS LIMITATION )
+- /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-extras/files/templates/calico/calico.yaml (NESTED YAML: HOST NETWORK)

@@ -447,7 +447,7 @@ def scanDockerSock(path_script ):
         key_list = [ x_[0] for x_ in temp_ls  ]
         if ( all( z_ in key_list for z_ in constants.DOCKERSOCK_KW_LIST )  ) :
             all_values = list( parser.getValuesRecursively(yaml_di)  )
-            if (constants.DOCKERSOCK_STRING in all_values) and (constants.DOCKERSOCK_PATH_KW in all_values):
+            if (constants.DOCKERSOCK_PATH_KW in all_values):
                 cnt += 1 
                 dic[ cnt ] = []
     return dic  
@@ -492,7 +492,9 @@ def runScanner(dir2scan):
                 host_alias_dic        = scanForHostAliases( yml_ )
                 # scan for allowPrivilegeEscalation 
                 allow_privi_dic       = scanAllowPrivileges( yml_ )
-                all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic, pid_dic, ipc_dic, dockersock_dic, host_net_dic, cap_sys_dic, host_alias_dic, allow_privi_dic ) )
+                # scan for unconfied seccomp 
+                unconfied_seccomp_dict= scanForUnconfinedSeccomp( yml_ )
+                all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic, pid_dic, ipc_dic, dockersock_dic, host_net_dic, cap_sys_dic, host_alias_dic, allow_privi_dic, unconfied_seccomp_dict ) )
                 print(constants.SIMPLE_DASH_CHAR ) 
 
 
@@ -587,6 +589,28 @@ def scanAllowPrivileges(path_script ):
     return dic  
 
 
+def scanForUnconfinedSeccomp(path_script ):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_script )  ): 
+        cnt = 0 
+        yaml_di = parser.loadYAML( path_script )
+        temp_ls = [] 
+        parser.getKeyRecursively(yaml_di, temp_ls) 
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
+        key_list = [ x_[0] for x_ in temp_ls  ]
+        # print(key_list)
+        if ( all( var in key_list for var in constants.SECCOMP_KW_LIST ) ) :
+                cnt += 1 
+                relevant_values = [] 
+                parser.getValsFromKey(yaml_di, constants.TYPE_KW, relevant_values)
+                # print( relevant_values )
+                if constants.UNCONFIED_KW in relevant_values:
+                    dic[cnt] = [] 
+    return dic  
+
 if __name__ == '__main__':
     # test_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-tutorial-series-youtube/kubernetes-configuration-file-explained/nginx-deployment-result.yaml'
     # scanSingleManifest(test_yaml) 
@@ -603,13 +627,19 @@ if __name__ == '__main__':
     # tp_pid  = 'TEST_ARTIFACTS/tp.host.net2.yaml'
     # a_dict  = scanForHostNetwork( tp_pid )
 
-    # tp_docker_sock   = 'TEST_ARTIFACTS/docker.sock.yaml' 
-    # docker_sock_dict = scanDockerSock( tp_docker_sock )
+    tp_docker_sock   = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/gitlab-runner/gitlab-runner-docker-deployment.yml' 
+    a_dict           = scanDockerSock( tp_docker_sock )
 
     # cap_sys_yaml = 'TEST_ARTIFACTS/cap.sys.yaml'
     # a_dict       = scanForHostAliases( cap_sys_yaml )
     
-    allow_privi_yaml = 'TEST_ARTIFACTS/allow.privilege.yaml'
-    a_dict           = scanAllowPrivileges( allow_privi_yaml  )
+    # allow_privi_yaml = 'TEST_ARTIFACTS/allow.privilege.yaml'
+    # a_dict           = scanAllowPrivileges( allow_privi_yaml  )
+
+    # missing_net_yaml = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/advanced-kubernetes-workshop/lb/nginx-dep.yaml'
+    # a_dict           = scanForMissingNetworkPolicy( missing_net_yaml )
+
+    # seccomp_unconfined_yaml = 'TEST_ARTIFACTS/fp.seccomp.unconfined.yaml'
+    # a_dict                  = scanForUnconfinedSeccomp( seccomp_unconfined_yaml )
 
     print(a_dict)
