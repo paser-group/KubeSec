@@ -173,7 +173,8 @@ def mineServiceGraph( script_path, dict_yaml, src_val ):
     yaml_files  = getYAMLFiles( svc_dir )    
     for yaml_f in yaml_files:
         if( parser.checkIfValidK8SYaml( yaml_f ) ):
-            sink_yaml_dict = parser.loadYAML( yaml_f ) 
+            dict_as_list   = parser.loadMultiYAML( yaml_f )
+            sink_yaml_dict = parser.getSingleDict4MultiDocs( dict_as_list )                    
             sink_val_li_   = list(  parser.getValuesRecursively(sink_yaml_dict) )
             if( src_val in sink_val_li_ ) and ( constants.DEPLOYMENT_KW in sink_val_li_ ): 
                     sink_keys = parser.keyMiner(sink_yaml_dict, src_val)
@@ -194,7 +195,8 @@ def mineNetPolGraph( script_, dict_y, src_val, src_keys ):
     yaml_files  = getYAMLFiles( net_pol_dir )    
     for yaml_f in yaml_files:
         if( parser.checkIfValidK8SYaml( yaml_f ) ):
-            sink_yaml_dict = parser.loadYAML( yaml_f )     
+            dict_as_list   = parser.loadMultiYAML( yaml_f )
+            sink_yaml_dict = parser.getSingleDict4MultiDocs( dict_as_list )                    
             sink_val_li_   = list(  parser.getValuesRecursively(sink_yaml_dict) )
             if( src_val in sink_val_li_ ) and ( (constants.DEPLOYMENT_KW in sink_val_li_) or (constants.POD_KW in sink_val_li_) ):  
                 sink_keys = parser.keyMiner(sink_yaml_dict, src_val)                

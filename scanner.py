@@ -135,7 +135,8 @@ def scanForOverPrivileges(script_path):
     kind_values = [] 
     checkVal = parser.checkIfValidK8SYaml( script_path )
     if(checkVal): 
-        yaml_dict = parser.loadYAML( script_path )
+        dict_as_list = parser.loadMultiYAML( script_path )
+        yaml_dict    = parser.getSingleDict4MultiDocs( dict_as_list )
         key_lis   = []
         parser.getKeyRecursively(yaml_dict, key_lis) 
         '''
@@ -170,7 +171,8 @@ def scanSingleManifest( path_to_script ):
     # print(checkVal) 
     # initializing 
     dict_secret = {} 
-    yaml_dict = parser.loadYAML( path_to_script )
+    dict_list   = parser.loadMultiYAML( path_to_script )
+    yaml_dict   = parser.getSingleDict4MultiDocs( dict_list )
     if(checkVal): 
         dict_secret = scanForSecrets( yaml_dict )
     elif ( parser.checkIfValidHelm( path_to_script )) :
@@ -197,9 +199,10 @@ def scanForHTTP( path2script ):
     sh_files_configmaps = {} 
     http_count = 0 
     if parser.checkIfValidK8SYaml( path2script ) or parser.checkIfValidHelm( path2script ):
-        yaml_d   = parser.loadYAML( path2script )
-        all_vals = list (parser.getValuesRecursively( yaml_d )  )
-        all_vals = [x_ for x_ in all_vals if isinstance(x_, str) ] 
+        dict_as_list = parser.loadMultiYAML( path2script )
+        yaml_d       = parser.getSingleDict4MultiDocs( dict_as_list )
+        all_vals     = list (parser.getValuesRecursively( yaml_d )  )
+        all_vals     = [x_ for x_ in all_vals if isinstance(x_, str) ] 
         for val_ in all_vals:
             # if (constants.HTTP_KW in val_ ) and ( (constants.WWW_KW in val_) and (constants.ORG_KW in val_) ):
             if (constants.HTTP_KW in val_ ) :
@@ -247,7 +250,8 @@ def scanForMissingSecurityContext(path_scrpt):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_scrpt )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_scrpt )
+        dict_as_list = parser.loadMultiYAML( path_scrpt )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         key_lis = [] 
         parser.getKeyRecursively(yaml_di, key_lis)
         yaml_values = list( parser.getValuesRecursively(yaml_di) )
@@ -277,7 +281,8 @@ def scanForDefaultNamespace(path_scrpt):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_scrpt )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_scrpt )
+        dict_as_list = parser.loadMultiYAML( path_scrpt )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         key_lis = parser.keyMiner(yaml_di, constants.DEFAULT_KW)
         if (isinstance( key_lis, list ) ):
             if (len(key_lis) > 0 ) : 
@@ -310,7 +315,8 @@ def scanForResourceLimits(path_scrpt):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_scrpt )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_scrpt )
+        dict_as_list = parser.loadMultiYAML( path_scrpt )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
         '''
@@ -340,7 +346,8 @@ def scanForRollingUpdates(path_script ):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_script )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_script )
+        dict_as_list = parser.loadMultiYAML( path_script )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
         '''
@@ -369,7 +376,8 @@ def scanForMissingNetworkPolicy(path_script ):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_script )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_script )
+        dict_as_list = parser.loadMultiYAML( path_script )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         all_values = list( parser.getValuesRecursively(yaml_di)  )
         if ( constants.NET_POLICY_KW not in all_values ):
             cnt += 1 
@@ -391,7 +399,8 @@ def scanForTruePID(path_script ):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_script )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_script )
+        dict_as_list = parser.loadMultiYAML( path_script )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
         '''
@@ -415,7 +424,8 @@ def scanForTrueIPC(path_script ):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_script )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_script )
+        dict_as_list = parser.loadMultiYAML( path_script )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
         '''
@@ -437,7 +447,8 @@ def scanDockerSock(path_script ):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_script )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_script )
+        dict_as_list = parser.loadMultiYAML( path_script )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
         '''
@@ -505,7 +516,8 @@ def scanForHostNetwork(path_script ):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_script )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_script )
+        dict_as_list = parser.loadMultiYAML( path_script )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
         '''
@@ -529,7 +541,8 @@ def scanForCAPSYS(path_script ):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_script )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_script )
+        dict_as_list = parser.loadMultiYAML( path_script )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
         '''
@@ -549,7 +562,8 @@ def scanForHostAliases(path_script ):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_script )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_script )
+        dict_as_list = parser.loadMultiYAML( path_script )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
         '''
@@ -569,7 +583,8 @@ def scanAllowPrivileges(path_script ):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_script )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_script )
+        dict_as_list = parser.loadMultiYAML( path_script )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
         '''
@@ -593,7 +608,8 @@ def scanForUnconfinedSeccomp(path_script ):
     dic, lis   = {}, []
     if ( parser.checkIfValidK8SYaml( path_script )  ): 
         cnt = 0 
-        yaml_di = parser.loadYAML( path_script )
+        dict_as_list = parser.loadMultiYAML( path_script )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         temp_ls = [] 
         parser.getKeyRecursively(yaml_di, temp_ls) 
         '''

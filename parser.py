@@ -16,14 +16,7 @@ def checkIfWeirdYAML(yaml_script):
         val = True 
     return val 
 
-def loadYAML( script_ ):
-    dict2ret = {}
-    with open(script_, constants.FILE_READ_FLAG  ) as yml_content :
-        try:
-            dict2ret =   yaml.safe_load(yml_content) 
-        except yaml.YAMLError as exc:
-            print( constants.YAML_SKIPPING_TEXT  )    
-    return dict2ret 
+
 
 def keyMiner(dic_, value):
   '''
@@ -83,8 +76,9 @@ def getValuesRecursively(  dict_   ) :
 
 def checkIfValidK8SYaml(path2yaml):
     val2ret   = False 
-    yaml_dict = loadYAML( path2yaml )
-    k_list    = []
+    dict_as_list = loadMultiYAML( path2yaml )
+    yaml_dict    = getSingleDict4MultiDocs( dict_as_list )        
+    k_list       = []
     getKeyRecursively( yaml_dict, k_list )
     temp_ = []
     for k_ in k_list:
@@ -97,20 +91,7 @@ def checkIfValidK8SYaml(path2yaml):
             val2ret = True 
     return val2ret
 
-'''
-def getValsFromKey(dict_, target, list_holder  ):
-    # If you give a key, then this function gets the corresponding values 
-    # Multiple values are returned if there are keys with the same name  
-    if ( isinstance( dict_, dict ) ):
-        for key, value in dict_.items():
-            if isinstance(value, dict):
-                getValsFromKey(value, target, list_holder)
-            elif isinstance(value, list):
-                for ls in value:
-                    getValsFromKey(ls, target, list_holder)
-            elif key == target:
-                list_holder.append( value )
-''' 
+
 
 def getValsFromKey(dict_, target, list_holder  ):
     '''
@@ -142,18 +123,60 @@ def readYAMLAsStr( path_script ):
         yaml_as_str = file_.read()
     return yaml_as_str
 
+def loadMultiYAML( script_ ):
+    dicts2ret = []
+    with open(script_, constants.FILE_READ_FLAG  ) as yml_content :
+        try:
+            for d_ in yaml.safe_load_all(yml_content) :
+                # print(d_)
+                # print('='*25)
+                dicts2ret.append( d_ )
+        except yaml.YAMLError as exc:
+            print( constants.YAML_SKIPPING_TEXT  )    
+    return dicts2ret 
 
 
+def getSingleDict4MultiDocs( lis_dic ):
+    dict2ret = {} 
+    key_lis  = []
+    counter  = 0 
+    for dic in lis_dic:
+        if( isinstance(dic, list) ): 
+            '''
+            to tackle YAMLs that are Ansible YAMLs and not K8S YAMLS
+            '''
+            dic = dic[0]
+        '''
+        the algorithm is if there are keys with similar names 
+        then add a suffix to differentiate between keys for 
+        multiple docs in a single YAML 
+        '''
+        # print(dic) 
+        '''
+        to handle Nones 
+        '''
+        if ( (dic is None) == False  ) and (isinstance(dic, dict ) ):
+            keys4dic = list(dic.keys()) 
+            for k_ in keys4dic: 
+                if k_ in key_lis:
+                    dic[k_ + constants.DOT_SYMBOL + constants.YAML_DOC_KW + str(counter)] = dic[k_]
+                else:
+                    key_lis.append( k_ )
+            dict2ret.update(dic)
+            counter += 1 
+    return dict2ret
 
 
 if __name__=='__main__':
     yaml_path = 'TEST_ARTIFACTS/docker.sock.yaml'
-    dic       = loadYAML(yaml_path)
+    dic_lis   = loadMultiYAML(yaml_path)
+    # multi_yaml= 'TEST_ARTIFACTS/multi.doc.yaml' ## 2 dicts 
+    # multi_yaml= 'TEST_ARTIFACTS/empty.yml'  ## 6 dicts 
+    # dics      = loadMultiYAML(multi_yaml)
+    # dic       = getSingleDict4MultiDocs( dic_lis )
+    # print( dic.keys() )
+
     # print(dic)
-    # dic = loadYAML('/Users/arahman/K8S_REPOS/GITLAB_REPOS/stackgres/stackgres-k8s/install/helm/stackgres-operator/templates/integrate-grafana-job.yaml')
-    # getKeyRecursively( dic )
-    # print('-'*100)
-    # print( keyMiner(dic, '/usr/local/airflow/analytics' ) )
 
     # temp_ = []
     # getValsFromKey( dic,  'allowPrivilegeEscalation', temp_ )
@@ -166,4 +189,6 @@ if __name__=='__main__':
     # print( next(  getValFromKey( dic,  'mountPath' ) ) )
     # print( next(  getValFromKey( dic,  'name' ) ) )
     
+    invalid_yaml = 'TEST_ARTIFACTS/bootstrap.debian.yaml'
+    print(checkIfValidK8SYaml( invalid_yaml )  )
     
