@@ -137,6 +137,7 @@ def scanForOverPrivileges(script_path):
     if(checkVal): 
         dict_as_list = parser.loadMultiYAML( script_path )
         yaml_dict    = parser.getSingleDict4MultiDocs( dict_as_list )
+        # print(yaml_dict.keys())
         key_lis   = []
         parser.getKeyRecursively(yaml_dict, key_lis) 
         '''
@@ -144,11 +145,13 @@ def scanForOverPrivileges(script_path):
         as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
         '''
         just_keys = [x_[0] for x_ in key_lis] 
+        # just_keys = list( np.unique( just_keys )  )
         if ( constants.KIND_KEY_NAME in just_keys ):
             parser.getValsFromKey( yaml_dict, constants.KIND_KEY_NAME, kind_values )
         '''
         For the time being Kind:DeamonSet is not a legit sink because they do not directly provision deplyoments 
         '''
+        # print(just_keys) 
         if ( constants.PRIVI_KW in just_keys ) and ( constants.DEAMON_KW not in kind_values  ) :
             privilege_values = []
             parser.getValsFromKey( yaml_dict, constants.PRIVI_KW , privilege_values )
@@ -156,7 +159,8 @@ def scanForOverPrivileges(script_path):
             for value_ in privilege_values:
                     if value_ == True: 
                         key_lis_holder = parser.keyMiner(yaml_dict, value_ ) 
-                        if(constants.SPEC_KW in key_lis_holder) and (constants.CONTAINER_KW in key_lis_holder) and (constants.SECU_CONT_KW in key_lis_holder) and (constants.PRIVI_KW in key_lis_holder):
+                        # print( key_lis_holder )
+                        if(constants.CONTAINER_KW in key_lis_holder) and (constants.SECU_CONT_KW in key_lis_holder) and (constants.PRIVI_KW in key_lis_holder):
                             key_count += 1
                             privi_dict_return[key_count] = value_, key_lis_holder 
     return privi_dict_return 
@@ -643,8 +647,8 @@ if __name__ == '__main__':
     # tp_pid  = 'TEST_ARTIFACTS/tp.host.net2.yaml'
     # a_dict  = scanForHostNetwork( tp_pid )
 
-    tp_docker_sock   = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/gitlab-runner/gitlab-runner-docker-deployment.yml' 
-    a_dict           = scanDockerSock( tp_docker_sock )
+    # tp_docker_sock   = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-gitlab-demo/gitlab-runner/gitlab-runner-docker-deployment.yml' 
+    # a_dict           = scanDockerSock( tp_docker_sock )
 
     # cap_sys_yaml = 'TEST_ARTIFACTS/cap.sys.yaml'
     # a_dict       = scanForHostAliases( cap_sys_yaml )
@@ -658,4 +662,7 @@ if __name__ == '__main__':
     # seccomp_unconfined_yaml = 'TEST_ARTIFACTS/fp.seccomp.unconfined.yaml'
     # a_dict                  = scanForUnconfinedSeccomp( seccomp_unconfined_yaml )
 
-    print(a_dict)
+    over_privilege  = 'TEST_ARTIFACTS/multi.doc.yaml'
+    scanForOverPrivileges( over_privilege )
+
+    # print(a_dict)

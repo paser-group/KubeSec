@@ -281,6 +281,13 @@ class TestOverPrivilegedContainers( unittest.TestCase ):
         _, _, _, privi_dict = scanner.scanSingleManifest( scriptName )
         self.assertEqual( oracle_value,  len( privi_dict ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
+    def testPrivilegeForMultiDoc(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.multi_doc_script1
+        _, _, _, privi_dict = scanner.scanSingleManifest( scriptName )
+        # print( privi_dict )
+        self.assertEqual( oracle_value,  len( privi_dict ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )          
+
 
 class TestMissingSecuContext( unittest.TestCase ):
 
@@ -318,7 +325,14 @@ class TestMissingSecuContext( unittest.TestCase ):
         oracle_value = 0
         scriptName   = TEST_CONSTANTS._no_secu_cont_yaml1
         res_dic = scanner.scanForMissingSecurityContext( scriptName )
-        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )                 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )   
+
+    def testMissingSecuForMultiDoc(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.multi_doc_script2
+        res_dic = scanner.scanForMissingSecurityContext( scriptName )
+        # print(res_dic)
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )                                
 
 
 class TestDefaultNamespace( unittest.TestCase ):

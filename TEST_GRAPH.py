@@ -132,8 +132,8 @@ class TestHTTPGraphs( unittest.TestCase ):
         self.assertEqual(oracle_value, len( res_dic  ) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )           
 
     def testHTTPGraphV11(self):     
-        oracle_value = 0
-        scriptName   = TEST_CONSTANTS._http_script11
+        oracle_value = 1 
+        scriptName   = TEST_CONSTANTS._http_script11 # this script is a multi doc 
         res_dic      = scanner.scanForHTTP(scriptName) 
         self.assertEqual(oracle_value, len( res_dic  ) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )           
 

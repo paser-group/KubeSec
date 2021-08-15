@@ -34,7 +34,7 @@ class TestSimpleIntegration( unittest.TestCase ):
 
 
     def testSampleOutput(self):     
-        oracle_value    = 231
+        oracle_value    = 214
         dirName         = TEST_CONSTANTS._sample_output_dir 
         content_as_ls   = scanner.runScanner( dirName )
         df_all          = pd.DataFrame(  main.getCountFromAnalysis( content_as_ls ),  columns=constants.CSV_HEADER )

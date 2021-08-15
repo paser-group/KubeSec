@@ -18,7 +18,7 @@ spec:
  #sessionAffinity: ClientIP
  #clusterIP: None
  #type: NodePort # Or LoadBalancer in production w/ proper security
- #type: LoadBalancer
+#  type: LoadBalancer
  selector:
    app: nfs-server
 

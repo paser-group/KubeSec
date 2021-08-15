@@ -141,6 +141,8 @@ def getSingleDict4MultiDocs( lis_dic ):
     key_lis  = []
     counter  = 0 
     for dic in lis_dic:
+        # print(dic)
+        # print('='*100)
         if( isinstance(dic, list) ): 
             '''
             to tackle YAMLs that are Ansible YAMLs and not K8S YAMLS
@@ -159,11 +161,12 @@ def getSingleDict4MultiDocs( lis_dic ):
             keys4dic = list(dic.keys()) 
             for k_ in keys4dic: 
                 if k_ in key_lis:
-                    dic[k_ + constants.DOT_SYMBOL + constants.YAML_DOC_KW + str(counter)] = dic[k_]
+                    dict2ret[k_ + constants.DOT_SYMBOL + constants.YAML_DOC_KW + str(counter)] = dic[k_]
                 else:
                     key_lis.append( k_ )
-            dict2ret.update(dic)
+                    dict2ret[k_] = dic[k_] 
             counter += 1 
+            # print(dict2ret) 
     return dict2ret
 
 
@@ -189,6 +192,11 @@ if __name__=='__main__':
     # print( next(  getValFromKey( dic,  'mountPath' ) ) )
     # print( next(  getValFromKey( dic,  'name' ) ) )
     
-    invalid_yaml = 'TEST_ARTIFACTS/bootstrap.debian.yaml'
-    print(checkIfValidK8SYaml( invalid_yaml )  )
+    # invalid_yaml = 'TEST_ARTIFACTS/bootstrap.debian.yaml'
+    # print(checkIfValidK8SYaml( invalid_yaml )  )
     
+    multi_yaml  = 'TEST_ARTIFACTS/multi.doc.yaml'
+    dics        = loadMultiYAML(multi_yaml)
+    getSingleDict4MultiDocs( dics )
+
+    # print(a_dict)
