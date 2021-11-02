@@ -268,15 +268,17 @@ def scanForMissingSecurityContext(path_scrpt):
         if (constants.SECU_CONT_KW  not in real_key_lis)  and ( constants.CONTAINER_KW in real_key_lis ): 
             occurrences = real_key_lis.count( constants.CONTAINER_KW )
             for _ in range( occurrences ):
-                cnt += 1 
-                prop_value = constants.YAML_SKIPPING_TEXT 
-                if ( constants.DEPLOYMENT_KW in yaml_values ) : 
-                    prop_value = constants.DEPLOYMENT_KW
-                    lis.append( prop_value )
-                elif ( constants.POD_KW in yaml_values ) :
-                    prop_value = constants.POD_KW 
-                    lis.append( prop_value )
-                dic[ cnt ] = lis
+                prop_value = constants.YAML_SKIPPING_TEXT
+                # if ( constants.DEPLOYMENT_KW in yaml_values ) : 
+                #     prop_value = constants.DEPLOYMENT_KW
+                #     lis.append( prop_value )
+                if ( constants.POD_KW in yaml_values ) :
+                    pod_kw_lis = parser.keyMiner(  yaml_di, constants.POD_KW  )
+                    if ( constants.KIND_KEY_NAME in pod_kw_lis ):
+                        cnt += 1 
+                        prop_value = constants.POD_KW 
+                        lis.append( prop_value )
+                        dic[ cnt ] = lis
     # print(dic) 
     return dic 
 

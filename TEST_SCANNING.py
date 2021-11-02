@@ -303,17 +303,17 @@ class TestMissingSecuContext( unittest.TestCase ):
         res_dic = scanner.scanForMissingSecurityContext( scriptName )
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
-    def testPresent1(self):     
-        oracle_value = 1
+    def testAbsence1(self):     
+        oracle_value = 0
         scriptName   = TEST_CONSTANTS._no_secu_cont_yaml2
         res_dic = scanner.scanForMissingSecurityContext( scriptName )
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
-    def testPresent2(self):     
-        oracle_value = 1
-        scriptName   = TEST_CONSTANTS._no_secu_cont_yaml2 
+    def testAbsence2(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.secu_cont_fp_yaml 
         res_dic = scanner.scanForMissingSecurityContext( scriptName )
-        self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testPresent3(self):     
         oracle_value = 0
@@ -328,7 +328,7 @@ class TestMissingSecuContext( unittest.TestCase ):
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )   
 
     def testMissingSecuForMultiDoc(self):     
-        oracle_value = 1
+        oracle_value = 0
         scriptName   = TEST_CONSTANTS.multi_doc_script2
         res_dic = scanner.scanForMissingSecurityContext( scriptName )
         # print(res_dic)
