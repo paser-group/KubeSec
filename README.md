@@ -5,11 +5,11 @@
 [![Actions Status](https://github.com/paser-group/KubeSec/workflows/Build%20KubeTaint/badge.svg)](https://github.com/Build%20TaintPupp/actions)
 
 
-# Taintube: Taint Tracking for Secuirty Analysis of Kubernetes Manifests 
+# Taintube: Taint Tracking for Security Analysis of Kubernetes Manifests 
 
 ## Collaborators 
 
-Akond Rahman (Lead), Shazibul Islam Shamim, and Farhat Lamia Barsha 
+Akond Rahman (Lead), Rahul Pandita, and Shazibul Islam Shamim 
 
 ### Details 
 

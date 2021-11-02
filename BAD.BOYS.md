@@ -1,5 +1,3 @@
-### Need to handle these today or tomorrow 
-
 #### Hard-coded secrets (all are FP instances and handled properly)
 
 - /Users/arahman/K8S_REPOS/TEST_REPOS/OpenStack-on-Kubernetes/src-newton/glance-pv.yaml 
@@ -28,7 +26,11 @@
 - /Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-tutorial-series-youtube/container-communication-k8s-networking/postgres.yaml 
 - /Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-gitlab-demo/gitlab/gitlab-deployment.yml
 
-###### KubeSec can handle but we can't (NONE EXISTS YET)
 
 ##### Parsing is still a problem (LEAVE AS LIMITATION )
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-extras/files/templates/calico/calico.yaml (NESTED YAML: HOST NETWORK)
+
+##### More bad boys (Nov 01, 2021 - TODO)
+
+- `Not a default namespace`: https://github.com/kubernetes-native-testbed/kubernetes-native-testbed/blob/develop/manifests/cicd/cd-manifests/infra/nginx-ingress-cd.yaml and https://github.com/narenarjun/ultimate-stack/blob/master/kubernetes/staging/gitops-setup/argocd-app-config.yaml and https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/blob/master/09-EKS-Workloads-on-Fargate/09-02-Fargate-Profiles-Advanced-YAML/kube-manifests/02-Applications/01-ns-app1/02-Nginx-App1-Deployment-and-NodePortService.yml 
+- `Not a 'no security context', as not 'kind:Pod' ` : https://github.com/in28minutes/spring-microservices-v2/blob/main/05.kubernetes/currency-exchange-service/backup/deployment-03-probes-configured.yaml [reff: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/]  
