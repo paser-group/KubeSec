@@ -76,6 +76,7 @@ SECCOMP_KW_LIST              = [ SPEC_KW, SECU_CONT_KW, SECCOMP_PROFILE_KW ]
 UNCONFIED_KW                 = 'Unconfined'
 TYPE_KW                      = 'type'
 YAML_DOC_KW                  = 'YAML.DOC.'
+NAMESPACE_KW                 = 'namespace'
 
 SECRET_USER_LIST             = ['user']
 SECRET_PASSWORD_LIST         = ['pwd', 'password', 'passwd', 'admin_pass'] 

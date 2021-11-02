@@ -392,6 +392,38 @@ class TestDefaultNamespace( unittest.TestCase ):
         res_dic = scanner.scanForDefaultNamespace( scriptName )
         self.assertEqual( oracle_value,   res_dic[1][0][0] ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
+    def testNamespaceAbsence1(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_nspace_yaml_1 
+        res_dic = scanner.scanForDefaultNamespace( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )          
+
+    def testNamespaceAbsence2(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_nspace_yaml_2
+        res_dic = scanner.scanForDefaultNamespace( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )                  
+
+    def testNamespaceAbsence3(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_nspace_yaml_3
+        res_dic = scanner.scanForDefaultNamespace( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )    
+
+    def testPresent5(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.tp_nspace_yaml
+        res_dic = scanner.scanForDefaultNamespace( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )           
+
+    def testPresent6(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.tp_nspace_default
+        res_dic = scanner.scanForDefaultNamespace( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+
+        
+
 class TestResourceLimits( unittest.TestCase ):
 
     def testAbsent1(self):     
@@ -414,7 +446,65 @@ class TestResourceLimits( unittest.TestCase ):
 
     def testPresent1(self):     
         oracle_value = 1
-        scriptName   = TEST_CONSTANTS.reso_yaml2
+        scriptName   = TEST_CONSTANTS.tp_allow_privilege
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent4(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_no_reso_yaml1 
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent5(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_no_reso_yaml2
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent6(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_no_reso_yaml3
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )             
+    def testAbsent7(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_no_reso_yaml4
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent8(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_no_reso_yaml5
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent9(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_no_reso_yaml6
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )             
+
+    def testAbsent10(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_no_reso_yaml7
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )             
+    def testAbsent11(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_no_reso_yaml8
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent12(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_no_reso_yaml9
+        res_dic = scanner.scanForResourceLimits( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
+    def testAbsent13(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.fp_no_reso_yaml10 
         res_dic = scanner.scanForResourceLimits( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 

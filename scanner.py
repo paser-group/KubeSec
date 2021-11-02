@@ -8,6 +8,7 @@ import constants
 import graphtaint 
 import os 
 import pandas as pd 
+import numpy as np 
 
 def getYAMLFiles(path_to_dir):
     valid_  = [] 
@@ -289,30 +290,33 @@ def scanForDefaultNamespace(path_scrpt):
         cnt = 0 
         dict_as_list = parser.loadMultiYAML( path_scrpt )
         yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
-        key_lis = parser.keyMiner(yaml_di, constants.DEFAULT_KW)
-        if (isinstance( key_lis, list ) ):
-            if (len(key_lis) > 0 ) : 
-                all_values = list( parser.getValuesRecursively(yaml_di)  )
-                # print(all_values)
-                cnt += 1 
-                prop_value = constants.YAML_SKIPPING_TEXT 
-                if ( constants.DEPLOYMENT_KW in all_values ) : 
-                    prop_value = constants.DEPLOYMENT_KW
-                    lis.append( prop_value )
-                elif ( constants.POD_KW in all_values ) :
-                    prop_value = constants.POD_KW 
-                    lis.append( prop_value )
-                else: 
-                    holder_ = [] 
-                    parser.getValsFromKey(yaml_di, constants.KIND_KEY_NAME, holder_ )
-                    if ( constants.K8S_SERVICE_KW in holder_ ): 
-                        srv_val_li_ = [] 
-                        parser.getValsFromKey( yaml_di, constants.K8S_APP_KW, srv_val_li_  ) 
-                        for srv_val in srv_val_li_:
-                            lis = graphtaint.mineServiceGraph( path_scrpt, yaml_di, srv_val )
+        nspace_vals  = []
+        parser.getValsFromKey( yaml_di, constants.NAMESPACE_KW, nspace_vals )
+        unique_nspace_vals =  list( np.unique( nspace_vals  ) )
+        if (len(unique_nspace_vals) == 1 ) and ( unique_nspace_vals[0] == constants.DEFAULT_KW  ): 
+            key_lis = parser.keyMiner(yaml_di, constants.DEFAULT_KW)
+            if (isinstance( key_lis, list ) ):
+                if (len(key_lis) > 0 ) : 
+                    all_values = list( parser.getValuesRecursively(yaml_di)  )
+                    cnt += 1 
+                    prop_value = constants.YAML_SKIPPING_TEXT 
+                    if ( constants.DEPLOYMENT_KW in all_values ) : 
+                        prop_value = constants.DEPLOYMENT_KW
+                        lis.append( prop_value )
+                    elif ( constants.POD_KW in all_values ) :
+                        prop_value = constants.POD_KW 
+                        lis.append( prop_value )
+                    else: 
+                        holder_ = [] 
+                        parser.getValsFromKey(yaml_di, constants.KIND_KEY_NAME, holder_ )
+                        if ( constants.K8S_SERVICE_KW in holder_ ): 
+                            srv_val_li_ = [] 
+                            parser.getValsFromKey( yaml_di, constants.K8S_APP_KW, srv_val_li_  ) 
+                            for srv_val in srv_val_li_:
+                                lis = graphtaint.mineServiceGraph( path_scrpt, yaml_di, srv_val )
 
 
-            dic[ cnt ] = lis
+                    dic[ cnt ] = lis
     # print(dic) 
     return dic 
 
@@ -330,19 +334,24 @@ def scanForResourceLimits(path_scrpt):
         as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
         '''
         key_list = [ x_[0] for x_ in temp_ls  ]
-        if ( (constants.CONTAINER_KW in key_list) and (constants.LIMITS_KW not in key_list ) and ( (constants.CPU_KW not in key_list)  or (constants.MEMORY_KW not in key_list) ) ):
-            cnt += 1 
-            if( len(temp_ls) > 0 ):
-                all_values = list( parser.getValuesRecursively(yaml_di)  )
-                # print(all_values)
-                prop_value = constants.YAML_SKIPPING_TEXT 
-                if ( constants.DEPLOYMENT_KW in all_values ) : 
-                    prop_value = constants.DEPLOYMENT_KW
-                    lis.append( prop_value )
-                elif ( constants.POD_KW in all_values ) :
-                    prop_value = constants.POD_KW 
-                    lis.append( prop_value )
-            dic[ cnt ] = lis
+        '''
+        get values for a key from the dict 
+        then check if at least one unique entry is kind:Pod 
+        '''
+        val_lis = [] 
+        parser.getValsFromKey(yaml_di, constants.KIND_KEY_NAME, val_lis) 
+        kind_entries =  list( np.unique( val_lis ) )
+        if ( constants.POD_KW in kind_entries ):
+            if ( (constants.CONTAINER_KW in key_list) and (constants.LIMITS_KW not in key_list ) and ( (constants.CPU_KW not in key_list)  or (constants.MEMORY_KW not in key_list) ) ):
+                cnt += 1 
+                if( len(temp_ls) > 0 ):
+                    all_values = list( parser.getValuesRecursively(yaml_di)  )
+                    # print(all_values)
+                    prop_value = constants.YAML_SKIPPING_TEXT 
+                    if ( constants.POD_KW in all_values ) :
+                        prop_value = constants.POD_KW 
+                        lis.append( prop_value )
+                dic[ cnt ] = lis
     # print(dic) 
     return dic 
 

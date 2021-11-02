@@ -1,0 +1,46 @@
+# reff: https://github.com/patrikduch/netcore-microservices/blob/master/deployment/aks/services/customer/customer-api/customer-api.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-api-deployment
+  labels:
+    app: customer-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: customer-api
+  template:
+    metadata:
+      labels:
+        app: customer-api
+    spec:
+      containers:
+        - name: customerapi
+          image:  netcoremicroservicesacr.azurecr.io/customerapi:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Release
+            - name: DatabaseSettings__ConnectionString
+              valueFrom:
+                  secretKeyRef:
+                    name: customer-api-secret
+                    key: ConnectionString
+
+      imagePullSecrets:
+        - name: acr-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-api-service
+spec:
+  type: ClusterIP
+  selector:
+    app: customer-api
+  ports:
+    - protocol: TCP
+      port: 80

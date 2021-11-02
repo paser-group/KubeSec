@@ -185,7 +185,7 @@ def mineServiceGraph( script_path, dict_yaml, src_val ):
 
 def mineNetPolGraph( script_, dict_y, src_val, src_keys ):
     '''
-    Thsi mehtod looks at YAML files that have kind: NetworkPoicy , and checks if used in another YAML
+    Thsi method looks at YAML files that have kind: NetworkPoicy , and checks if used in another YAML
     with kind: Deployment or kind: Pod 
     Works for all types 
     Need to provide script path, script dict, idnetified values, and all keys of source 

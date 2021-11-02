@@ -1,0 +1,21 @@
+## reff: https://github.com/narenarjun/ultimate-stack/blob/master/kubernetes/staging/gitops-setup/argocd-app-config.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: glotixz-app-backends-deploy
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/narenarjun/ultimate-stack.git
+    targetRevision: HEAD
+    path: gitops
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: glotixz-backend
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
