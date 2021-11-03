@@ -101,7 +101,7 @@ def mineSecretGraph( path2script, yaml_dict , secret_dict ):
             if constants.VALU_FROM_KW not in hierarchy_list: 
                     within_match_head = hierarchy_list[0]
     valid_taints = getValidTaints( templ_match_list ) 
-    # print( templ_match_list ) 
+    # print( within_match_head ) 
     return within_match_head, templ_match_list, valid_taints 
 
 

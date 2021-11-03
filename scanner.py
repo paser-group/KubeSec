@@ -128,6 +128,7 @@ def scanForSecrets(yaml_d):
         # print(keyList)
         if( len(unameList) > 0  )  or ( len(passwList) > 0  ) or ( len(keyList) > 0  ) :
             dic2ret_secret[key_] =  ( unameList, passwList, keyList ) 
+    # print(dic2ret_secret)
     return dic2ret_secret
 
 
@@ -166,6 +167,16 @@ def scanForOverPrivileges(script_path):
                             privi_dict_return[key_count] = value_, key_lis_holder 
     return privi_dict_return 
 
+def getItemFromSecret( dict_sec, pos ): 
+    dic2ret = {}
+    cnt     = 0 
+    for key_name , key_tup in dict_sec.items():
+        secret_data_list = key_tup[pos]
+        for data_ in secret_data_list: 
+            dic2ret[cnt] = (key_name, data_)
+            cnt          += 1
+    return dic2ret
+
 
 def scanSingleManifest( path_to_script ):
     '''
@@ -175,11 +186,43 @@ def scanSingleManifest( path_to_script ):
     checkVal = parser.checkIfValidK8SYaml( path_to_script )
     # print(checkVal) 
     # initializing 
-    dict_secret = {} 
-    dict_list   = parser.loadMultiYAML( path_to_script )
-    yaml_dict   = parser.getSingleDict4MultiDocs( dict_list )
-    if(checkVal): 
-        dict_secret = scanForSecrets( yaml_dict )
+    within_secret_ = []
+    dict_secret    = {} 
+    dict_list      = parser.loadMultiYAML( path_to_script )
+    yaml_dict      = parser.getSingleDict4MultiDocs( dict_list )
+    if(checkVal):
+        '''
+        additional logic to handle secrets within a valid Kubernetes manifest 
+        '''
+        val_lis    = list( parser.getValuesRecursively  ( yaml_dict ) )
+        if( constants.CONFIGMAP_KW in val_lis   ) or (constants.SECRET_KW in val_lis):  
+            secret_key_list    = parser.keyMiner(yaml_dict, constants.SECRET_KW)  
+            configmap_key_list = parser.keyMiner(yaml_dict, constants.CONFIGMAP_KW)  
+            key_lis            = []
+            if( isinstance(secret_key_list, list) ): 
+                key_lis = key_lis + secret_key_list 
+            if( isinstance(configmap_key_list, list) ): 
+                key_lis = key_lis + configmap_key_list 
+            if (len( key_lis ) > 0 ) :
+                unique_keys = np.unique( key_lis )
+                unique_keys = [x_ for x_ in unique_keys if constants.KIND_KEY_NAME in x_]
+                if (len( unique_keys ) > 0 ):
+                    dict_secret = scanForSecrets( yaml_dict )
+                    within_secret_.append( getItemFromSecret( dict_secret, 0 )  ) # 0 for username 
+                    within_secret_.append( getItemFromSecret( dict_secret, 1 )  ) # 1 for password 
+                    within_secret_.append( getItemFromSecret( dict_secret, 2 )  ) # 2 for tokens  
+                else: 
+                    within_secret_.append({})
+                    within_secret_.append({})
+                    within_secret_.append({})                     
+            else: 
+                within_secret_.append({})
+                within_secret_.append({})
+                within_secret_.append({}) 
+        else: 
+            within_secret_.append({})
+            within_secret_.append({})
+            within_secret_.append({})            
     elif ( parser.checkIfValidHelm( path_to_script )) :
         dict_secret = scanForSecrets( yaml_dict )
     
@@ -187,7 +230,7 @@ def scanSingleManifest( path_to_script ):
     taint tracking zone for secret dictionary 
     '''
     # print(dict_secret)
-    within_secret_, templ_secret_, valid_taint_secr  = graphtaint.mineSecretGraph(path_to_script, yaml_dict, dict_secret) 
+    _, templ_secret_, valid_taint_secr  = graphtaint.mineSecretGraph(path_to_script, yaml_dict, dict_secret) 
     # print(within_secret_) 
     # print(templ_secret_) 
     # print(valid_taint_secr) 
@@ -370,7 +413,7 @@ def scanForRollingUpdates(path_script ):
         as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
         '''
         key_list = [ x_[0] for x_ in temp_ls  ]
-        if ( (constants.STRATEGY_KW not in key_list ) and  (constants.ROLLING_UPDATE_KW not in key_list)   ):
+        if ( (constants.STRATEGY_KW not in key_list ) and  (constants.ROLLING_UPDATE_KW not in key_list) and (constants.SPEC_KW in key_list)   ):
             cnt += 1 
             if( len(temp_ls) > 0 ):
                 all_values = list( parser.getValuesRecursively(yaml_di)  )
@@ -673,7 +716,13 @@ if __name__ == '__main__':
     # seccomp_unconfined_yaml = 'TEST_ARTIFACTS/fp.seccomp.unconfined.yaml'
     # a_dict                  = scanForUnconfinedSeccomp( seccomp_unconfined_yaml )
 
-    over_privilege  = 'TEST_ARTIFACTS/multi.doc.yaml'
-    scanForOverPrivileges( over_privilege )
+    # over_privilege  = 'TEST_ARTIFACTS/multi.doc.yaml'
+    # scanForOverPrivileges( over_privilege )
 
-    # print(a_dict)
+    # no_http_file        = 'TEST_ARTIFACTS/fp.http.yaml'
+    # sh_files_configmaps = scanForHTTP( no_http_file )
+
+    special_secret1     = 'TEST_ARTIFACTS/special.secret1.yaml'
+    within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi  = scanSingleManifest( special_secret1 )
+
+    print(within_secret_) 

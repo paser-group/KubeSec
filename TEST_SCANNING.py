@@ -107,14 +107,38 @@ class TestScanning( unittest.TestCase ):
         yaml_as_dict = parser.getSingleDict4MultiDocs( dict_as_list )        
         secret_dict  = scanner.scanForSecrets( yaml_as_dict )
         self.assertEqual(oracle_value, len(secret_dict) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )              
+    def testSecret13(self):     
+        oracle_value = 2
+        scriptName   = TEST_CONSTANTS.special_secret_1
+        within, _, _, _  = scanner.scanSingleManifest( scriptName )
+        self.assertEqual(oracle_value, len(within[0]) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )              
+
+    def testSecret14(self):     
+        oracle_value = 2
+        scriptName   = TEST_CONSTANTS.special_secret_1
+        within, _, _, _  = scanner.scanSingleManifest( scriptName )
+        self.assertEqual(oracle_value, len(within[1]) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )               
+
+    def testSecret15(self):     
+        oracle_value = 0
+        scriptName   = TEST_CONSTANTS.special_secret_1
+        within, _, _, _  = scanner.scanSingleManifest( scriptName )
+        self.assertEqual(oracle_value, len(within[2]) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )              
+
+    def testSecret16(self):     
+        oracle_value = 4
+        scriptName   = TEST_CONSTANTS.special_secret_1
+        within, _, _, _  = scanner.scanSingleManifest( scriptName )
+        self.assertEqual(oracle_value, len(within[0])  + len(within[1]) + len(within[2]) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )    
+
 
 class TestFalsePositives( unittest.TestCase ):
 
     def testSecret1(self):     
-        oracle_value = TEST_CONSTANTS._none_kw
+        oracle_value = 0
         scriptName   = TEST_CONSTANTS._fp_script1
         within_match_, _, _ , _ = scanner.scanSingleManifest( scriptName )
-        self.assertTrue( within_match_ == None ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+        self.assertEqual( len(within_match_), 0,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testSecret2(self):     
         oracle_value = 0
@@ -243,10 +267,10 @@ class TestFalsePositives( unittest.TestCase ):
         self.assertEqual( oracle_value,  len(templ_matches) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
     def testSecret20(self):     
-        oracle_value = TEST_CONSTANTS._none_kw 
+        oracle_value = 0
         scriptName   = TEST_CONSTANTS._fp_script10 
         within , _ , _, _  = scanner.scanSingleManifest( scriptName )
-        self.assertTrue( within == None ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
+        self.assertEqual( oracle_value , len(within) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  )  
 
 
 class TestOverPrivilegedContainers( unittest.TestCase ):

@@ -103,6 +103,7 @@ fp_no_reso_yaml7    = 'TEST_ARTIFACTS/fp.no.reso7.yaml'
 fp_no_reso_yaml8    = 'TEST_ARTIFACTS/fp.no.reso8.yaml'
 fp_no_reso_yaml9    = 'TEST_ARTIFACTS/fp.no.reso9.yaml'
 fp_no_reso_yaml10   = 'TEST_ARTIFACTS/fp.no.reso10.yaml'
+special_secret_1    = 'TEST_ARTIFACTS/special.secret1.yaml'
 
 _value_for_key      = '/usr/local/airflow/analytics'
 _mount_path_kw      = 'mountPath' 

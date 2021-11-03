@@ -13,10 +13,14 @@ def getCountFromAnalysis(ls_):
         within_sec_cnt = 0 
         dir_name       = tup_[0]
         script_name    = tup_[1]        
-        within_secret  = tup_[2] ### format: ('data', 'password', ([], ['MTIzNAo='], [])) => (<name>, <type>, <data_list>) ... need the list of the last tuple
+        within_secret  = tup_[2]  # a list of dicts: [unameDict, passwordDict, tokenDict]
+        within_sec_cnt = len(within_secret[0]) + len( within_secret[1]  ) + len( within_secret[2] )
+        '''
+        ### format: ('data', 'password', ([], ['MTIzNAo='], [])) => (<rootKey>, <key>, <data_list>) ... need the list of the last tuple
         if isinstance( within_secret, tuple ):
             within_sec_cnt = len( within_secret[-1][1] )
             # print( script_name,  within_secret, within_sec_cnt, type(within_secret) ) 
+        '''
         templa_secret  = tup_[3]       ### format: a list , we will not use this in dumping       
         taint_secret   = tup_[4]       ###   format: a list 
         privilege_dic  = tup_[5]

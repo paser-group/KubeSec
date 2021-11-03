@@ -53,4 +53,5 @@
 
 ##### Parsing is still a problem (LEAVE AS LIMITATION )
 - /Users/arahman/K8S_REPOS/GITLAB_REPOS/kubernetes-extras/files/templates/calico/calico.yaml (NESTED YAML: HOST NETWORK)
+- https://github.com/oktadev/jhipster-microservices-example/blob/master/kubernetes/registry/application-configmap.yml (template generated content where secret is provided) 
 

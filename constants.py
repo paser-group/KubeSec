@@ -77,6 +77,7 @@ UNCONFIED_KW                 = 'Unconfined'
 TYPE_KW                      = 'type'
 YAML_DOC_KW                  = 'YAML.DOC.'
 NAMESPACE_KW                 = 'namespace'
+SECRET_KW                    = 'Secret'
 
 SECRET_USER_LIST             = ['user']
 SECRET_PASSWORD_LIST         = ['pwd', 'password', 'passwd', 'admin_pass'] 

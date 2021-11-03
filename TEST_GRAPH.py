@@ -49,10 +49,10 @@ class TestSecretGraphs( unittest.TestCase ):
         self.assertEqual(oracle_value, len( valid_taint_ls  ) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )           
 
     def testHelmGraphV7(self):     
-        oracle_value = TEST_CONSTANTS._none_kw 
+        oracle_value = 0
         scriptName   = TEST_CONSTANTS._helm_script4 
         within_match, _, _, _ = scanner.scanSingleManifest(scriptName)
-        self.assertTrue( within_match == None ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )                           
+        self.assertEqual( len(within_match) , oracle_value ,   TEST_CONSTANTS._common_error_string + str(oracle_value)  )                           
 
     def testHelmGraphV8(self):     
         oracle_value = 1
@@ -61,10 +61,10 @@ class TestSecretGraphs( unittest.TestCase ):
         self.assertEqual(oracle_value, len( valid_taint_ls  ) ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )           
 
     def testHelmGraphV9(self):     
-        oracle_value = TEST_CONSTANTS._none_kw 
+        oracle_value = 0
         scriptName   = TEST_CONSTANTS._helm_script5 
         within_match, _, _, _ = scanner.scanSingleManifest(scriptName)
-        self.assertTrue( within_match == None ,  TEST_CONSTANTS._common_error_string + str(oracle_value)  )                           
+        self.assertEqual( len(within_match) , oracle_value ,   TEST_CONSTANTS._common_error_string + str(oracle_value)  )                           
 
 
 class TestHTTPGraphs( unittest.TestCase ):
