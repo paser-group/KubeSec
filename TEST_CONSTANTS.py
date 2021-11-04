@@ -135,7 +135,7 @@ _integ_fp_scrip4    = '/Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-gitlab-dem
 _integ_fp_scrip5    = '/Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-gitlab-demo/gitlab/postgresql-configmap.yml'
 _integ_fp_scrip6    = '/Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-gitlab-demo/gitlab-runner/gitlab-runner-docker-deployment.yml'
 _integ_fp_scrip7    = '/Users/arahman/K8S_REPOS/TEST_REPOS/kubernetes-gitlab-demo/load-balancer/nginx/tcp-configmap.yaml'
-_sample_df_field2   = 'UNFILTERED_SECRET'
+_sample_df_field2   = 'WITHIN_MANIFEST_SECRET'
 
 multi_doc_script1   = 'TEST_ARTIFACTS/multi.doc.yaml'
 multi_doc_script2   = 'TEST_ARTIFACTS/empty.yml'

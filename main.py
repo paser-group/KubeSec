@@ -49,13 +49,13 @@ if __name__ =='__main__':
     DO NOT DELETE ALL IN K8S_REPOS AS TAINT TRACKING RELIES ON BASH SCRIPTS, ONE OF THE STRENGTHS OF THE TOOL 
     '''
     # ORG_DIR         = '/Users/arahman/K8S_REPOS/GITHUB_REPOS/'
-    # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V9_GITHUB_OUTPUT.csv'
+    # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V12_GITHUB_OUTPUT.csv'
 
     # ORG_DIR         = '/Users/arahman/K8S_REPOS/GITLAB_REPOS/'
-    # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V9_GITLAB_OUTPUT.csv'
+    # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V12_GITLAB_OUTPUT.csv'
 
     # ORG_DIR         = '/Users/arahman/K8S_REPOS/TEST_REPOS/'
-    # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V9_TEST_OUTPUT.csv'
+    # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V12_TEST_OUTPUT.csv'
 
     content_as_ls   = scanner.runScanner( ORG_DIR )
     df_all          = pd.DataFrame( getCountFromAnalysis( content_as_ls ) )

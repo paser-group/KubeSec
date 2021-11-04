@@ -225,6 +225,13 @@ def scanSingleManifest( path_to_script ):
             within_secret_.append({})            
     elif ( parser.checkIfValidHelm( path_to_script )) :
         dict_secret = scanForSecrets( yaml_dict )
+        within_secret_.append({})
+        within_secret_.append({})
+        within_secret_.append({}) 
+    else: 
+        within_secret_.append({})
+        within_secret_.append({})
+        within_secret_.append({}) 
     
     '''
     taint tracking zone for secret dictionary 
@@ -335,6 +342,11 @@ def scanForDefaultNamespace(path_scrpt):
         yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
         nspace_vals  = []
         parser.getValsFromKey( yaml_di, constants.NAMESPACE_KW, nspace_vals )
+        # print(nspace_vals)
+        '''
+        we are not going to process list of dicts 
+        '''
+        nspace_vals        = [x_ for x_ in nspace_vals if isinstance( x_ , str ) ]
         unique_nspace_vals =  list( np.unique( nspace_vals  ) )
         if (len(unique_nspace_vals) == 1 ) and ( unique_nspace_vals[0] == constants.DEFAULT_KW  ): 
             key_lis = parser.keyMiner(yaml_di, constants.DEFAULT_KW)
