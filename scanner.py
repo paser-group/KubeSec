@@ -426,19 +426,15 @@ def scanForRollingUpdates(path_script ):
         '''
         key_list = [ x_[0] for x_ in temp_ls  ]
         if ( (constants.STRATEGY_KW not in key_list ) and  (constants.ROLLING_UPDATE_KW not in key_list) and (constants.SPEC_KW in key_list)   ):
-            cnt += 1 
             if( len(temp_ls) > 0 ):
                 all_values = list( parser.getValuesRecursively(yaml_di)  )
                 # print(all_values)
                 prop_value = constants.YAML_SKIPPING_TEXT 
                 if ( constants.DEPLOYMENT_KW in all_values ) and ( constants.VAL_ROLLING_UPDATE_KW not in all_values ) : 
-                    prop_value = constants.DEPLOYMENT_KW
-                    lis.append( prop_value )
-                elif ( constants.POD_KW in all_values ) and ( constants.VAL_ROLLING_UPDATE_KW not in all_values )  :
-                    prop_value = constants.POD_KW 
-                    lis.append( prop_value )
-            dic[ cnt ] = lis
-    # print(dic) 
+                    keyFromVal =  parser.keyMiner(yaml_di, constants.DEPLOYMENT_KW)
+                    if( constants.KIND_KEY_NAME in keyFromVal ):
+                        cnt += 1 
+                        dic[ cnt ] = [ constants.DEPLOYMENT_KW ]
     return dic     
 
 
@@ -575,7 +571,10 @@ def runScanner(dir2scan):
                 allow_privi_dic       = scanAllowPrivileges( yml_ )
                 # scan for unconfied seccomp 
                 unconfied_seccomp_dict= scanForUnconfinedSeccomp( yml_ )
-                all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic, pid_dic, ipc_dic, dockersock_dic, host_net_dic, cap_sys_dic, host_alias_dic, allow_privi_dic, unconfied_seccomp_dict ) )
+                # need the flags to differentiate legitimate HELM and K8S flags 
+                helm_flag             = parser.checkIfValidHelm(yml_)
+                k8s_flag              = parser.checkIfValidK8SYaml(yml_)
+                all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic, pid_dic, ipc_dic, dockersock_dic, host_net_dic, cap_sys_dic, host_alias_dic, allow_privi_dic, unconfied_seccomp_dict, k8s_flag, helm_flag ) )
                 print(constants.SIMPLE_DASH_CHAR ) 
 
 

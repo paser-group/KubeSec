@@ -554,7 +554,7 @@ class TestMissingRollingUpdate( unittest.TestCase ):
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
     def testAbsent4(self):     
-        oracle_value = 1
+        oracle_value = 0
         scriptName   = TEST_CONSTANTS.fp_rolling_yaml4
         res_dic = scanner.scanForRollingUpdates( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
@@ -563,7 +563,7 @@ class TestMissingRollingUpdate( unittest.TestCase ):
         oracle_value = 0
         scriptName   = TEST_CONSTANTS.fp_rolling_yaml4
         res_dic = scanner.scanForRollingUpdates( scriptName ) 
-        self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
 
     def testAbsent6(self):     
@@ -574,7 +574,7 @@ class TestMissingRollingUpdate( unittest.TestCase ):
 
 
     def testAbsent7(self):     
-        oracle_value = 1
+        oracle_value = 0
         scriptName   = TEST_CONSTANTS.fp_rolling_yaml6 
         res_dic = scanner.scanForRollingUpdates( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
@@ -583,7 +583,7 @@ class TestMissingRollingUpdate( unittest.TestCase ):
         oracle_value = 0
         scriptName   = TEST_CONSTANTS.fp_rolling_yaml6 
         res_dic = scanner.scanForRollingUpdates( scriptName ) 
-        self.assertEqual( oracle_value,  len( res_dic[1] ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
     def testPresent1(self):     
         oracle_value = 1
