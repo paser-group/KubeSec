@@ -732,6 +732,12 @@ class TestHostIssues( unittest.TestCase ):
         res_dic      = scanner.scanDockerSock( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
+    def testCAPSYSMODULE(self):     
+        oracle_value = 1
+        scriptName   = TEST_CONSTANTS.cap_module_script
+        res_dic      = scanner.scanForCAPMODULE( scriptName ) 
+        self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
+
 
 class TestSecCompIssues( unittest.TestCase ):
 

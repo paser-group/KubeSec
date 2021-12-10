@@ -104,6 +104,7 @@ fp_no_reso_yaml8    = 'TEST_ARTIFACTS/fp.no.reso8.yaml'
 fp_no_reso_yaml9    = 'TEST_ARTIFACTS/fp.no.reso9.yaml'
 fp_no_reso_yaml10   = 'TEST_ARTIFACTS/fp.no.reso10.yaml'
 special_secret_1    = 'TEST_ARTIFACTS/special.secret1.yaml'
+cap_module_script   = 'TEST_ARTIFACTS/cap-module-ostk.yaml'
 
 _value_for_key      = '/usr/local/airflow/analytics'
 _mount_path_kw      = 'mountPath' 

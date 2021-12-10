@@ -1,0 +1,202 @@
+# Reference: (N/A)
+
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: neutron-server-pdb
+spec:
+  selector:
+    matchLabels:
+      app: neutron-server
+  minAvailable: 1
+  #maxUnavailable: 2
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: neutron-server
+  labels:
+    app: neutron-server
+spec:
+  ports:
+  - name: neutron-server-api
+    port: 9696
+    targetPort: 9696
+  #sessionAffinity: ClientIP
+  clusterIP: None
+  #type: NodePort # Or LoadBalancer in production w/ proper security
+  #type: LoadBalancer
+  selector:
+    app: neutron-server
+
+---
+
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: neutron-server
+  labels:
+    app: neutron-server
+spec:
+  serviceName: "neutron-server"
+  ## now, replicas must be "1", because of high load-average issue. (trying to solv).
+  replicas: 2
+  podManagementPolicy: OrderedReady
+  #podManagementPolicy: Parallel
+  selector:
+    matchLabels:
+      app: neutron-server
+  template:
+    metadata:
+      labels:
+        app: neutron-server
+    spec:
+      terminationGracePeriodSeconds: 10
+      affinity:
+         podAntiAffinity:
+           requiredDuringSchedulingIgnoredDuringExecution:
+           - labelSelector:
+               matchExpressions:
+               - key: "app"
+                 operator: In
+                 values:
+                 - neutron-server
+             topologyKey: "kubernetes.io/hostname"
+      nodeSelector:
+        network: "true"
+      initContainers:
+      - name: wait1
+        #imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
+        image: call518/oaas-init-container:1.0
+        envFrom:
+          - configMapRef:
+              name: env-common
+        volumeMounts:
+        - name: init-container-scripts
+          mountPath: /init-container-scripts
+        command: ["/bin/bash","-c","/init-container-scripts/init-check-haproxy.sh"]
+      - name: wait2
+        #imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
+        image: call518/oaas-init-container:1.0
+        envFrom:
+          - configMapRef:
+              name: env-common
+        volumeMounts:
+        - name: init-container-scripts
+          mountPath: /init-container-scripts
+        command: ["/bin/bash","-c","/init-container-scripts/init-check-memcached.sh"]
+      - name: wait3
+        #imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
+        image: call518/oaas-init-container:1.0
+        envFrom:
+          - configMapRef:
+              name: env-common
+        volumeMounts:
+        - name: init-container-scripts
+          mountPath: /init-container-scripts
+        command: ["/bin/bash","-c","/init-container-scripts/init-check-rabbitmq.sh"]
+      - name: wait4
+        #imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
+        image: call518/oaas-init-container:1.0
+        envFrom:
+          - configMapRef:
+              name: env-common
+        volumeMounts:
+        - name: init-container-scripts
+          mountPath: /init-container-scripts
+        command: ["/bin/bash","-c","/init-container-scripts/init-check-keystone.sh"]
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "neutron-server"
+      #- ip: "192.168.0.150"
+      #  hostnames:
+      #  - "nfs-server"
+      #hostNetwork: true
+      containers:
+        - name: neutron-server
+          image: call518/oaas-queens:latest
+          #imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+              - ALL
+              - CAP_SYS_ADMIN
+              - CAP_SYS_MODULE
+              - CAP_NET_ADMIN
+          env:
+            #- name: MY_POD_NAME
+            #  valueFrom:
+            #    fieldRef:
+            #      fieldPath: metadata.name
+            #- name: MY_POD_NAMESPACE
+            #  valueFrom:
+            #    fieldRef:
+            #      fieldPath: metadata.namespace
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          envFrom:
+            - configMapRef:
+                name: env-common
+          command: ["/scripts/neutron-server-init.sh"]
+          ports:
+            - containerPort: 9696
+          volumeMounts:
+          - name: kernel-modules
+            mountPath: /lib/modules
+          - name: openstack-openrc
+            mountPath: /root/openrc
+          - name: ovs-setup
+            mountPath: /ovs-setup
+          - name: neutron-server-setup
+            mountPath: /scripts
+          readinessProbe:
+            exec:
+              command:
+              - /check-init.sh
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            #timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+          #livenessProbe:
+          #  exec:
+          #    command:
+          #    - /healthcheck.sh
+          #    - --liveness
+          ##livenessProbe:
+          ##  tcpSocket:
+          ##    port: 5000
+          ##  initialDelaySeconds: 5
+          ##  periodSeconds: 10
+      volumes:
+      - name: init-container-scripts
+        configMap:
+          name: init-container-scripts
+          defaultMode: 0755
+      - name: kernel-modules
+        hostPath:
+          path: /lib/modules
+          type: Directory
+      - name: openstack-openrc
+        configMap:
+          name: openstack-openrc
+          defaultMode: 0755
+      - name: ovs-setup
+        configMap:
+          name: ovs-setup
+          defaultMode: 0755
+      - name: neutron-server-setup
+        configMap:
+          name: neutron-server-setup
+          defaultMode: 0755

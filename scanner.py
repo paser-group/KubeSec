@@ -571,10 +571,12 @@ def runScanner(dir2scan):
                 allow_privi_dic       = scanAllowPrivileges( yml_ )
                 # scan for unconfied seccomp 
                 unconfied_seccomp_dict= scanForUnconfinedSeccomp( yml_ )
+                # scan for cap sys module 
+                cap_module_dic        = scanForCAPMODULE( yml_ )
                 # need the flags to differentiate legitimate HELM and K8S flags 
                 helm_flag             = parser.checkIfValidHelm(yml_)
                 k8s_flag              = parser.checkIfValidK8SYaml(yml_)
-                all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic, pid_dic, ipc_dic, dockersock_dic, host_net_dic, cap_sys_dic, host_alias_dic, allow_privi_dic, unconfied_seccomp_dict, k8s_flag, helm_flag ) )
+                all_content.append( ( dir2scan, yml_, within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi, http_dict, absentSecuContextDict, defaultNameSpaceDict, absentResourceDict, rollingUpdateDict, absentNetPolicyDic, pid_dic, ipc_dic, dockersock_dic, host_net_dic, cap_sys_dic, host_alias_dic, allow_privi_dic, unconfied_seccomp_dict, cap_module_dic, k8s_flag, helm_flag ) )
                 print(constants.SIMPLE_DASH_CHAR ) 
 
 
@@ -619,13 +621,32 @@ def scanForCAPSYS(path_script ):
         as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
         '''
         key_list = [ x_[0] for x_ in temp_ls  ]
-        # print('ASI_MAMA', key_list)
         if ( all( z_ in key_list for z_ in constants.CAPSYS_KW_LIST )  ) :
             relevant_values = parser.getValuesRecursively(yaml_di)
             if (constants.CAPSYS_ADMIN_STRING in relevant_values) :
                 cnt += 1 
                 dic[ cnt ] = []
     return dic  
+
+def scanForCAPMODULE(path_script ):
+    dic, lis   = {}, []
+    if ( parser.checkIfValidK8SYaml( path_script )  ): 
+        cnt = 0 
+        dict_as_list = parser.loadMultiYAML( path_script )
+        yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
+        temp_ls = [] 
+        parser.getKeyRecursively(yaml_di, temp_ls) 
+        '''
+        if you are using `parser.getKeyRecursively` to get all keys , you need to do some trnasformation to get the key names 
+        as the output is a list of tuples so, `[(k1, v1), (k2, v2), (k3, v3)]`
+        '''
+        key_list = [ x_[0] for x_ in temp_ls  ]
+        if ( all( z_ in key_list for z_ in constants.CAPSYS_KW_LIST )  ) :
+            relevant_values = parser.getValuesRecursively(yaml_di)
+            if (constants.CAPSYS_MODULE_STRING in relevant_values) :
+                cnt += 1 
+                dic[ cnt ] = []
+    return dic      
 
 def scanForHostAliases(path_script ):
     dic, lis   = {}, []
@@ -733,7 +754,13 @@ if __name__ == '__main__':
     # no_http_file        = 'TEST_ARTIFACTS/fp.http.yaml'
     # sh_files_configmaps = scanForHTTP( no_http_file )
 
-    special_secret1     = 'TEST_ARTIFACTS/special.secret1.yaml'
-    within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi  = scanSingleManifest( special_secret1 )
+    # special_secret1     = 'TEST_ARTIFACTS/special.secret1.yaml'
+    # within_secret_, templ_secret_, valid_taint_secr, valid_taint_privi  = scanSingleManifest( special_secret1 )
 
-    print(within_secret_) 
+    # no_reso_yaml = '/Users/arahman/K8S_REPOS/GITHUB_REPOS/istio-handson/deployment/articles.yaml'
+    # no_reso_dict = scanForHTTP(no_reso_yaml)
+
+    # cap_sys_module_yaml = 'TEST_ARTIFACTS/cap-module-ostk.yaml'
+    # cap_sys_module_dic  = scanForCAPMODULE ( cap_sys_module_yaml )   
+
+    print(cap_sys_module_dic)  
