@@ -133,6 +133,8 @@ def loadMultiYAML( script_ ):
                 dicts2ret.append( d_ )
         except yaml.YAMLError as exc:
             print( constants.YAML_SKIPPING_TEXT  )    
+        except UnicodeDecodeError as err_: 
+            print( constants.YAML_SKIPPING_TEXT  )    
     return dicts2ret 
 
 
