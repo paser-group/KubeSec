@@ -13,7 +13,16 @@ Akond Rahman (Lead), Rahul Pandita, and Shazibul Islam Shamim
 
 ### Details 
 
-Building a taint tracking tool that follows the flow of data like hard-coded password in Kubernetes manifests and Helm charts.  
-More details coming soon. 
+The tool is available as a Docker image: https://hub.docker.com/repository/docker/akondrahman/sli-kube 
+
+#### Instruction to run the tool:
+
+- docker rm $(docker ps -a -f status=exited -f status=created -q)
+- docker rmi -f $(docker images -a -q)
+- docker pull akondrahman/sli-kube
+- docker images -a
+- docker run --rm -it akondrahman/sli-kube bash
+- cd SLI-KUBE-WORK/KubeSec-master/
+- python3 main.py
 
  
