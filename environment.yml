@@ -34,14 +34,13 @@ dependencies:
   - xz=5.4.2=h6c40b1e_0
   - zlib=1.2.13=h4dc903c_0
   - pip:
-    - click==8.1.3
-    - colorama==0.4.6
-    - markdown-it-py==2.2.0
-    - mdurl==0.1.2
-    - pygments==2.15.1
-    - pyyaml==6.0
-    - rich==13.4.1
-    - shellingham==1.5.0.post1
-    - typer==0.9.0
-    - typing-extensions==4.6.3
-prefix: /Users/phu/opt/anaconda3/envs/KUBESEC
+      - click==8.1.3
+      - colorama==0.4.6
+      - markdown-it-py==2.2.0
+      - mdurl==0.1.2
+      - pygments==2.15.1
+      - pyyaml==6.0
+      - rich==13.4.1
+      - shellingham==1.5.0.post1
+      - typer==0.9.0
+      - typing-extensions==4.6.3
