@@ -49,13 +49,14 @@ def getCountFromAnalysis(ls_):
 
 
 def main(directory: Path = typer.Argument(..., exists=True, help="Absolute path to the folder than contains Kubernetes manifests"),
-         outfile: Path = typer.Argument(..., writable=True, help="Absolute path to the output CSV file")):
+         ):
     """
     Run KubeSec in a Kubernetes directory and get results in a CSV file.
 
     """
     content_as_ls   = scanner.runScanner( directory )
     df_all          = pd.DataFrame( getCountFromAnalysis( content_as_ls ) )
+    outfile = Path(directory, "slikube_results.csv")
 
     df_all.to_csv( outfile, header= constants.CSV_HEADER , index=False, encoding= constants.CSV_ENCODING )
 
