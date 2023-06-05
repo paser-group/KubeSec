@@ -7,6 +7,25 @@
 
 # Taintube: Taint Tracking for Security Analysis of Kubernetes Manifests 
 
+## Environment
+We use Conda to manage the virtual environment for KubeSec. To see the content of the environment, see [environment.yml](./environment.yml).
+
+To use the environment, use the following commands.
+
+```bash
+# Create
+conda env create -f environment.yml
+
+# Activate
+conda activate KUBESEC
+
+# Deactivate
+conda deactivate
+
+# Export (if you modify the environment)
+conda env export > environment.yaml
+```
+
 ## Collaborators 
 
 Akond Rahman (Lead), Rahul Pandita, and Shazibul Islam Shamim 
