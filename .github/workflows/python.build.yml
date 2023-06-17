@@ -17,19 +17,19 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.11
-    - name: Install Conda
-      uses: conda-incubator/setup-miniconda@v2
+    # - name: Install Conda
+    #   uses: conda-incubator/setup-miniconda@v2
         
-    - name: Activate conda 
+    - name: Install Python Dependencies
       run: | 
-        conda env create -f environment.yml
-        conda activate slikube-enhancement        
-        # python -m pip install --upgrade pip
-        # pip install flake8 pytest
-        # pip install requests
-        # pip install pandas
-        # pip install PyYAML
-        # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        # conda env create -f environment.yml
+        # conda activate slikube-enhancement        
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        pip install requests
+        pip install pandas
+        pip install PyYAML
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run integration and taint-related tests 
       run: |
         python TEST_PARSING.py  
