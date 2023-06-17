@@ -2,9 +2,9 @@ name: Build KubeTaint
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches: [ slikube-enhancement ]
+  # pull_request:
+  #   branches: [ master ]
 
 jobs:
   build:
@@ -17,14 +17,19 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.11
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        pip install requests
-        pip install pandas
-        pip install PyYAML
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Install Conda
+      uses: conda-incubator/setup-miniconda@v2
+        
+    - name: Activate conda 
+      run: | 
+        conda env create -f environment.yaml
+        conda activate slikube-enhancement        
+        # python -m pip install --upgrade pip
+        # pip install flake8 pytest
+        # pip install requests
+        # pip install pandas
+        # pip install PyYAML
+        # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run integration and taint-related tests 
       run: |
         python TEST_PARSING.py  
