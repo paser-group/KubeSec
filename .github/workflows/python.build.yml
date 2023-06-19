@@ -29,7 +29,9 @@ jobs:
         pip install requests
         pip install pandas
         pip install PyYAML
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install ruamel.yaml
+        pip install pathlib
+        # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run integration and taint-related tests 
       run: |
         python TEST_PARSING.py  
