@@ -919,7 +919,21 @@ def scanForHTTP( path2script ):
                 http_in_spec = parser.keyMiner(yaml_d,val_)
                 # The last element of the http_in_spec is the value so the second last element of the http_in_spec is the key
                 http_key = http_in_spec[-2]
-                print(" THIS IS HTTP KEY ----> ", http_key)
+                
+                # The error was generated to the use of parser.KeyMiner() to get the key for the value that contains http keyword
+                # Fix http key and value is in list of a dictionary key element so return the first key element root dictionary key element
+                # http_key is a list index if its length is less than 3 and if the later part is more than 15 then it should be an URL so refer back to first key
+                # ['spec', '0', 'doc', '1', 'http://localhost:8080/'] -- > spec
+                # For key output from key miner such as spec.doc.YAML.1. 
+                # The key for http can contain not contain any dot [BRING regex but first remove Key Miner output above ] -- > spec
+                
+                if (len(http_key) < 3 and len(http_in_spec[-1])>15):
+                    count_dot = http_in_spec[0].count('.')
+                    if (count_dot>0):
+                        http_temp = http_in_spec[0].split('.')
+                        http_key = http_temp[0]
+                    else:
+                        http_key = http_in_spec[0]
 
                 if ( constants.SPEC_KW in just_keys ):
                     '''
@@ -995,7 +1009,7 @@ def scanForUnconfinedSeccomp(path_script ):
                 parser.getValsFromKey(yaml_di, constants.TYPE_KW, relevant_values)
                 # print( relevant_values )
                 if constants.UNCONFIED_KW in relevant_values:
-                    line_number = parser.show_line_for_paths(path_script,constants.UNCONFIED_KW)
+                    line_number = parser.show_line_for_paths(path_script,constants.TYPE_KW)
                     for line in line_number:
                         result= Result(rule_id='SLIKUBE_UNLISTED_05',rule_index= 4, level='error',attachments = [] ,message=Message(text=" Use of unconfined seccomp profile"))
                         location = Location(physical_location=PhysicalLocation(artifact_location=ArtifactLocation(uri=path_script),region = Region(start_line =line)))

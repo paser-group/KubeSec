@@ -9,7 +9,6 @@ import constants
 import typer
 from pathlib import Path
 
-
 def getCountFromAnalysis(ls_):
     list2ret           = []
     for tup_ in ls_:
@@ -55,13 +54,16 @@ def main(directory: Path = typer.Argument(..., exists=True, help="Absolute path 
     Run KubeSec in a Kubernetes directory and get results in a CSV file.
 
     """
+    for file in directory.iterdir():
+        print(file)
     content_as_ls, sarif_json   = scanner.runScanner( directory )
     
     csv_outfile = Path(directory, "slikube_results.csv")
     sarif_outfile = Path(directory, "slikube_results.sarif")
 
     with open(sarif_outfile, "w") as f:
-      f.write(sarif_json)
+        print(sarif_json)
+        f.write(sarif_json)
 
     df_all          = pd.DataFrame( getCountFromAnalysis( content_as_ls ) )
 
