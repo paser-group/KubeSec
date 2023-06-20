@@ -8,3 +8,6 @@ dependencies:
   - pytest=7.3.1
   - requests=2.29.0
   - typer=0.9.0
+  - jschema-to-python
+  - ruamel.yaml
+  - sarif-om

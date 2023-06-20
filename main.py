@@ -6,6 +6,9 @@ Source Code to Run Tool on All Kubernetes Manifests
 import scanner 
 import pandas as pd 
 import constants
+import typer
+from pathlib import Path
+
 
 def getCountFromAnalysis(ls_):
     list2ret           = []
@@ -54,13 +57,15 @@ def main(directory: Path = typer.Argument(..., exists=True, help="Absolute path 
     """
     content_as_ls, sarif_json   = scanner.runScanner( directory )
     
-    with open("SLIKUBE.sarif", "w") as f:
+    csv_outfile = Path(directory, "slikube_results.csv")
+    sarif_outfile = Path(directory, "slikube_results.sarif")
+
+    with open(sarif_outfile, "w") as f:
       f.write(sarif_json)
 
     df_all          = pd.DataFrame( getCountFromAnalysis( content_as_ls ) )
-    outfile = Path(directory, "slikube_results.csv")
 
-    df_all.to_csv( outfile, header= constants.CSV_HEADER , index=False, encoding= constants.CSV_ENCODING )
+    df_all.to_csv( csv_outfile, header= constants.CSV_HEADER , index=False, encoding= constants.CSV_ENCODING )
 
 
 if __name__ == '__main__':
@@ -79,7 +84,7 @@ if __name__ == '__main__':
     # OUTPUT_FILE_CSV = '/Users/arahman/Documents/OneDriveWingUp/OneDrive-TennesseeTechUniversity/Research/Kubernetes/StaticTaint/data/V16_BRINTO_OUTPUT.csv'
 
     # take sarif_json from scanner
-    main()
+    typer.run(main)
 
 
 

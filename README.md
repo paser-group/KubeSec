@@ -13,10 +13,10 @@ We use Conda to manage the virtual environment for KubeSec. To see the content o
 To use the environment, use the following commands.
 
 ```bash
-# Create
+# Create a new environment called KUBESEC if it does not exist
 conda env create -f environment.yml
 
-# Activate
+# Activate the KUBESEC enviroment
 conda activate KUBESEC
 
 # Deactivate
@@ -40,18 +40,19 @@ The tool is available as a Docker image: https://hub.docker.com/repository/docke
 - cd SLI-KUBE-WORK/KubeSec-master/
 - python3 main.py
 
-### Build and run locally
+### Build and run SLIKube locally
 You can also build the docker container locally.
 
-After running the tool, you will find a CSV file called 'slikube_results.csv' in the scanned directory.
+After running the tool, you will find a CSV file called 'slikube_results.csv' and a SARIF file called 'slikube_results.sarif' in the scanned directory.
 
 ```bash
 # Build the image
 docker build -t slikube .
 
-# Run the container 
-# Replace '/Users/phu/Desktop/tf-open-source/aws-eks-base' with your local path
-docker run --rm -v /Users/phu/Desktop/tf-open-source/aws-eks-base:/iac --name slikube slikube /iac
+# Run the container, volume map the repository path to /iac.
+# For example, if the repository you want to scan is at `/Users/john/Desktop/repo1`, then
+# use the following Docker run command:
+docker run --rm -v /Users/john/Desktop/repo1:/iac --name slikube slikube /iac
 ```
 
 ## Collaborators 
