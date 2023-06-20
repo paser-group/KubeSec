@@ -717,13 +717,13 @@ class TestHostIssues( unittest.TestCase ):
     def testAllowPrivilegePresence(self):     
         oracle_value = 1
         scriptName   = TEST_CONSTANTS.tp_allow_privilege 
-        res_dic      = scanner.scanAllowPrivileges( scriptName ) 
+        res_dic      = scanner.scanForAllowPrivileges( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
     def testAllowPrivilegeAbsence(self):     
         oracle_value = 0
         scriptName   = TEST_CONSTANTS.net_policy_yaml 
-        res_dic      = scanner.scanAllowPrivileges( scriptName ) 
+        res_dic      = scanner.scanForAllowPrivileges( scriptName ) 
         self.assertEqual( oracle_value,  len( res_dic ) ,    TEST_CONSTANTS._common_error_string + str(oracle_value)  ) 
 
     def testAnotherDockerSock(self):     
