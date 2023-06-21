@@ -8,7 +8,7 @@
 # Taintube: Taint Tracking for Security Analysis of Kubernetes Manifests 
 
 ## Development Environment
-We use Conda to manage the virtual environment for KubeSec. To see the content of the environment, see [environment.yml](./environment.yml).
+We use Conda to manage the virtual environment for KubeSec. To see the content of the environment, see [environment.yml](./environment.yml). The tool uses [`yq`](https://github.com/mikefarah/yq) as a pre-requisite. 
 
 To use the environment, use the following commands.
 
@@ -42,13 +42,34 @@ The tool is available as a Docker image: https://hub.docker.com/repository/docke
 
 ### Instruction to Build and run SLI-KUBE locally
 
-You can also build the docker container locally. The tool uses [`yq`](https://github.com/mikefarah/yq) as a pre-requisite. Run the following command to build the docker image and run the container.
+You can build the docker container locally. 
+
+To run the tool, first clone the repository
+```bash
+git clone https://github.com/paser-group/KubeSec
+```
+
+Go to the project directory
+```bash
+cd KubeSec
+```
+
+Switch to `update-readme` branch
+```bash
+git checkout update-readme
+```
+
+
+Run the following command to build the docker image and run the container.
 
 ```bash
+
+git clone 
+
 # Build the image
 docker build -t slikube .
 
-# Run the container, volume map the repository path to /iac.
+# Run the container, volume map the repository path (absolute path) to /iac.
 # For example, if the repository you want to scan is at `/Users/john/Desktop/repo1`, then
 # use the following Docker run command:
 docker run --rm -v /Users/john/Desktop/repo1:/iac --name slikube slikube /iac
