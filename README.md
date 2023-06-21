@@ -8,7 +8,7 @@
 # Taintube: Taint Tracking for Security Analysis of Kubernetes Manifests 
 
 ## Development Environment
-We use Conda to manage the virtual environment for KubeSec. To see the content of the environment, see [environment.yml](./environment.yml).
+We use Conda to manage the virtual environment for KubeSec. To see the content of the environment, see [environment.yml](./environment.yml). The tool uses [`yq`](https://github.com/mikefarah/yq) as a pre-requisite. 
 
 To use the environment, use the following commands.
 
@@ -30,7 +30,7 @@ conda env export --from-history > environment.yml
 
 The tool is available as a Docker image: https://hub.docker.com/repository/docker/akondrahman/sli-kube 
 
-### Instruction to run the tool from Docker Hub:
+### Instruction to run SLI-KUBE from Docker Hub:
 
 - docker rm $(docker ps -a -f status=exited -f status=created -q)
 - docker rmi -f $(docker images -a -q)
@@ -40,20 +40,42 @@ The tool is available as a Docker image: https://hub.docker.com/repository/docke
 - cd SLI-KUBE-WORK/KubeSec-master/
 - python3 main.py
 
-### Build and run SLIKube locally
-You can also build the docker container locally.
+### Instruction to Build and run SLI-KUBE locally
 
-After running the tool, you will find a CSV file called 'slikube_results.csv' and a SARIF file called 'slikube_results.sarif' in the scanned directory.
+You can build the docker container locally. 
+
+To run the tool, first clone the repository
+```bash
+git clone https://github.com/paser-group/KubeSec
+```
+
+Go to the project directory
+```bash
+cd KubeSec
+```
+
+Switch to `update-readme` branch
+```bash
+git checkout update-readme
+```
+
+
+Run the following command to build the docker image and run the container.
 
 ```bash
+
+git clone 
+
 # Build the image
 docker build -t slikube .
 
-# Run the container, volume map the repository path to /iac.
+# Run the container, volume map the repository path (absolute path) to /iac.
 # For example, if the repository you want to scan is at `/Users/john/Desktop/repo1`, then
 # use the following Docker run command:
 docker run --rm -v /Users/john/Desktop/repo1:/iac --name slikube slikube /iac
 ```
+
+After running the tool, you will find a CSV file called 'slikube_results.csv' and a SARIF file called 'slikube_results.sarif' in the scanned directory.
 
 ## Collaborators 
 
