@@ -13,8 +13,7 @@ RUN echo "conda activate KUBESEC" >> ~/.bashrc
 SHELL ["/bin/bash", "--login", "-c"]
 ENV PATH /opt/conda/envs/KUBESEC/bin:$PATH
 
-RUN apt-get update
-RUN apt-get install -y wget
+RUN apt-get update && apt-get install --no-install-recommends -y wget && rm -rf /var/lib/apt/lists/*
 RUN wget https://github.com/mikefarah/yq/releases/download/v4.33.3/yq_linux_386 -O /usr/bin/yq \ 
     && chmod +x /usr/bin/yq
 
