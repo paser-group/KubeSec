@@ -30,7 +30,7 @@ conda env export --from-history > environment.yml
 
 The tool is available as a Docker image: https://hub.docker.com/repository/docker/akondrahman/sli-kube 
 
-### Instruction to run the tool from Docker Hub:
+### Instruction to run SLI-KUBE from Docker Hub:
 
 - docker rm $(docker ps -a -f status=exited -f status=created -q)
 - docker rmi -f $(docker images -a -q)
@@ -40,10 +40,9 @@ The tool is available as a Docker image: https://hub.docker.com/repository/docke
 - cd SLI-KUBE-WORK/KubeSec-master/
 - python3 main.py
 
-### Build and run SLIKube locally
-You can also build the docker container locally.
+### Instruction to Build and run SLI-KUBE locally
 
-After running the tool, you will find a CSV file called 'slikube_results.csv' and a SARIF file called 'slikube_results.sarif' in the scanned directory.
+You can also build the docker container locally. The tool uses [`yq`](https://github.com/mikefarah/yq) as a pre-requisite. Run the following command to build the docker image and run the container.
 
 ```bash
 # Build the image
@@ -54,6 +53,8 @@ docker build -t slikube .
 # use the following Docker run command:
 docker run --rm -v /Users/john/Desktop/repo1:/iac --name slikube slikube /iac
 ```
+
+After running the tool, you will find a CSV file called 'slikube_results.csv' and a SARIF file called 'slikube_results.sarif' in the scanned directory.
 
 ## Collaborators 
 
