@@ -500,6 +500,17 @@ def scanForMissingNetworkPolicy(path_script ):
         cnt = 0 
         dict_as_list = parser.loadMultiYAML( path_script )
         yaml_di      = parser.getSingleDict4MultiDocs( dict_as_list )        
+
+#Adjustment
+        WORKLOAD_KINDS = ['Pod', 'Deployment', 'StatefulSet', 'DaemonSet',
+                          'ReplicaSet', 'Job', 'CronJob']
+
+        kind = yaml_di.get('kind', '')
+
+        if kind not in WORKLOAD_KINDS:
+            return dic
+
+
         all_values = list( parser.getValuesRecursively(yaml_di)  )
         #print(all_values)
         #print(all_values)
